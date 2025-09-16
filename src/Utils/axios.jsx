@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://fittrack-backend.railway.app/api",
+  baseURL:"https://fittrack-backend.railway.app/api",
   withCredentials: true, // ADD THIS LINE
 });
 
