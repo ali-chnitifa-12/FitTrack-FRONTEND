@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import api from "../Utils/axios"; // ← your axios instance
 
 export default function Login() {
   const { login } = useContext(AuthContext);
@@ -14,23 +15,17 @@ export default function Login() {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      // ✅ Use axios with baseURL from .env
+      const { data } = await api.post("/auth/login", { email, password });
 
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message || "Login failed");
-
+      // Save user in context
       login({ name: data.user.name, email: data.user.email, token: data.token });
 
-      // ✅ redirect to dashboard/home after login
+      // Redirect to dashboard
       navigate("/dashboard");
-
     } catch (err) {
-      setError(err.message);
+      // Handle errors from backend
+      setError(err.response?.data?.message || err.message || "Login failed");
     }
   };
 
@@ -68,9 +63,9 @@ export default function Login() {
 
         <p className="text-center mt-4 text-gray-400">
           Don’t have an account?{" "}
-          <a href="/register" className="text-green-500 hover:underline">
+          <Link to="/register" className="text-green-500 hover:underline">
             Register
-          </a>
+          </Link>
         </p>
       </form>
     </div>
