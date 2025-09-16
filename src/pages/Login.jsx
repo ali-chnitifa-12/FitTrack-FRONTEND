@@ -1,7 +1,8 @@
+// src/pages/Login.jsx
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
-import api from "../Utils/axios"; // ← your axios instance
+import api from "../Utils/axios";
 
 export default function Login() {
   const { login } = useContext(AuthContext);
@@ -15,23 +16,24 @@ export default function Login() {
     setError("");
 
     try {
-      // ✅ Use axios with baseURL from .env
       const { data } = await api.post("/auth/login", { email, password });
 
-      // Save user in context
+      // Save user in context and localStorage
       login({ name: data.user.name, email: data.user.email, token: data.token });
+      localStorage.setItem("token", data.token);
 
-      // Redirect to dashboard
       navigate("/dashboard");
     } catch (err) {
-      // Handle errors from backend
       setError(err.response?.data?.message || err.message || "Login failed");
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-black">
-      <form onSubmit={handleSubmit} className="bg-gray-900 rounded-xl shadow-lg p-8 w-96">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-900 rounded-xl shadow-lg p-8 w-96"
+      >
         <h2 className="text-3xl font-bold text-center mb-6 text-green-500">
           Login
         </h2>
