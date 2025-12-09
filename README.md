@@ -1,12 +1,42 @@
-# React + Vite
+📌 FitTrack — Frontend (React + Vite + TailwindCSS + Framer Motion)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+FitTrack is a modern and responsive fitness tracking web application built using React, Vite, TailwindCSS, and Framer Motion for smooth and elegant animations.
+This frontend interacts with a custom Express.js backend API to manage users, workouts, and progress tracking.
 
-Currently, two official plugins are available:
+🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🔐 User Authentication UI (Login & Register)
 
-## Expanding the ESLint configuration
+🏋️ Workout management interface
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+⚡ Lightning-fast development experience with Vite
+
+🎨 Clean, modern, and responsive UI using TailwindCSS
+
+🎞️ Beautiful animations made with Framer Motion
+
+🔄 Integration with backend REST API
+
+🚫 Error & loading states for better UX
+
+🧩 Reusable components & clean project structure
+
+🛠 Tech Stack
+Category	Technology
+UI Library	React
+Styling	TailwindCSS
+Animations	Framer Motion
+Build Tool	Vite
+API Communication	Fetch / Axios
+State	React Hooks
+📂 Project Structure
+src/
+│── components/
+│── pages/
+│── services/
+│── context/
+│── assets/
+│── animations/    # Framer Motion animations (if used)
+│── App.jsx
+│── main.jsx
+│── index.css
