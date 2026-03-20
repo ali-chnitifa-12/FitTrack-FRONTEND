@@ -137,6 +137,18 @@ export default function Dashboard() {
             ease: "none"
           });
         }
+
+        const neonRing = gsap.utils.toArray(".dashboard-neon-ring");
+        if (neonRing.length > 0) {
+          gsap.to(neonRing, {
+            rotation: 360,
+            scale: 1.1,
+            duration: 16,
+            repeat: -1,
+            ease: "sine.inOut",
+            yoyo: true
+          });
+        }
       });
 
       return () => ctx.revert();
@@ -263,18 +275,19 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-green-900 p-6 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-[#02040c] via-[#081526] to-[#0d2e5c] p-6 flex items-center justify-center text-white">
       <motion.div
         ref={containerRef}
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="bg-gray-900/80 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-green-500/20 max-w-6xl w-full relative overflow-hidden transform-gpu"
+        initial={{ opacity: 0, scale: 0.92, rotationY: 8 }}
+        animate={{ opacity: 1, scale: 1, rotationY: 0 }}
+        transition={{ duration: 0.7, ease: "power3.out" }}
+        className="bg-[#02112d]/90 backdrop-blur-xl p-8 rounded-3xl shadow-[0_0_60px_rgba(8,229,255,0.35)] border border-cyan-400/30 max-w-6xl w-full relative overflow-hidden transform-gpu"
         style={{ transformStyle: 'preserve-3d' }}
       >
         {/* Animated background elements */}
         <div className="dashboard-bg-1 absolute -top-20 -left-20 w-40 h-40 bg-green-500 rounded-full mix-blend-soft-light filter blur-xl opacity-20 transform-gpu" />
         <div className="dashboard-bg-2 absolute -bottom-20 -right-20 w-60 h-60 bg-teal-500 rounded-full mix-blend-soft-light filter blur-xl opacity-15 transform-gpu" />
+        <div className="dashboard-neon-ring absolute inset-0 m-auto w-96 h-96 border-2 border-cyan-400 rounded-full opacity-20 mix-blend-screen pointer-events-none" style={{ boxShadow: '0 0 40px rgba(0,255,229,0.45)', transformStyle: 'preserve-3d' }} />
 
         <motion.div
           variants={containerVariants}
@@ -325,7 +338,7 @@ export default function Dashboard() {
             <motion.div
               ref={welcomeRef}
               variants={itemVariants}
-              className="bg-gray-800/50 p-6 rounded-2xl shadow-lg border border-green-500/20 relative overflow-hidden transform-gpu"
+              className="bg-[#02162f]/85 p-6 rounded-2xl shadow-[0_0_35px_rgba(6,206,255,0.35)] border border-cyan-400/30 relative overflow-hidden transform-gpu"
               style={{ transformStyle: 'preserve-3d' }}
             >
               <h2 className="text-2xl font-bold text-green-400 mb-3">Welcome</h2>
@@ -350,7 +363,7 @@ export default function Dashboard() {
             <motion.div
               ref={challengeRef}
               variants={itemVariants}
-              className="bg-gray-800/50 p-6 rounded-2xl shadow-lg border border-green-500/30 relative overflow-hidden transform-gpu"
+              className="bg-[#022f44]/85 p-6 rounded-2xl shadow-[0_0_35px_rgba(99,255,241,0.3)] border border-cyan-300/30 relative overflow-hidden transform-gpu"
               style={{ transformStyle: 'preserve-3d' }}
             >
               <h2 className="text-2xl font-bold text-green-400 mb-3">Daily Challenge</h2>
@@ -362,7 +375,7 @@ export default function Dashboard() {
                   const index = Math.floor(Math.random() * dailyChallenges.length);
                   setChallenge(dailyChallenges[index]);
                 }}
-                className="px-5 py-2 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-black rounded-lg font-semibold transition duration-200"
+                className="px-5 py-2 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-600 text-black rounded-lg font-bold transition duration-200 shadow-lg shadow-cyan-500/30"
               >
                 New Challenge
               </motion.button>

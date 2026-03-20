@@ -151,7 +151,8 @@ export default function App() {
       // Parallax effect on scroll
       if (heroRef.current) {
         gsap.to(heroRef.current, {
-          yPercent: -50,
+          yPercent: -52,
+          rotateX: 2,
           ease: "none",
           scrollTrigger: {
             trigger: heroRef.current,
@@ -159,6 +160,32 @@ export default function App() {
             end: "bottom top",
             scrub: true
           }
+        });
+      }
+
+      if (bg1Ref.current) {
+        gsap.to(bg1Ref.current, {
+          x: 80,
+          y: -45,
+          rotationY: 360,
+          rotationX: 40,
+          duration: 18,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut"
+        });
+      }
+
+      if (bg2Ref.current) {
+        gsap.to(bg2Ref.current, {
+          x: -90,
+          y: 55,
+          rotationY: -360,
+          rotationX: -25,
+          duration: 20,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut"
         });
       }
     });
@@ -358,7 +385,7 @@ export default function App() {
               <ProtectedRoute>
                 <>
                   {/* Hero Section */}
-                  <section ref={heroRef} className="h-screen flex flex-col justify-center items-center relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-green-900 perspective-1000">
+                  <section ref={heroRef} className="h-screen flex flex-col justify-center items-center relative overflow-hidden bg-gradient-to-br from-[#060a1e] via-[#0f1f3f] to-[#03102a] perspective-1000 text-white">
                     <motion.div
                       initial="hidden"
                       animate="visible"
@@ -368,7 +395,7 @@ export default function App() {
                       <motion.h1 
                         ref={titleRef}
                         variants={fadeInUp}
-                        className="text-6xl md:text-8xl font-bold text-green-400 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400 transform-gpu"
+                        className="text-6xl md:text-8xl font-black mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#73ffdb] via-[#00e5ff] to-[#6de5ff] tracking-tight shadow-[0_0_20px_rgba(0, 255, 230, 0.65)] transform-gpu"
                         style={{ transformStyle: 'preserve-3d' }}
                       >
                         Welcome to FitTrack
