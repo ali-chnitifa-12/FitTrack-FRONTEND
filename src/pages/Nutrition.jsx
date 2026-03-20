@@ -83,7 +83,7 @@ export default function Nutrition() {
     }, 100);
 
     return () => clearTimeout(timeoutId);
-  }, [tdee, macros]); // Re-run when results change
+  }, []);
   
   // Animation variants
   const containerVariants = {

@@ -106,50 +106,62 @@ export default function App() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Hero animations
-      gsap.fromTo(titleRef.current, 
-        { y: 100, opacity: 0, rotationX: -90 },
-        { y: 0, opacity: 1, rotationX: 0, duration: 1.5, ease: "back.out(1.7)" }
-      );
+      if (titleRef.current) {
+        gsap.fromTo(titleRef.current, 
+          { y: 100, opacity: 0, rotationX: -90 },
+          { y: 0, opacity: 1, rotationX: 0, duration: 1.5, ease: "back.out(1.7)" }
+        );
+      }
       
-      gsap.fromTo(subtitleRef.current,
-        { y: 50, opacity: 0, rotationX: -45 },
-        { y: 0, opacity: 1, rotationX: 0, duration: 1.2, delay: 0.3, ease: "power2.out" }
-      );
+      if (subtitleRef.current) {
+        gsap.fromTo(subtitleRef.current,
+          { y: 50, opacity: 0, rotationX: -45 },
+          { y: 0, opacity: 1, rotationX: 0, duration: 1.2, delay: 0.3, ease: "power2.out" }
+        );
+      }
       
-      gsap.fromTo(buttonRef.current,
-        { scale: 0, rotationY: 180, opacity: 0 },
-        { scale: 1, rotationY: 0, opacity: 1, duration: 1, delay: 0.6, ease: "elastic.out(1, 0.5)" }
-      );
+      if (buttonRef.current) {
+        gsap.fromTo(buttonRef.current,
+          { scale: 0, rotationY: 180, opacity: 0 },
+          { scale: 1, rotationY: 0, opacity: 1, duration: 1, delay: 0.6, ease: "elastic.out(1, 0.5)" }
+        );
+      }
 
       // Background animations
-      gsap.to(bg1Ref.current, {
-        rotation: 360,
-        scale: 1.2,
-        duration: 20,
-        repeat: -1,
-        ease: "none"
-      });
+      if (bg1Ref.current) {
+        gsap.to(bg1Ref.current, {
+          rotation: 360,
+          scale: 1.2,
+          duration: 20,
+          repeat: -1,
+          ease: "none"
+        });
+      }
       
-      gsap.to(bg2Ref.current, {
-        rotation: -360,
-        scale: 1.5,
-        duration: 25,
-        repeat: -1,
-        ease: "none"
-      });
+      if (bg2Ref.current) {
+        gsap.to(bg2Ref.current, {
+          rotation: -360,
+          scale: 1.5,
+          duration: 25,
+          repeat: -1,
+          ease: "none"
+        });
+      }
 
       // Parallax effect on scroll
-      gsap.to(heroRef.current, {
-        yPercent: -50,
-        ease: "none",
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true
-        }
-      });
-    }, heroRef);
+      if (heroRef.current) {
+        gsap.to(heroRef.current, {
+          yPercent: -50,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true
+          }
+        });
+      }
+    });
 
     return () => ctx.revert();
   }, []);
@@ -211,7 +223,7 @@ export default function App() {
             };
           }
         });
-      }, featuresRef);
+      });
 
       return () => ctx.revert();
     }, 100);
@@ -257,7 +269,7 @@ export default function App() {
             stagger: 0.2
           });
         }
-      }, statsRef);
+      });
 
       return () => ctx.revert();
     }, 100);

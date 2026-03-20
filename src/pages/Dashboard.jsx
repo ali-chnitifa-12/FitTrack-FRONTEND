@@ -137,7 +137,7 @@ export default function Dashboard() {
             ease: "none"
           });
         }
-      }, containerRef);
+      });
 
       return () => ctx.revert();
     }, 100);
