@@ -298,7 +298,7 @@ export default function Dashboard() {
         ref={containerRef}
         initial={{ opacity: 0, scale: 0.92, rotationY: 8 }}
         animate={{ opacity: 1, scale: 1, rotationY: 0 }}
-        transition={{ duration: 0.7, ease: "power3.out" }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
         className="bg-[#02112d]/90 backdrop-blur-xl p-8 rounded-3xl shadow-[0_0_60px_rgba(8,229,255,0.35)] border border-cyan-400/30 max-w-6xl w-full relative overflow-hidden transform-gpu"
         style={{ transformStyle: 'preserve-3d' }}
       >
