@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation, Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "./Components/Navbar.jsx";
 import Footer from "./Components/Footer.jsx";
 import Dashboard from "./pages/Dashboard.jsx"; 
@@ -11,6 +13,9 @@ import Register from "./pages/Register.jsx";
 import About from "./pages/About.jsx";
 import ContactForm from "./pages/ContactForm.jsx";
 import { AuthContext } from "./context/AuthContext.jsx";
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
 
 // ---------- Animation Variants ----------
 const fadeInUp = {
@@ -79,7 +84,7 @@ function MainLayout({ children }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex-1"
+          className={`flex-1 ${!hideLayout ? 'pt-24' : ''}`}
         >
           {children}
         </motion.div>
@@ -91,6 +96,175 @@ function MainLayout({ children }) {
 
 // ---------- App Component ----------
 export default function App() {
+  const heroRef = useRef(null);
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const buttonRef = useRef(null);
+  const bg1Ref = useRef(null);
+  const bg2Ref = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Hero animations
+      gsap.fromTo(titleRef.current, 
+        { y: 100, opacity: 0, rotationX: -90 },
+        { y: 0, opacity: 1, rotationX: 0, duration: 1.5, ease: "back.out(1.7)" }
+      );
+      
+      gsap.fromTo(subtitleRef.current,
+        { y: 50, opacity: 0, rotationX: -45 },
+        { y: 0, opacity: 1, rotationX: 0, duration: 1.2, delay: 0.3, ease: "power2.out" }
+      );
+      
+      gsap.fromTo(buttonRef.current,
+        { scale: 0, rotationY: 180, opacity: 0 },
+        { scale: 1, rotationY: 0, opacity: 1, duration: 1, delay: 0.6, ease: "elastic.out(1, 0.5)" }
+      );
+
+      // Background animations
+      gsap.to(bg1Ref.current, {
+        rotation: 360,
+        scale: 1.2,
+        duration: 20,
+        repeat: -1,
+        ease: "none"
+      });
+      
+      gsap.to(bg2Ref.current, {
+        rotation: -360,
+        scale: 1.5,
+        duration: 25,
+        repeat: -1,
+        ease: "none"
+      });
+
+      // Parallax effect on scroll
+      gsap.to(heroRef.current, {
+        yPercent: -50,
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
+        }
+      });
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const featuresRef = useRef(null);
+  const cardsRef = useRef([]);
+
+  useEffect(() => {
+    // Small delay to ensure DOM is ready
+    const timeoutId = setTimeout(() => {
+      const ctx = gsap.context(() => {
+        // Features section animations - wait for elements to exist
+        const featureCards = gsap.utils.toArray(".feature-card");
+        if (featureCards.length > 0 && featuresRef.current) {
+          gsap.fromTo(featureCards, 
+            { y: 100, opacity: 0, rotationX: -30 },
+            { 
+              y: 0, 
+              opacity: 1, 
+              rotationX: 0, 
+              duration: 1, 
+              stagger: 0.2,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: featuresRef.current,
+                start: "top 80%",
+                toggleActions: "play none none reverse"
+              }
+            }
+          );
+        }
+
+        // Hover effects for cards
+        cardsRef.current.forEach((card, index) => {
+          if (card) {
+            const handleMouseEnter = () => {
+              gsap.to(card, { 
+                rotationY: 10, 
+                scale: 1.05, 
+                duration: 0.3, 
+                ease: "power2.out" 
+              });
+            };
+            const handleMouseLeave = () => {
+              gsap.to(card, { 
+                rotationY: 0, 
+                scale: 1, 
+                duration: 0.3, 
+                ease: "power2.out" 
+              });
+            };
+            
+            card.addEventListener('mouseenter', handleMouseEnter);
+            card.addEventListener('mouseleave', handleMouseLeave);
+            
+            return () => {
+              card.removeEventListener('mouseenter', handleMouseEnter);
+              card.removeEventListener('mouseleave', handleMouseLeave);
+            };
+          }
+        });
+      }, featuresRef);
+
+      return () => ctx.revert();
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  const statsRef = useRef(null);
+  const statCardsRef = useRef([]);
+
+  useEffect(() => {
+    // Small delay to ensure DOM is ready
+    const timeoutId = setTimeout(() => {
+      const ctx = gsap.context(() => {
+        // Stats section animations - wait for elements to exist
+        const statCards = gsap.utils.toArray(".stat-card");
+        if (statCards.length > 0 && statsRef.current) {
+          gsap.fromTo(statCards, 
+            { y: 80, opacity: 0, rotationX: -20, scale: 0.8 },
+            { 
+              y: 0, 
+              opacity: 1, 
+              rotationX: 0,
+              scale: 1,
+              duration: 1.2, 
+              stagger: 0.3,
+              ease: "elastic.out(1, 0.5)",
+              scrollTrigger: {
+                trigger: statsRef.current,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+              }
+            }
+          );
+
+          // Continuous floating animation for stat cards
+          gsap.to(statCards, {
+            y: -10,
+            duration: 2,
+            ease: "power1.inOut",
+            yoyo: true,
+            repeat: -1,
+            stagger: 0.2
+          });
+        }
+      }, statsRef);
+
+      return () => ctx.revert();
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   const sections = [
     {
       title: "Upper Body Strength",
@@ -172,29 +346,33 @@ export default function App() {
               <ProtectedRoute>
                 <>
                   {/* Hero Section */}
-                  <section className="h-screen flex flex-col justify-center items-center relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-green-900">
+                  <section ref={heroRef} className="h-screen flex flex-col justify-center items-center relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-green-900 perspective-1000">
                     <motion.div
                       initial="hidden"
                       animate="visible"
                       variants={staggerChildren}
-                      className="relative z-10 text-center space-y-8"
+                      className="relative z-10 text-center space-y-8 transform-gpu"
                     >
                       <motion.h1 
+                        ref={titleRef}
                         variants={fadeInUp}
-                        className="text-6xl md:text-8xl font-bold text-green-400 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400"
+                        className="text-6xl md:text-8xl font-bold text-green-400 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400 transform-gpu"
+                        style={{ transformStyle: 'preserve-3d' }}
                       >
                         Welcome to FitTrack
                       </motion.h1>
                       <motion.p 
+                        ref={subtitleRef}
                         variants={fadeInUp}
-                        className="max-w-3xl mx-auto text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed"
+                        className="max-w-3xl mx-auto text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed transform-gpu"
+                        style={{ transformStyle: 'preserve-3d' }}
                       >
                         Transform your body, track your progress, and achieve your fitness goals with our comprehensive platform
                       </motion.p>
-                      <motion.div variants={fadeInUp}>
+                      <motion.div ref={buttonRef} variants={fadeInUp} className="transform-gpu" style={{ transformStyle: 'preserve-3d' }}>
                         <Link
                           to="/dashboard"
-                          className="inline-block bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-black font-bold px-12 py-4 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-green-500/30"
+                          className="inline-block bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-black font-bold px-12 py-4 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-green-500/30 hover:shadow-green-500/50"
                         >
                           Start Your Journey
                         </Link>
@@ -202,20 +380,16 @@ export default function App() {
                     </motion.div>
 
                     {/* Animated Background */}
-                    <motion.div
-                      className="absolute top-20 left-20 w-72 h-72 bg-green-500 rounded-full mix-blend-soft-light filter blur-xl opacity-20 animate-pulse"
-                      animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-                      transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                    />
-                    <motion.div
-                      className="absolute bottom-20 right-20 w-96 h-96 bg-teal-500 rounded-full mix-blend-soft-light filter blur-xl opacity-15"
-                      animate={{ scale: [1.2, 1, 1.2], rotate: [360, 0, 360] }}
-                      transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-                    />
+                    <div ref={bg1Ref} className="absolute top-20 left-20 w-72 h-72 bg-green-500 rounded-full mix-blend-soft-light filter blur-xl opacity-20 transform-gpu" style={{ transformStyle: 'preserve-3d' }} />
+                    <div ref={bg2Ref} className="absolute bottom-20 right-20 w-96 h-96 bg-teal-500 rounded-full mix-blend-soft-light filter blur-xl opacity-15 transform-gpu" style={{ transformStyle: 'preserve-3d' }} />
+                    
+                    {/* Additional 3D elements */}
+                    <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-purple-500 rounded-full mix-blend-soft-light filter blur-lg opacity-10 animate-bounce" />
+                    <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-blue-500 rounded-full mix-blend-soft-light filter blur-lg opacity-10 animate-pulse" />
                   </section>
 
                   {/* Features Grid */}
-                  <section className="max-w-7xl mx-auto p-6 py-20">
+                  <section ref={featuresRef} className="max-w-7xl mx-auto p-6 py-20">
                     <motion.div
                       initial="hidden"
                       whileInView="visible"
@@ -239,17 +413,22 @@ export default function App() {
                       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                     >
                       {sections.map((section, index) => (
-                        <motion.div key={index} variants={scaleIn} whileHover={{ scale: 1.05, rotateY: 5 }} whileTap={{ scale: 0.95 }}>
+                        <div 
+                          key={index} 
+                          ref={el => cardsRef.current[index] = el}
+                          className="feature-card transform-gpu"
+                          style={{ transformStyle: 'preserve-3d' }}
+                        >
                           <Link
                             to={section.link}
-                            className="block bg-gray-900 rounded-2xl overflow-hidden shadow-2xl hover:shadow-green-500/20 transition-all duration-300 group"
+                            className="block bg-gray-900/80 backdrop-blur-lg rounded-2xl overflow-hidden shadow-2xl hover:shadow-green-500/20 transition-all duration-300 group border border-gray-700/50"
                           >
                             <div className="relative overflow-hidden">
                               <img src={section.img} alt={section.title} className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"/>
-                              <div className="absolute top-4 right-4 bg-green-500 text-black px-3 py-1 rounded-full text-sm font-semibold">
+                              <div className="absolute top-4 right-4 bg-green-500/90 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-semibold">
                                 {section.category}
                               </div>
-                              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"/>
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"/>
                             </div>
                             <div className="p-6">
                               <h3 className="text-2xl font-bold text-green-400 mb-3 group-hover:text-green-300 transition-colors">
@@ -262,14 +441,28 @@ export default function App() {
                               </span>
                             </div>
                           </Link>
-                        </motion.div>
+                        </div>
                       ))}
                     </motion.div>
                   </section>
 
                   {/* Stats Section */}
-                  <motion.section initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerChildren} className="bg-gradient-to-r from-gray-900 to-black py-20">
-                    <div className="max-w-6xl mx-auto text-center">
+                  <motion.section 
+                    ref={statsRef} 
+                    initial="hidden" 
+                    whileInView="visible" 
+                    viewport={{ once: true }} 
+                    variants={staggerChildren} 
+                    className="bg-gradient-to-r from-gray-900 to-black py-20 relative overflow-hidden"
+                  >
+                    {/* Background pattern */}
+                    <div className="absolute inset-0 opacity-5">
+                      <div className="absolute top-10 left-10 w-32 h-32 border border-green-500 rounded-full"></div>
+                      <div className="absolute top-20 right-20 w-24 h-24 border border-teal-500 rounded-full"></div>
+                      <div className="absolute bottom-10 left-1/3 w-40 h-40 border border-purple-500 rounded-full"></div>
+                    </div>
+                    
+                    <div className="max-w-6xl mx-auto text-center relative z-10">
                       <motion.h2 variants={fadeInUp} className="text-4xl font-bold text-green-400 mb-12">
                         Why Thousands Choose FitTrack
                       </motion.h2>
@@ -279,11 +472,15 @@ export default function App() {
                           { number: "10K+", label: "Active Users", desc: "Worldwide community" },
                           { number: "24/7", label: "Support", desc: "Always here to help you" }
                         ].map((stat, idx) => (
-                          <motion.div key={idx} variants={fadeInUp} className="text-center p-6 bg-gray-800 rounded-2xl hover:bg-gray-750 transition-colors">
-                            <div className="text-5xl font-bold text-green-400 mb-4">{stat.number}</div>
+                          <div 
+                            key={idx} 
+                            className="stat-card transform-gpu bg-gray-800/80 backdrop-blur-lg rounded-2xl p-6 hover:bg-gray-750/80 transition-all duration-300 border border-gray-700/50"
+                            style={{ transformStyle: 'preserve-3d' }}
+                          >
+                            <div className="text-5xl font-bold text-green-400 mb-4 transform-gpu" style={{ transform: 'translateZ(20px)' }}>{stat.number}</div>
                             <div className="text-xl font-semibold text-white mb-2">{stat.label}</div>
                             <div className="text-gray-400">{stat.desc}</div>
-                          </motion.div>
+                          </div>
                         ))}
                       </div>
                     </div>

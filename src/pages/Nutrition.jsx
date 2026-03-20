@@ -1,10 +1,89 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { gsap } from "gsap";
 import { AuthContext } from "../context/AuthContext";
 import api from "../Utils/axios";
 
 export default function Nutrition() {
   const { user } = useContext(AuthContext);
+  const containerRef = useRef(null);
+  const formRef = useRef(null);
+  const resultsRef = useRef(null);
+  const particlesRef = useRef([]);
+
+  useEffect(() => {
+    // Small delay to ensure DOM is ready
+    const timeoutId = setTimeout(() => {
+      const ctx = gsap.context(() => {
+        // Container entrance animation
+        gsap.fromTo(containerRef.current, 
+          { rotationY: -90, scale: 0.8, opacity: 0 },
+          { rotationY: 0, scale: 1, opacity: 1, duration: 1.5, ease: "back.out(1.7)" }
+        );
+
+        // Form elements stagger animation - use refs instead of class selector
+        const formElements = document.querySelectorAll('.form-element');
+        if (formElements.length > 0) {
+          gsap.fromTo(formElements, 
+            { y: 50, opacity: 0, rotationX: -30 },
+            { 
+              y: 0, 
+              opacity: 1, 
+              rotationX: 0,
+              duration: 0.8, 
+              stagger: 0.1, 
+              delay: 0.5,
+              ease: "power2.out" 
+            }
+          );
+        }
+
+        // Floating particles animation
+        particlesRef.current.forEach((particle, index) => {
+          if (particle) {
+            gsap.to(particle, {
+              y: -20,
+              opacity: 0.8,
+              duration: 2 + index * 0.5,
+              ease: "power1.inOut",
+              yoyo: true,
+              repeat: -1,
+              delay: index * 0.3
+            });
+          }
+        });
+
+        // Background circles continuous rotation
+        gsap.to(".bg-circle-1", {
+          rotation: 360,
+          scale: 1.2,
+          duration: 20,
+          repeat: -1,
+          ease: "none"
+        });
+
+        gsap.to(".bg-circle-2", {
+          rotation: -360,
+          scale: 1.5,
+          duration: 25,
+          repeat: -1,
+          ease: "none"
+        });
+
+        // Results animation when they appear
+        if (resultsRef.current) {
+          gsap.fromTo(resultsRef.current, 
+            { scale: 0, rotationY: 180, opacity: 0 },
+            { scale: 1, rotationY: 0, opacity: 1, duration: 1, ease: "elastic.out(1, 0.5)" }
+          );
+        }
+      }, containerRef);
+
+      return () => ctx.revert();
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, [tdee, macros]); // Re-run when results change
   
   // Animation variants
   const containerVariants = {
@@ -288,20 +367,16 @@ export default function Nutrition() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-green-900 text-gray-100 p-6 flex items-center justify-center">
       <motion.div
+        ref={containerRef}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-900/80 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-green-500/30 max-w-5xl w-full relative overflow-hidden"
+        className="bg-gray-900/80 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-green-500/30 max-w-5xl w-full relative overflow-hidden transform-gpu"
+        style={{ transformStyle: 'preserve-3d' }}
       >
         {/* Background circles */}
-        <motion.div className="absolute -top-20 -left-20 w-40 h-40 bg-green-500 rounded-full mix-blend-soft-light blur-3xl opacity-20"
-          animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-          transition={{ rotate: { duration: 15, repeat: Infinity, ease: "linear" }, scale: { duration: 8, repeat: Infinity, ease: "easeInOut" } }}
-        />
-        <motion.div className="absolute -bottom-20 -right-20 w-60 h-60 bg-teal-500 rounded-full mix-blend-soft-light blur-3xl opacity-15"
-          animate={{ rotate: -360, scale: [1.2, 1, 1.2] }}
-          transition={{ rotate: { duration: 20, repeat: Infinity, ease: "linear" }, scale: { duration: 10, repeat: Infinity, ease: "easeInOut" } }}
-        />
+        <motion.div className="bg-circle-1 absolute -top-20 -left-20 w-40 h-40 bg-green-500 rounded-full mix-blend-soft-light blur-3xl opacity-20 transform-gpu" />
+        <motion.div className="bg-circle-2 absolute -bottom-20 -right-20 w-60 h-60 bg-teal-500 rounded-full mix-blend-soft-light blur-3xl opacity-15 transform-gpu" />
 
         <motion.div variants={containerVariants} initial="hidden" animate="visible" className="relative z-10">
           {/* Error Message */}
@@ -319,16 +394,16 @@ export default function Nutrition() {
             Nutrition Calculator
           </motion.h1>
 
-          <motion.form variants={containerVariants} onSubmit={handleCalculate} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <motion.form ref={formRef} variants={containerVariants} onSubmit={handleCalculate} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {[
               { label: "Age (years)", value: age, setter: setAge, type: "number" },
               { label: "Weight (kg)", value: weight, setter: setWeight, type: "number" },
               { label: "Height (cm)", value: height, setter: setHeight, type: "number" },
             ].map((field, idx) => (
-              <motion.div key={idx} variants={itemVariants}>
+              <motion.div key={idx} variants={itemVariants} className="form-element transform-gpu" style={{ transformStyle: 'preserve-3d' }}>
                 <label className="block mb-2 text-lg font-semibold">{field.label}</label>
                 <input type={field.type} value={field.value} onChange={(e) => field.setter(e.target.value)}
-                  className="w-full p-3 rounded-xl bg-gray-800 text-gray-100 text-lg border border-green-500 focus:border-green-400 focus:outline-none"
+                  className="w-full p-3 rounded-xl bg-gray-800 text-gray-100 text-lg border border-green-500 focus:border-green-400 focus:outline-none transition-all duration-300 hover:border-green-300"
                   required
                 />
               </motion.div>
@@ -340,17 +415,17 @@ export default function Nutrition() {
               { label: "Body Type", value: bodyType, setter: setBodyType, options: ["ectomorph", "mesomorph", "endomorph"], labels: { ectomorph: "Ectomorph", mesomorph: "Mesomorph", endomorph: "Endomorph" } },
               { label: "Goal", value: goal, setter: setGoal, options: ["maintain", "bulk", "cut"], labels: { maintain: "Maintain", bulk: "Bulk", cut: "Cut" } }
             ].map((field, idx) => (
-              <motion.div key={idx} variants={itemVariants}>
+              <motion.div key={idx} variants={itemVariants} className="form-element transform-gpu" style={{ transformStyle: 'preserve-3d' }}>
                 <label className="block mb-2 text-lg font-semibold">{field.label}</label>
                 <select value={field.value} onChange={(e) => field.setter(e.target.value)}
-                  className="w-full p-3 rounded-xl bg-gray-800 text-gray-100 text-lg border border-green-500 focus:border-green-400 focus:outline-none"
+                  className="w-full p-3 rounded-xl bg-gray-800 text-gray-100 text-lg border border-green-500 focus:border-green-400 focus:outline-none transition-all duration-300 hover:border-green-300"
                 >
                   {field.options.map(option => <option key={option} value={option}>{field.labels[option]}</option>)}
                 </select>
               </motion.div>
             ))}
 
-            <motion.div variants={itemVariants} className="md:col-span-2">
+            <motion.div variants={itemVariants} className="md:col-span-2 form-element transform-gpu" style={{ transformStyle: 'preserve-3d' }}>
               <motion.button 
                 type="submit"
                 disabled={loading}
@@ -378,11 +453,13 @@ export default function Nutrition() {
           <AnimatePresence>
             {tdee && macros && (
               <motion.div 
+                ref={resultsRef}
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.5 }}
-                className="mb-8 bg-gray-800/50 p-6 rounded-2xl border border-green-500/30"
+                className="mb-8 bg-gray-800/50 p-6 rounded-2xl border border-green-500/30 transform-gpu"
+                style={{ transformStyle: 'preserve-3d' }}
               >
                 <h3 className="text-3xl font-bold text-green-400 mb-4">Your Results ({goal})</h3>
                 <div className="flex flex-col md:flex-row md:space-x-6 mb-6">
@@ -505,10 +582,11 @@ export default function Nutrition() {
 
         {/* Floating particles */}
         {[1,2,3,4,5,6].map(i => (
-          <motion.div key={i} className="absolute w-2 h-2 bg-green-400 rounded-full"
-            style={{ top: `${10 + i*12}%`, left: `${5 + i*15}%` }}
-            animate={{ y: [0, -15, 0], opacity: [0.3,0.8,0.3] }}
-            transition={{ duration: 3+i, repeat: Infinity, delay: i*0.5 }}
+          <div 
+            key={i} 
+            ref={el => particlesRef.current[i-1] = el}
+            className="absolute w-2 h-2 bg-green-400 rounded-full transform-gpu"
+            style={{ top: `${10 + i*12}%`, left: `${5 + i*15}%`, transformStyle: 'preserve-3d' }}
           />
         ))}
       </motion.div>

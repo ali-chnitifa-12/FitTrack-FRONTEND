@@ -1,7 +1,8 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import api from "../Utils/axios.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { motion, AnimatePresence } from "framer-motion";
+import { gsap } from "gsap";
 import { useNavigate } from "react-router-dom";
 
 // Components
@@ -32,8 +33,21 @@ const itemVariants = {
   }
 };
 
+const dailyChallenges = [
+  "Do 20 push-ups!",
+  "Take a 15-min walk.",
+  "Try a new healthy snack.",
+  "Drink 2L of water today.",
+  "Do a 5-min plank.",
+];
 
-
+const quotes = [
+  "The only bad workout is the one that didn't happen.",
+  "Push yourself, because no one else is going to do it for you.",
+  "Don't limit your challenges, challenge your limits.",
+  "Success starts with self-discipline.",
+  "You don't get the body you want by wishing for it, but by working for it.",
+];
 
 export default function Dashboard() {
   const { user, logout } = useContext(AuthContext);
@@ -44,21 +58,92 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const dailyChallenges = [
-    "Do 20 push-ups!",
-    "Take a 15-min walk.",
-    "Try a new healthy snack.",
-    "Drink 2L of water today.",
-    "Do a 5-min plank.",
-  ];
+  const containerRef = useRef(null);
+  const welcomeRef = useRef(null);
+  const challengeRef = useRef(null);
+  const quoteRef = useRef(null);
+  const particlesRef = useRef([]);
 
-  const quotes = [
-    "The only bad workout is the one that didn't happen.",
-    "Push yourself, because no one else is going to do it for you.",
-    "Don't limit your challenges, challenge your limits.",
-    "Success starts with self-discipline.",
-    "You don't get the body you want by wishing for it, but by working for it.",
-  ];
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!containerRef.current) return;
+
+      const ctx = gsap.context(() => {
+        // Container entrance
+        gsap.fromTo(containerRef.current, 
+          { rotationY: -45, scale: 0.9, opacity: 0 },
+          { rotationY: 0, scale: 1, opacity: 1, duration: 1.2, ease: "back.out(1.7)" }
+        );
+
+        // Welcome and challenge cards
+        const cards = [welcomeRef.current, challengeRef.current].filter(el => el);
+        if (cards.length > 0) {
+          gsap.fromTo(cards, 
+            { y: 50, opacity: 0, rotationX: -20 },
+            { 
+              y: 0, 
+              opacity: 1, 
+              rotationX: 0,
+              duration: 0.8, 
+              stagger: 0.2, 
+              delay: 0.5,
+              ease: "power2.out" 
+            }
+          );
+        }
+
+        // Quote animation
+        if (quoteRef.current) {
+          gsap.fromTo(quoteRef.current, 
+            { scale: 0.8, opacity: 0, rotationY: 45 },
+            { scale: 1, opacity: 1, rotationY: 0, duration: 1, delay: 1, ease: "elastic.out(1, 0.5)" }
+          );
+        }
+
+        // Floating particles
+        particlesRef.current.forEach((particle, index) => {
+          if (particle) {
+            gsap.to(particle, {
+              y: -25,
+              opacity: 0.9,
+              duration: 3 + index * 0.5,
+              ease: "power1.inOut",
+              yoyo: true,
+              repeat: -1,
+              delay: index * 0.3
+            });
+          }
+        });
+
+        // Background continuous animations
+        const bg1Elements = gsap.utils.toArray(".dashboard-bg-1");
+        if (bg1Elements.length > 0) {
+          gsap.to(bg1Elements, {
+            rotation: 360,
+            scale: 1.3,
+            duration: 18,
+            repeat: -1,
+            ease: "none"
+          });
+        }
+
+        const bg2Elements = gsap.utils.toArray(".dashboard-bg-2");
+        if (bg2Elements.length > 0) {
+          gsap.to(bg2Elements, {
+            rotation: -360,
+            scale: 1.4,
+            duration: 22,
+            repeat: -1,
+            ease: "none"
+          });
+        }
+      }, containerRef);
+
+      return () => ctx.revert();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const [challenge, setChallenge] = useState(dailyChallenges[0]);
   const [quote, setQuote] = useState(quotes[0]);
@@ -180,35 +265,16 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-green-900 p-6 flex items-center justify-center">
       <motion.div
+        ref={containerRef}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-900/80 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-green-500/20 max-w-6xl w-full relative overflow-hidden"
+        className="bg-gray-900/80 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-green-500/20 max-w-6xl w-full relative overflow-hidden transform-gpu"
+        style={{ transformStyle: 'preserve-3d' }}
       >
         {/* Animated background elements */}
-        <motion.div
-          className="absolute -top-20 -left-20 w-40 h-40 bg-green-500 rounded-full mix-blend-soft-light filter blur-xl opacity-20"
-          animate={{
-            rotate: 360,
-            scale: [1, 1.2, 1]
-          }}
-          transition={{
-            rotate: { duration: 15, repeat: Infinity, ease: "linear" },
-            scale: { duration: 8, repeat: Infinity, ease: "easeInOut" }
-          }}
-        />
-        
-        <motion.div
-          className="absolute -bottom-20 -right-20 w-60 h-60 bg-teal-500 rounded-full mix-blend-soft-light filter blur-xl opacity-15"
-          animate={{
-            rotate: -360,
-            scale: [1.2, 1, 1.2]
-          }}
-          transition={{
-            rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-            scale: { duration: 10, repeat: Infinity, ease: "easeInOut" }
-          }}
-        />
+        <div className="dashboard-bg-1 absolute -top-20 -left-20 w-40 h-40 bg-green-500 rounded-full mix-blend-soft-light filter blur-xl opacity-20 transform-gpu" />
+        <div className="dashboard-bg-2 absolute -bottom-20 -right-20 w-60 h-60 bg-teal-500 rounded-full mix-blend-soft-light filter blur-xl opacity-15 transform-gpu" />
 
         <motion.div
           variants={containerVariants}
@@ -257,8 +323,10 @@ export default function Dashboard() {
           {/* Welcome & Daily Challenge */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <motion.div
+              ref={welcomeRef}
               variants={itemVariants}
-              className="bg-gray-800/50 p-6 rounded-2xl shadow-lg border border-green-500/20 relative overflow-hidden"
+              className="bg-gray-800/50 p-6 rounded-2xl shadow-lg border border-green-500/20 relative overflow-hidden transform-gpu"
+              style={{ transformStyle: 'preserve-3d' }}
             >
               <h2 className="text-2xl font-bold text-green-400 mb-3">Welcome</h2>
               <p className="text-gray-300 text-lg leading-relaxed">
@@ -280,8 +348,10 @@ export default function Dashboard() {
             </motion.div>
 
             <motion.div
+              ref={challengeRef}
               variants={itemVariants}
-              className="bg-gray-800/50 p-6 rounded-2xl shadow-lg border border-green-500/30 relative overflow-hidden"
+              className="bg-gray-800/50 p-6 rounded-2xl shadow-lg border border-green-500/30 relative overflow-hidden transform-gpu"
+              style={{ transformStyle: 'preserve-3d' }}
             >
               <h2 className="text-2xl font-bold text-green-400 mb-3">Daily Challenge</h2>
               <p className="text-gray-300 text-lg mb-4">{challenge}</p>
@@ -329,8 +399,10 @@ export default function Dashboard() {
 
           {/* Motivational Quote */}
           <motion.div
+            ref={quoteRef}
             variants={itemVariants}
-            className="bg-gray-800/50 p-6 rounded-2xl shadow-lg border border-green-500/30 text-center relative overflow-hidden"
+            className="bg-gray-800/50 p-6 rounded-2xl shadow-lg border border-green-500/30 text-center relative overflow-hidden transform-gpu"
+            style={{ transformStyle: 'preserve-3d' }}
           >
             <h2 className="text-2xl font-bold text-green-400 mb-3">Daily Motivation</h2>
             <motion.blockquote 
@@ -357,21 +429,14 @@ export default function Dashboard() {
 
         {/* Floating particles */}
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <motion.div
+          <div
             key={i}
-            className="absolute w-2 h-2 bg-green-400 rounded-full"
+            ref={el => particlesRef.current[i-1] = el}
+            className="absolute w-2 h-2 bg-green-400 rounded-full transform-gpu"
             style={{
               top: `${10 + i * 12}%`,
               left: `${5 + i * 15}%`,
-            }}
-            animate={{
-              y: [0, -15, 0],
-              opacity: [0.3, 0.8, 0.3],
-            }}
-            transition={{
-              duration: 3 + i,
-              repeat: Infinity,
-              delay: i * 0.5,
+              transformStyle: 'preserve-3d'
             }}
           />
         ))}
