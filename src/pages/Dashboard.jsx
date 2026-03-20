@@ -90,6 +90,24 @@ export default function Dashboard() {
               ease: "power2.out" 
             }
           );
+
+          // Crazy rotating 3D loop for cards
+          gsap.to(cards, {
+            rotationY: 360,
+            transformPerspective: 1000,
+            transformOrigin: "50% 50%",
+            duration: 14,
+            repeat: -1,
+            ease: "linear"
+          });
+          gsap.to(cards, {
+            rotationX: 10,
+            yoyo: true,
+            repeat: -1,
+            duration: 6,
+            ease: "sine.inOut",
+            stagger: 0.2
+          });
         }
 
         // Quote animation

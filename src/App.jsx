@@ -188,6 +188,32 @@ export default function App() {
           ease: "sine.inOut"
         });
       }
+
+      // Crazy 3D hero wobble timeline
+      const heroChaos = gsap.timeline({ repeat: -1, yoyo: true, defaults: { duration: 1.8, ease: "sine.inOut" } });
+      if (titleRef.current) {
+        heroChaos.to(titleRef.current, { rotationY: 18, rotationX: -8, x: 12, y: -7, scale: 1.05 });
+      }
+      if (subtitleRef.current) {
+        heroChaos.to(subtitleRef.current, { rotationY: -8, rotationX: 7, x: -6, y: 5, scale: 1.02 }, "<");
+      }
+      if (buttonRef.current) {
+        heroChaos.to(buttonRef.current, { rotationY: 12, rotationX: 6, x: 5, scale: 1.03 }, "<");
+      }
+
+      // Float the colored ring in 3D space as well
+      const ringRefs = gsap.utils.toArray(".hero-ring");
+      if (ringRefs.length > 0) {
+        gsap.to(ringRefs, {
+          rotationY: 360,
+          rotationX: 45,
+          x: 20,
+          y: -20,
+          duration: 24,
+          repeat: -1,
+          ease: "power1.inOut"
+        });
+      }
     });
 
     return () => ctx.revert();
@@ -421,6 +447,7 @@ export default function App() {
                     {/* Animated Background */}
                     <div ref={bg1Ref} className="absolute top-20 left-20 w-72 h-72 bg-green-500 rounded-full mix-blend-soft-light filter blur-xl opacity-20 transform-gpu" style={{ transformStyle: 'preserve-3d' }} />
                     <div ref={bg2Ref} className="absolute bottom-20 right-20 w-96 h-96 bg-teal-500 rounded-full mix-blend-soft-light filter blur-xl opacity-15 transform-gpu" style={{ transformStyle: 'preserve-3d' }} />
+                    <div className="hero-ring absolute inset-1/3 w-80 h-80 border-2 border-purple-400/40 rounded-full opacity-30 mix-blend-screen transform-gpu" style={{ transformStyle: 'preserve-3d', boxShadow: '0 0 50px rgba(142, 94, 255, 0.4)' }} />
                     
                     {/* Additional 3D elements */}
                     <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-purple-500 rounded-full mix-blend-soft-light filter blur-lg opacity-10 animate-bounce" />
