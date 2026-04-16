@@ -365,19 +365,14 @@ export default function Nutrition() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-green-900 text-gray-100 p-6 flex items-center justify-center">
+    <div className="w-full flex-1 flex items-center justify-center p-6 text-gray-100">
       <motion.div
         ref={containerRef}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-900/80 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-green-500/30 max-w-5xl w-full relative overflow-hidden transform-gpu"
-        style={{ transformStyle: 'preserve-3d' }}
+        className="bg-gray-900/80 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-green-500/30 max-w-5xl w-full relative overflow-hidden"
       >
-        {/* Background circles */}
-        <motion.div className="bg-circle-1 absolute -top-20 -left-20 w-40 h-40 bg-green-500 rounded-full mix-blend-soft-light blur-3xl opacity-20 transform-gpu" />
-        <motion.div className="bg-circle-2 absolute -bottom-20 -right-20 w-60 h-60 bg-teal-500 rounded-full mix-blend-soft-light blur-3xl opacity-15 transform-gpu" />
-
         <motion.div variants={containerVariants} initial="hidden" animate="visible" className="relative z-10">
           {/* Error Message */}
           {error && (

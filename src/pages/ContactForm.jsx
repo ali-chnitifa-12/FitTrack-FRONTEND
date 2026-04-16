@@ -100,7 +100,7 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-green-900 text-gray-200 flex items-center justify-center p-6">
+    <div className="w-full flex-1 flex items-center justify-center p-6 mt-12 mb-12 text-gray-200">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}

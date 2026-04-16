@@ -273,7 +273,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-green-900 flex items-center justify-center">
+      <div className="w-full flex-1 flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -293,20 +293,14 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#02040c] via-[#081526] to-[#0d2e5c] p-6 flex items-center justify-center text-white">
+    <div className="w-full flex-1 relative p-6 flex items-center justify-center text-white">
       <motion.div
         ref={containerRef}
         initial={{ opacity: 0, scale: 0.92, rotationY: 8 }}
         animate={{ opacity: 1, scale: 1, rotationY: 0 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
-        className="bg-[#02112d]/90 backdrop-blur-xl p-8 rounded-3xl shadow-[0_0_60px_rgba(8,229,255,0.35)] border border-cyan-400/30 max-w-6xl w-full relative overflow-hidden transform-gpu"
-        style={{ transformStyle: 'preserve-3d' }}
+        className="bg-gray-900 p-8 rounded-3xl shadow-xl max-w-6xl w-full relative overflow-hidden"
       >
-        {/* Animated background elements */}
-        <div className="dashboard-bg-1 absolute -top-20 -left-20 w-40 h-40 bg-green-500 rounded-full mix-blend-soft-light filter blur-xl opacity-20 transform-gpu" />
-        <div className="dashboard-bg-2 absolute -bottom-20 -right-20 w-60 h-60 bg-teal-500 rounded-full mix-blend-soft-light filter blur-xl opacity-15 transform-gpu" />
-        <div className="dashboard-neon-ring absolute inset-0 m-auto w-96 h-96 border-2 border-cyan-400 rounded-full opacity-20 mix-blend-screen pointer-events-none" style={{ boxShadow: '0 0 40px rgba(0,255,229,0.45)', transformStyle: 'preserve-3d' }} />
-
         <motion.div
           variants={containerVariants}
           initial="hidden"
