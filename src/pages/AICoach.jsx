@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Bot, User, Sparkles, Trash2, RefreshCcw, ChevronDown } from "lucide-react";
+import { Send, Bot, User, Sparkles, Trash2, RefreshCcw, ChevronDown, Zap } from "lucide-react";
 import { AuthContext } from "../context/AuthContext.jsx";
 import api from "../Utils/axios.jsx";
 
@@ -18,15 +18,16 @@ const suggestions = [
 function TypingIndicator() {
   return (
     <div className="flex items-end gap-3">
-      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-green-500/20">
-        <Bot size={16} className="text-black" />
+      <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))" }}>
+        <Bot size={16} className="text-white" />
       </div>
-      <div className="bg-gray-800/80 border border-gray-700/50 rounded-2xl rounded-bl-sm px-4 py-3">
+      <div className="rounded-2xl rounded-bl-sm px-4 py-3" style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}>
         <div className="flex gap-1.5 items-center">
           {[0, 1, 2].map((i) => (
             <motion.div
               key={i}
-              className="w-2 h-2 bg-green-400 rounded-full"
+              className="w-2 h-2 rounded-full"
+              style={{ background: "var(--accent-primary)" }}
               animate={{ y: [0, -6, 0] }}
               transition={{ duration: 0.7, repeat: Infinity, delay: i * 0.15 }}
             />
@@ -50,26 +51,19 @@ function MessageBubble({ msg }) {
     >
       {/* Avatar */}
       <div
-        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ${
-          isAI
-            ? "bg-gradient-to-br from-green-500 to-teal-500 shadow-green-500/20"
-            : "bg-gradient-to-br from-blue-500 to-purple-600 shadow-blue-500/20"
-        }`}
+        className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+        style={{ background: isAI ? "linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))" : "linear-gradient(135deg, #6366f1, #a855f7)" }}
       >
-        {isAI ? (
-          <Bot size={16} className="text-black" />
-        ) : (
-          <User size={16} className="text-white" />
-        )}
+        {isAI ? <Bot size={16} className="text-white" /> : <User size={16} className="text-white" />}
       </div>
 
       {/* Bubble */}
       <div
-        className={`max-w-[78%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
-          isAI
-            ? "bg-gray-800/80 border border-gray-700/50 text-gray-100 rounded-bl-sm"
-            : "bg-gradient-to-br from-green-500/90 to-teal-500/80 text-black font-medium rounded-br-sm"
-        }`}
+        className="max-w-[78%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap"
+        style={isAI
+          ? { background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", borderRadius: "1rem 1rem 1rem 0.25rem" }
+          : { background: "linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))", color: "#fff", fontWeight: 600, borderRadius: "1rem 1rem 0.25rem 1rem" }
+        }
       >
         {msg.content}
         <span className="block text-[10px] mt-1.5 opacity-50">
@@ -175,7 +169,7 @@ export default function AICoach() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#020810] via-[#081526] to-[#0a1f0f] flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: "var(--bg-base)" }}>
       {/* Header */}
       <div className="pt-8 pb-4 px-6 max-w-4xl mx-auto w-full">
         <motion.div
