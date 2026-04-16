@@ -120,9 +120,9 @@ export default function ProgressForm({ addEntry }) {
       {/* Energy Selector */}
       <div>
         <label className="text-xs mb-2 flex items-center gap-1 font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-          <Zap size={12} className="text-yellow-400" /> Energy Level
+          <Zap size={12} style={{ color: "var(--accent-primary)" }} /> Energy Level
         </label>
-        <div className="flex gap-2 items-end">
+        <div className="flex gap-2 items-end h-20">
           {energyOptions.map((e) => (
             <motion.button
               key={e.value}
@@ -130,18 +130,18 @@ export default function ProgressForm({ addEntry }) {
               onClick={() => setEnergy(e.value)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.9 }}
-              className="flex-1 flex flex-col items-center gap-1"
+              className="flex-1 flex flex-col justify-end items-center gap-1 h-full"
             >
               <div
                 className="w-full rounded-t-sm transition-all duration-200"
                 style={{
                   background: e.color,
-                  height: `${e.value * 8 + 8}px`,
+                  height: `${e.value * 12 + 10}px`, /* Increased height */
                   opacity: energy === e.value ? 1 : 0.3,
-                  boxShadow: energy === e.value ? `0 0 10px ${e.color}40` : "none"
+                  boxShadow: energy === e.value ? `0 0 10px ${e.color}` : "none"
                 }}
               />
-              <span className="text-xs" style={{ color: energy === e.value ? "var(--text-primary)" : "var(--text-muted)" }}>{e.label}</span>
+              <span className="text-[10px] leading-tight text-center font-semibold uppercase tracking-wider" style={{ color: energy === e.value ? "var(--text-primary)" : "var(--text-muted)" }}>{e.label}</span>
             </motion.button>
           ))}
         </div>
