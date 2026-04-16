@@ -283,6 +283,8 @@ export default function AICoach() {
               className="flex gap-3 items-end"
             >
               <textarea
+                id="chat-input"
+                name="chat-input"
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -293,6 +295,7 @@ export default function AICoach() {
                   }
                 }}
                 placeholder="Ask your AI coach anything... (Enter to send)"
+                aria-label="Chat Message"
                 rows={1}
                 className="flex-1 bg-gray-800/80 border border-gray-700 focus:border-green-500/60 focus:outline-none focus:ring-1 focus:ring-green-500/30 text-gray-100 placeholder-gray-500 rounded-xl px-4 py-3 text-sm resize-none transition-all duration-200"
                 style={{ maxHeight: "120px", overflowY: "auto" }}

@@ -38,8 +38,13 @@ export function AuthProvider({ children }) {
     setUser(userData);
     // Store user info and token separately
     localStorage.setItem("user", JSON.stringify({
+      id: userData.id,
       name: userData.name,
-      email: userData.email
+      email: userData.email,
+      isAdmin: userData.isAdmin,
+      trialEndsAt: userData.trialEndsAt,
+      isSubscribed: userData.isSubscribed,
+      subscriptionExpiresAt: userData.subscriptionExpiresAt
     }));
     localStorage.setItem("token", userData.token);
   };

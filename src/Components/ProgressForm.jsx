@@ -85,8 +85,10 @@ export default function ProgressForm({ addEntry }) {
       {/* Core Fields */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="text-xs text-gray-400 mb-1 block">Calories Consumed</label>
+          <label htmlFor="caloriesIn" className="text-xs text-gray-400 mb-1 block">Calories Consumed</label>
           <input
+            id="caloriesIn"
+            name="caloriesIn"
             type="number"
             placeholder="e.g. 2200"
             value={caloriesIn}
@@ -96,8 +98,10 @@ export default function ProgressForm({ addEntry }) {
           />
         </div>
         <div>
-          <label className="text-xs text-gray-400 mb-1 block">Calories Burned</label>
+          <label htmlFor="caloriesOut" className="text-xs text-gray-400 mb-1 block">Calories Burned</label>
           <input
+            id="caloriesOut"
+            name="caloriesOut"
             type="number"
             placeholder="e.g. 400"
             value={caloriesOut}
@@ -107,8 +111,10 @@ export default function ProgressForm({ addEntry }) {
           />
         </div>
         <div>
-          <label className="text-xs text-gray-400 mb-1 block">Current Weight (kg)</label>
+          <label htmlFor="weight" className="text-xs text-gray-400 mb-1 block">Current Weight (kg)</label>
           <input
+            id="weight"
+            name="weight"
             type="number"
             step="0.1"
             placeholder="e.g. 82.5"
@@ -119,8 +125,10 @@ export default function ProgressForm({ addEntry }) {
           />
         </div>
         <div>
-          <label className="text-xs text-gray-400 mb-1 block">Target Weight (kg)</label>
+          <label htmlFor="targetWeight" className="text-xs text-gray-400 mb-1 block">Target Weight (kg)</label>
           <input
+            id="targetWeight"
+            name="targetWeight"
             type="number"
             step="0.1"
             placeholder="e.g. 75.0"
@@ -226,8 +234,10 @@ export default function ProgressForm({ addEntry }) {
           >
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="text-xs text-gray-400 mb-1 block">Waist (cm)</label>
+                <label htmlFor="waist" className="text-xs text-gray-400 mb-1 block">Waist (cm)</label>
                 <input
+                  id="waist"
+                  name="waist"
                   type="number"
                   placeholder="e.g. 82"
                   value={waist}
@@ -236,8 +246,10 @@ export default function ProgressForm({ addEntry }) {
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-400 mb-1 block">Chest (cm)</label>
+                <label htmlFor="chest" className="text-xs text-gray-400 mb-1 block">Chest (cm)</label>
                 <input
+                  id="chest"
+                  name="chest"
                   type="number"
                   placeholder="e.g. 96"
                   value={chest}
@@ -246,8 +258,10 @@ export default function ProgressForm({ addEntry }) {
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-400 mb-1 block">Arms (cm)</label>
+                <label htmlFor="arms" className="text-xs text-gray-400 mb-1 block">Arms (cm)</label>
                 <input
+                  id="arms"
+                  name="arms"
                   type="number"
                   placeholder="e.g. 35"
                   value={arms}
@@ -257,8 +271,10 @@ export default function ProgressForm({ addEntry }) {
               </div>
             </div>
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Notes</label>
+              <label htmlFor="notes" className="text-xs text-gray-400 mb-1 block">Notes</label>
               <textarea
+                id="notes"
+                name="notes"
                 placeholder="How did you feel? Any notes for today..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}

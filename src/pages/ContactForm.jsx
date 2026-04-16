@@ -218,9 +218,11 @@ export default function ContactForm() {
               >
                 <motion.div variants={itemVariants}>
                   <input
+                    id="name"
                     type="text"
                     name="name"
                     placeholder="Your Name"
+                    aria-label="Your Name"
                     value={formData.name}
                     onChange={handleChange}
                     className="w-full p-4 rounded-xl bg-gray-800/50 border border-gray-700 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all duration-300"
@@ -230,9 +232,11 @@ export default function ContactForm() {
 
                 <motion.div variants={itemVariants}>
                   <input
+                    id="email"
                     type="email"
                     name="email"
                     placeholder="Your Email"
+                    aria-label="Your Email Address"
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full p-4 rounded-xl bg-gray-800/50 border border-gray-700 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all duration-300"
@@ -242,8 +246,10 @@ export default function ContactForm() {
 
                 <motion.div variants={itemVariants}>
                   <textarea
+                    id="message"
                     name="message"
                     placeholder="Your Message..."
+                    aria-label="Your Message"
                     value={formData.message}
                     onChange={handleChange}
                     rows="5"

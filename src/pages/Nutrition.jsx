@@ -397,13 +397,19 @@ export default function Nutrition() {
 
           <motion.form ref={formRef} variants={containerVariants} onSubmit={handleCalculate} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {[
-              { label: "Age (years)", value: age, setter: setAge, type: "number" },
-              { label: "Weight (kg)", value: weight, setter: setWeight, type: "number" },
-              { label: "Height (cm)", value: height, setter: setHeight, type: "number" },
+              { id: "age", name: "age", label: "Age (years)", value: age, setter: setAge, type: "number" },
+              { id: "weight", name: "weight", label: "Weight (kg)", value: weight, setter: setWeight, type: "number" },
+              { id: "height", name: "height", label: "Height (cm)", value: height, setter: setHeight, type: "number" },
             ].map((field, idx) => (
               <motion.div key={idx} variants={itemVariants} className="form-element transform-gpu" style={{ transformStyle: 'preserve-3d' }}>
-                <label className="block mb-2 text-lg font-semibold">{field.label}</label>
-                <input type={field.type} value={field.value} onChange={(e) => field.setter(e.target.value)}
+                <label htmlFor={field.id} className="block mb-2 text-lg font-semibold">{field.label}</label>
+                <input 
+                  id={field.id}
+                  name={field.name}
+                  type={field.type} 
+                  value={field.value} 
+                  onChange={(e) => field.setter(e.target.value)}
+                  aria-label={field.label}
                   className="w-full p-3 rounded-xl bg-gray-800 text-gray-100 text-lg border border-green-500 focus:border-green-400 focus:outline-none transition-all duration-300 hover:border-green-300"
                   required
                 />
@@ -411,14 +417,19 @@ export default function Nutrition() {
             ))}
 
             {[
-              { label: "Gender", value: gender, setter: setGender, options: ["male", "female"], labels: { male: "Male", female: "Female" } },
-              { label: "Activity Level", value: activity, setter: setActivity, options: ["1.2", "1.375", "1.55", "1.725", "1.9"], labels: { "1.2": "Sedentary", "1.375": "Lightly Active", "1.55": "Moderate", "1.725": "Very Active", "1.9": "Extra Active" } },
-              { label: "Body Type", value: bodyType, setter: setBodyType, options: ["ectomorph", "mesomorph", "endomorph"], labels: { ectomorph: "Ectomorph", mesomorph: "Mesomorph", endomorph: "Endomorph" } },
-              { label: "Goal", value: goal, setter: setGoal, options: ["maintain", "bulk", "cut"], labels: { maintain: "Maintain", bulk: "Bulk", cut: "Cut" } }
+              { id: "gender", name: "gender", label: "Gender", value: gender, setter: setGender, options: ["male", "female"], labels: { male: "Male", female: "Female" } },
+              { id: "activity", name: "activity", label: "Activity Level", value: activity, setter: setActivity, options: ["1.2", "1.375", "1.55", "1.725", "1.9"], labels: { "1.2": "Sedentary", "1.375": "Lightly Active", "1.55": "Moderate", "1.725": "Very Active", "1.9": "Extra Active" } },
+              { id: "bodyType", name: "bodyType", label: "Body Type", value: bodyType, setter: setBodyType, options: ["ectomorph", "mesomorph", "endomorph"], labels: { ectomorph: "Ectomorph", mesomorph: "Mesomorph", endomorph: "Endomorph" } },
+              { id: "goal", name: "goal", label: "Goal", value: goal, setter: setGoal, options: ["maintain", "bulk", "cut"], labels: { maintain: "Maintain", bulk: "Bulk", cut: "Cut" } }
             ].map((field, idx) => (
               <motion.div key={idx} variants={itemVariants} className="form-element transform-gpu" style={{ transformStyle: 'preserve-3d' }}>
-                <label className="block mb-2 text-lg font-semibold">{field.label}</label>
-                <select value={field.value} onChange={(e) => field.setter(e.target.value)}
+                <label htmlFor={field.id} className="block mb-2 text-lg font-semibold">{field.label}</label>
+                <select 
+                  id={field.id}
+                  name={field.name}
+                  value={field.value} 
+                  onChange={(e) => field.setter(e.target.value)}
+                  aria-label={field.label}
                   className="w-full p-3 rounded-xl bg-gray-800 text-gray-100 text-lg border border-green-500 focus:border-green-400 focus:outline-none transition-all duration-300 hover:border-green-300"
                 >
                   {field.options.map(option => <option key={option} value={option}>{field.labels[option]}</option>)}

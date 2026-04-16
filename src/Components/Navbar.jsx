@@ -156,6 +156,25 @@ export default function Navbar() {
               </Link>
             </motion.div>
           )}
+
+          {user && !user.isAdmin && (
+            <div className="flex flex-col items-end ml-4 border-l border-gray-800 pl-4">
+              {user.isSubscribed ? (
+                <span className="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full border border-green-500/30 uppercase font-bold tracking-tighter">
+                  Premium
+                </span>
+              ) : (
+                <>
+                  <span className="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">
+                    Trial Mode
+                  </span>
+                  <span className="text-xs text-green-400 font-mono">
+                    {Math.max(0, Math.ceil((new Date(user.trialEndsAt) - new Date()) / (1000 * 60 * 60 * 24)))} days left
+                  </span>
+                </>
+              )}
+            </div>
+          )}
         </motion.div>
 
         {/* Mobile Menu Button */}

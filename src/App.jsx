@@ -12,6 +12,7 @@ import About from "./pages/About.jsx";
 import ContactForm from "./pages/ContactForm.jsx";
 import AICoach from "./pages/AICoach.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
+import Subscription from "./pages/Subscription.jsx";
 import { AuthContext } from "./context/AuthContext.jsx";
 
 // ---------- Animation Variants ----------
@@ -63,6 +64,19 @@ function ProtectedRoute({ children }) {
   
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Admin bypass
+  if (user.isAdmin) return children;
+
+  const isTrialActive = user.trialEndsAt && new Date(user.trialEndsAt) > new Date();
+  const isSubscribed = user.isSubscribed === true || (user.subscriptionExpiresAt && new Date(user.subscriptionExpiresAt) > new Date());
+
+  // If trial expired AND not subscribed, force to subscription page
+  // BUT allow access to the subscription page itself!
+  const useLocationResult = useLocation();
+  if (!isTrialActive && !isSubscribed && useLocationResult.pathname !== "/subscription") {
+    return <Navigate to="/subscription" replace />;
   }
   
   return children;
@@ -360,6 +374,7 @@ export default function App() {
           <Route path="/contact" element={<ProtectedRoute><ContactForm /></ProtectedRoute>} />
           <Route path="/coach" element={<ProtectedRoute><AICoach /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/subscription" element={<ProtectedRoute><Subscription /></ProtectedRoute>} />
 
           {/* Catch-all redirect */}
           <Route path="*" element={<Navigate to="/" replace />} />

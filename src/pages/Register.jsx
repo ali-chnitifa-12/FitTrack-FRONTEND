@@ -20,7 +20,7 @@ export default function Register() {
       const { data } = await api.post("/auth/register", { name, email, password });
 
       // Save user in context and localStorage
-      login({ name: data.user.name, email: data.user.email, token: data.token });
+      login({ ...data.user, token: data.token });
       localStorage.setItem("token", data.token);
 
       navigate("/dashboard");
@@ -42,27 +42,39 @@ export default function Register() {
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
         <input
+          id="name"
+          name="name"
           type="text"
           placeholder="Full Name"
+          aria-label="Full Name"
           className="w-full p-3 mb-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          required
         />
 
         <input
+          id="email"
+          name="email"
           type="email"
           placeholder="Email"
+          aria-label="Email Address"
           className="w-full p-3 mb-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
         <input
+          id="password"
+          name="password"
           type="password"
           placeholder="Password"
+          aria-label="Password"
           className="w-full p-3 mb-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
 
         <button

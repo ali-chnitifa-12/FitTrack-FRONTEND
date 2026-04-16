@@ -76,7 +76,7 @@ export default function Login() {
       const { data } = await api.post("/auth/login", { email, password });
 
       // Save user in context and localStorage
-      login({ name: data.user.name, email: data.user.email, token: data.token });
+      login({ ...data.user, token: data.token });
       localStorage.setItem("token", data.token);
 
       navigate("/dashboard");
@@ -105,23 +105,31 @@ export default function Login() {
 
         <div className="space-y-4">
           <input
+            id="email"
+            name="email"
             ref={el => inputsRef.current[0] = el}
             type="email"
             placeholder="Email"
+            aria-label="Email Address"
             className="w-full p-3 rounded-lg bg-gray-800/80 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300 hover:bg-gray-800 border border-gray-600/50 transform-gpu"
             style={{ transformStyle: 'preserve-3d' }}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
 
           <input
+            id="password"
+            name="password"
             ref={el => inputsRef.current[1] = el}
             type="password"
             placeholder="Password"
+            aria-label="Password"
             className="w-full p-3 rounded-lg bg-gray-800/80 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300 hover:bg-gray-800 border border-gray-600/50 transform-gpu"
             style={{ transformStyle: 'preserve-3d' }}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
 

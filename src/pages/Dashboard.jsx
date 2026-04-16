@@ -3,7 +3,7 @@ import api from "../Utils/axios.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 // Components
 import ProgressForm from "../Components/ProgressForm.jsx";
@@ -57,6 +57,8 @@ export default function Dashboard() {
   const [estimatedTime, setEstimatedTime] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchParams] = useSearchParams();
+  const paymentSuccess = searchParams.get("payment_success") === "true";
 
   const containerRef = useRef(null);
   const welcomeRef = useRef(null);

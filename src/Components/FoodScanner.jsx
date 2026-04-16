@@ -155,6 +155,8 @@ export default function FoodScanner({ onAnalyzed }) {
               )}
 
               <input 
+                id="food-photo-upload"
+                name="food-photo-upload"
                 type="file" 
                 ref={fileInputRef} 
                 accept="image/*" 
