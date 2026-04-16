@@ -109,7 +109,8 @@ export default function Navbar() {
             { to: "/nutrition", label: "Nutrition" },
             { to: "/coach", label: "AI Coach", isAI: true },
             { to: "/about", label: "About" },
-            { to: "/contact", label: "Contact" }
+            { to: "/contact", label: "Contact" },
+            ...(user && user.isAdmin ? [{ to: "/admin", label: "Admin Panel" }] : [])
           ].map((item, index) => (
             <Link 
               key={item.to}
@@ -195,7 +196,8 @@ export default function Navbar() {
               { to: "/nutrition", label: "Nutrition" },
               { to: "/coach", label: "AI Coach", isAI: true },
               { to: "/about", label: "About" },
-              { to: "/contact", label: "Contact" }
+              { to: "/contact", label: "Contact" },
+              ...(user && user.isAdmin ? [{ to: "/admin", label: "Admin Panel" }] : [])
             ].map((item) => (
               <motion.div
                 key={item.to}
