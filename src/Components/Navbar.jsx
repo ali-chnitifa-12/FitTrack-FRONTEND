@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../context/AuthContext.jsx";
-import { Menu, X } from "lucide-react"; 
+import { Menu, X, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 
@@ -107,6 +107,7 @@ export default function Navbar() {
             { to: "/dashboard", label: "Dashboard" },
             { to: "/workouts", label: "Workouts" },
             { to: "/nutrition", label: "Nutrition" },
+            { to: "/coach", label: "AI Coach", isAI: true },
             { to: "/about", label: "About" },
             { to: "/contact", label: "Contact" }
           ].map((item, index) => (
@@ -114,9 +115,14 @@ export default function Navbar() {
               key={item.to}
               ref={el => menuItemsRef.current[index] = el}
               to={item.to} 
-              className="text-lg text-gray-300 hover:text-green-400 transition-all duration-300 relative group transform-gpu"
+              className={`text-lg transition-all duration-300 relative group transform-gpu flex items-center gap-1.5 ${
+                item.isAI
+                  ? "text-green-400 font-semibold hover:text-green-300"
+                  : "text-gray-300 hover:text-green-400"
+              }`}
               style={{ transformStyle: 'preserve-3d' }}
             >
+              {item.isAI && <Sparkles size={15} className="text-green-400" />}
               {item.label}
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-green-400 to-teal-400 group-hover:w-full transition-all duration-300"></span>
             </Link>
@@ -187,6 +193,7 @@ export default function Navbar() {
               { to: "/dashboard", label: "Dashboard" },
               { to: "/workouts", label: "Workouts" },
               { to: "/nutrition", label: "Nutrition" },
+              { to: "/coach", label: "AI Coach", isAI: true },
               { to: "/about", label: "About" },
               { to: "/contact", label: "Contact" }
             ].map((item) => (
@@ -199,9 +206,12 @@ export default function Navbar() {
               >
                 <Link
                   to={item.to}
-                  className="block text-lg text-gray-300 hover:text-green-400 transition-colors py-2 border-b border-gray-700/30 last:border-b-0"
+                  className={`flex items-center gap-2 text-lg transition-colors py-2 border-b border-gray-700/30 last:border-b-0 ${
+                    item.isAI ? "text-green-400 font-semibold" : "text-gray-300 hover:text-green-400"
+                  }`}
                   onClick={() => setIsOpen(false)}
                 >
+                  {item.isAI && <Sparkles size={15} />}
                   {item.label}
                 </Link>
               </motion.div>

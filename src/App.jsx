@@ -12,6 +12,7 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import About from "./pages/About.jsx";
 import ContactForm from "./pages/ContactForm.jsx";
+import AICoach from "./pages/AICoach.jsx";
 import { AuthContext } from "./context/AuthContext.jsx";
 
 // Register GSAP plugins
@@ -562,6 +563,7 @@ export default function App() {
           <Route path="/nutrition" element={<ProtectedRoute><Nutrition /></ProtectedRoute>} />
           <Route path="/about" element={<ProtectedRoute><About /></ProtectedRoute>} />
           <Route path="/contact" element={<ProtectedRoute><ContactForm /></ProtectedRoute>} />
+          <Route path="/coach" element={<ProtectedRoute><AICoach /></ProtectedRoute>} />
 
           {/* Catch-all redirect */}
           <Route path="*" element={<Navigate to="/" replace />} />
