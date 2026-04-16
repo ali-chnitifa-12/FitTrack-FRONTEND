@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { AuthContext } from "../context/AuthContext";
 import api from "../Utils/axios";
+import FoodScanner from "../Components/FoodScanner";
 
 export default function Nutrition() {
   const { user } = useContext(AuthContext);
@@ -385,9 +386,14 @@ export default function Nutrition() {
             </motion.div>
           )}
 
-          <motion.h1 variants={itemVariants} className="text-4xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400">
+          <motion.h1 variants={itemVariants} className="text-4xl font-bold mb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400">
             Nutrition Calculator
           </motion.h1>
+
+          <motion.div variants={itemVariants} className="flex flex-col items-center justify-center mb-10 pb-6 border-b border-gray-800">
+            <p className="text-gray-400 mb-4 text-center">Want to know the macros of your meal instantly?</p>
+            <FoodScanner />
+          </motion.div>
 
           <motion.form ref={formRef} variants={containerVariants} onSubmit={handleCalculate} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {[
