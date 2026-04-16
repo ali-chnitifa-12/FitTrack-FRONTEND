@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation, Link } from "react-router-dom";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "./Components/Navbar.jsx";
 import Footer from "./Components/Footer.jsx";
-import Dashboard from "./pages/Dashboard.jsx"; 
+import Dashboard from "./pages/Dashboard.jsx";
 import Workouts from "./pages/Workouts.jsx";
 import Nutrition from "./pages/Nutrition.jsx";
 import Login from "./pages/Login.jsx";
@@ -14,78 +14,53 @@ import About from "./pages/About.jsx";
 import ContactForm from "./pages/ContactForm.jsx";
 import AICoach from "./pages/AICoach.jsx";
 import { AuthContext } from "./context/AuthContext.jsx";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
+import {
+  Zap, Dumbbell, Apple, BarChart3, Brain, Trophy,
+  ArrowRight, ChevronDown, Star, Users, Clock
+} from "lucide-react";
 
-// Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
-// ---------- Animation Variants ----------
-const fadeInUp = {
-  hidden: { opacity: 0, y: 60 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease: "easeOut" }
-  }
-};
-
-const staggerChildren = {
-  visible: {
-    transition: {
-      staggerChildren: 0.15
-    }
-  }
-};
-
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.9 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.7, ease: "easeOut" }
-  }
-};
-
-// ---------- ProtectedRoute Component ----------
+// ────────────────────────────────────────────────────────────────────────────
+// Protected Route
+// ────────────────────────────────────────────────────────────────────────────
 function ProtectedRoute({ children }) {
   const { user, loading } = useContext(AuthContext);
-  
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "var(--bg-base)" }}>
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-green-500 text-xl"
-        >
-          Loading...
-        </motion.div>
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="w-12 h-12 rounded-full border-4 border-transparent"
+          style={{ borderTopColor: "var(--accent-primary)", borderRightColor: "var(--accent-secondary)" }}
+        />
       </div>
     );
   }
-  
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-  
+  if (!user) return <Navigate to="/login" replace />;
   return children;
 }
 
-// ---------- Layout Component ----------
+// ────────────────────────────────────────────────────────────────────────────
+// Main Layout
+// ────────────────────────────────────────────────────────────────────────────
 function MainLayout({ children }) {
   const location = useLocation();
   const hideLayout = ["/login", "/register"].includes(location.pathname);
 
   return (
-    <div className="bg-black text-gray-300 min-h-screen">
+    <div className="page-wrapper">
       {!hideLayout && <Navbar />}
       <AnimatePresence mode="wait">
         <motion.div
           key={location.pathname}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-          className={`flex-1 ${!hideLayout ? 'pt-24' : ''}`}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -16 }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+          className={!hideLayout ? "pt-20" : ""}
         >
           {children}
         </motion.div>
@@ -95,480 +70,532 @@ function MainLayout({ children }) {
   );
 }
 
-// ---------- App Component ----------
-export default function App() {
-  const heroRef = useRef(null);
-  const titleRef = useRef(null);
-  const subtitleRef = useRef(null);
-  const buttonRef = useRef(null);
-  const bg1Ref = useRef(null);
-  const bg2Ref = useRef(null);
+// ────────────────────────────────────────────────────────────────────────────
+// Hero Section
+// ────────────────────────────────────────────────────────────────────────────
+function HeroSection() {
+  const heroRef    = useRef(null);
+  const titleRef   = useRef(null);
+  const subRef     = useRef(null);
+  const btnRef     = useRef(null);
+  const orb1Ref    = useRef(null);
+  const orb2Ref    = useRef(null);
+  const orb3Ref    = useRef(null);
+  const floatRef   = useRef(null);
+  const badgeRef   = useRef(null);
+  const mousePos   = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Hero animations
-      if (titleRef.current) {
-        gsap.fromTo(titleRef.current, 
-          { y: 100, opacity: 0, rotationX: -90 },
-          { y: 0, opacity: 1, rotationX: 0, duration: 1.5, ease: "back.out(1.7)" }
-        );
-      }
-      
-      if (subtitleRef.current) {
-        gsap.fromTo(subtitleRef.current,
-          { y: 50, opacity: 0, rotationX: -45 },
-          { y: 0, opacity: 1, rotationX: 0, duration: 1.2, delay: 0.3, ease: "power2.out" }
-        );
-      }
-      
-      if (buttonRef.current) {
-        gsap.fromTo(buttonRef.current,
-          { scale: 0, rotationY: 180, opacity: 0 },
-          { scale: 1, rotationY: 0, opacity: 1, duration: 1, delay: 0.6, ease: "elastic.out(1, 0.5)" }
-        );
-      }
+      // Badge pop
+      gsap.fromTo(badgeRef.current,
+        { scale: 0, rotation: -20, opacity: 0 },
+        { scale: 1, rotation: 0, opacity: 1, duration: 0.7, ease: "back.out(2.5)", delay: 0.2 }
+      );
 
-      // Background animations
-      if (bg1Ref.current) {
-        gsap.to(bg1Ref.current, {
-          rotation: 360,
-          scale: 1.2,
-          duration: 20,
-          repeat: -1,
-          ease: "none"
-        });
-      }
-      
-      if (bg2Ref.current) {
-        gsap.to(bg2Ref.current, {
-          rotation: -360,
-          scale: 1.5,
-          duration: 25,
-          repeat: -1,
-          ease: "none"
-        });
-      }
+      // Title 3D entrance
+      gsap.fromTo(titleRef.current,
+        { y: 120, rotationX: -60, opacity: 0 },
+        { y: 0, rotationX: 0, opacity: 1, duration: 1.4, ease: "expo.out", delay: 0.4 }
+      );
 
-      // Parallax effect on scroll
-      if (heroRef.current) {
-        gsap.to(heroRef.current, {
-          yPercent: -52,
-          rotateX: 2,
-          ease: "none",
+      // Subtitle
+      gsap.fromTo(subRef.current,
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: "power3.out", delay: 0.9 }
+      );
+
+      // Button
+      gsap.fromTo(btnRef.current,
+        { scale: 0.5, rotation: 8, opacity: 0 },
+        { scale: 1, rotation: 0, opacity: 1, duration: 0.9, ease: "elastic.out(1, 0.55)", delay: 1.1 }
+      );
+
+      // Orb animations — crazy floating
+      gsap.to(orb1Ref.current, {
+        x: 60, y: -80, rotation: 180, scale: 1.3,
+        duration: 7, yoyo: true, repeat: -1, ease: "sine.inOut"
+      });
+      gsap.to(orb2Ref.current, {
+        x: -70, y: 90, rotation: -220, scale: 0.8,
+        duration: 9, yoyo: true, repeat: -1, ease: "sine.inOut"
+      });
+      gsap.to(orb3Ref.current, {
+        x: 40, y: 50, rotation: 360,
+        duration: 12, yoyo: true, repeat: -1, ease: "none"
+      });
+
+      // Floating card-like element
+      gsap.to(floatRef.current, {
+        y: -18, rotation: 2,
+        duration: 3, yoyo: true, repeat: -1, ease: "power1.inOut"
+      });
+
+      // Parallax on scroll
+      gsap.to(heroRef.current, {
+        yPercent: -25,
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        }
+      });
+    });
+
+    // Magnetic mouse effect on title
+    const handleMouseMove = (e) => {
+      mousePos.current = { x: e.clientX, y: e.clientY };
+      const rect = heroRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+      const dx = (e.clientX - rect.left - cx) / cx;
+      const dy = (e.clientY - rect.top  - cy) / cy;
+      gsap.to(titleRef.current, {
+        rotationY: dx * 6,
+        rotationX: -dy * 4,
+        duration: 0.5,
+        ease: "power2.out",
+      });
+    };
+    const resetTilt = () => {
+      gsap.to(titleRef.current, { rotationY: 0, rotationX: 0, duration: 0.8, ease: "power2.out" });
+    };
+
+    const el = heroRef.current;
+    el?.addEventListener("mousemove", handleMouseMove);
+    el?.addEventListener("mouseleave", resetTilt);
+    return () => {
+      ctx.revert();
+      el?.removeEventListener("mousemove", handleMouseMove);
+      el?.removeEventListener("mouseleave", resetTilt);
+    };
+  }, []);
+
+  return (
+    <section
+      ref={heroRef}
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden text-center px-6"
+      style={{ background: "var(--bg-base)" }}
+    >
+      {/* Orbs */}
+      <div ref={orb1Ref} className="orb orb-orange w-[520px] h-[520px] -top-32 -left-32" />
+      <div ref={orb2Ref} className="orb orb-yellow w-[400px] h-[400px] -bottom-24 -right-24" />
+      <div ref={orb3Ref} className="orb orb-purple w-[300px] h-[300px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+
+      {/* Mesh grid overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.025] pointer-events-none"
+        style={{
+          backgroundImage: "linear-gradient(var(--accent-primary) 1px, transparent 1px), linear-gradient(90deg, var(--accent-primary) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+        }}
+      />
+
+      {/* Content */}
+      <div className="relative z-10 max-w-5xl w-full" style={{ perspective: "800px", transformStyle: "preserve-3d" }}>
+
+        {/* Badge */}
+        <div ref={badgeRef} className="flex justify-center mb-6">
+          <span className="tag flex items-center gap-2 text-xs">
+            <Zap size={12} fill="white" /> 
+            NEW  ·  AI-Powered Fitness Coach
+          </span>
+        </div>
+
+        {/* Main Title */}
+        <div
+          ref={titleRef}
+          className="card-3d mb-6"
+          style={{ transformStyle: "preserve-3d" }}
+        >
+          <h1 className="font-display tracking-wider leading-none">
+            <span
+              className="block text-[clamp(4rem,12vw,10rem)] shimmer"
+              style={{ lineHeight: 0.95 }}
+            >
+              TRACK.
+            </span>
+            <span
+              className="block text-[clamp(4rem,12vw,10rem)]"
+              style={{
+                lineHeight: 0.95,
+                color: "var(--text-primary)",
+                WebkitTextStroke: "2px var(--accent-primary)",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              TRAIN.
+            </span>
+            <span
+              className="block text-[clamp(4rem,12vw,10rem)] shimmer"
+              style={{ lineHeight: 1.0 }}
+            >
+              TRANSFORM.
+            </span>
+          </h1>
+        </div>
+
+        {/* Subtitle */}
+        <p
+          ref={subRef}
+          className="text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
+          style={{ color: "var(--text-secondary)" }}
+        >
+          The all-in-one fitness platform that tracks your workouts, nutrition, and progress —
+          powered by an AI coach that knows your data.
+        </p>
+
+        {/* CTA buttons */}
+        <div ref={btnRef} className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link to="/dashboard" className="btn-accent text-base px-8 py-4 gap-2">
+            Start Your Journey <ArrowRight size={20} />
+          </Link>
+          <Link to="/about" className="btn-outline text-base px-8 py-4">
+            Learn More
+          </Link>
+        </div>
+
+        {/* Social proof row */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.5 }}
+          className="flex flex-wrap items-center justify-center gap-6 mt-14"
+          style={{ color: "var(--text-muted)" }}
+        >
+          {[
+            { icon: Users, val: "10K+", label: "Users" },
+            { icon: Star,  val: "4.9★", label: "Rating" },
+            { icon: Clock, val: "24/7", label: "Support" },
+          ].map(({ icon: Icon, val, label }) => (
+            <div key={label} className="flex items-center gap-2 text-sm">
+              <Icon size={15} style={{ color: "var(--accent-primary)" }} />
+              <strong style={{ color: "var(--text-primary)" }}>{val}</strong>
+              <span>{label}</span>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        style={{ color: "var(--text-muted)" }}
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+      >
+        <span className="text-xs tracking-widest uppercase">Scroll</span>
+        <ChevronDown size={18} />
+      </motion.div>
+    </section>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Feature Cards Section
+// ────────────────────────────────────────────────────────────────────────────
+const FEATURES = [
+  {
+    icon: BarChart3, title: "Smart Dashboard",
+    desc: "Real-time analytics on your weight, calories, and fitness trends — all in one glance.",
+    link: "/dashboard", color: "#ff6b35"
+  },
+  {
+    icon: Dumbbell, title: "Workout Tracker",
+    desc: "Log every rep, set, and session. Build custom routines and crush your PRs.",
+    link: "/workouts", color: "#ffd23f"
+  },
+  {
+    icon: Apple, title: "Nutrition Logging",
+    desc: "Track macros, calories, and meal plans. Fuel your body the right way.",
+    link: "/nutrition", color: "#ff6b35"
+  },
+  {
+    icon: Brain, title: "AI Coach",
+    desc: "Your personal Gemini-powered coach giving data-driven advice 24/7.",
+    link: "/coach", color: "#a855f7"
+  },
+  {
+    icon: Trophy, title: "Progress Goals",
+    desc: "Set ambitious targets and watch the analytics prove you're winning.",
+    link: "/dashboard", color: "#ffd23f"
+  },
+  {
+    icon: Zap, title: "Instant Insights",
+    desc: "AI analyzes your data and surfaces actionable insights before you even ask.",
+    link: "/coach", color: "#ff6b35"
+  },
+];
+
+function FeaturesSection() {
+  const sectionRef = useRef(null);
+  const cardsRef   = useRef([]);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        gsap.utils.toArray(".ft-card"),
+        { y: 80, opacity: 0, rotationX: -20, scale: 0.92 },
+        {
+          y: 0, opacity: 1, rotationX: 0, scale: 1,
+          duration: 0.9, stagger: 0.12, ease: "power3.out",
           scrollTrigger: {
-            trigger: heroRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true
+            trigger: sectionRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
           }
-        });
-      }
+        }
+      );
+    });
 
-      if (bg1Ref.current) {
-        gsap.to(bg1Ref.current, {
-          x: 80,
-          y: -45,
-          rotationY: 360,
-          rotationX: 40,
-          duration: 18,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut"
+    // 3D mouse-tilt on each card
+    cardsRef.current.forEach((card) => {
+      if (!card) return;
+      const onMove = (e) => {
+        const rect = card.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top  + rect.height / 2;
+        const dx = (e.clientX - cx) / (rect.width / 2);
+        const dy = (e.clientY - cy) / (rect.height / 2);
+        gsap.to(card, {
+          rotationY: dx * 12,
+          rotationX: -dy * 8,
+          scale: 1.04,
+          duration: 0.3,
+          ease: "power2.out",
         });
-      }
-
-      if (bg2Ref.current) {
-        gsap.to(bg2Ref.current, {
-          x: -90,
-          y: 55,
-          rotationY: -360,
-          rotationX: -25,
-          duration: 20,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut"
-        });
-      }
-
-      // Crazy 3D hero wobble timeline
-      const heroChaos = gsap.timeline({ repeat: -1, yoyo: true, defaults: { duration: 1.8, ease: "sine.inOut" } });
-      if (titleRef.current) {
-        heroChaos.to(titleRef.current, { rotationY: 18, rotationX: -8, x: 12, y: -7, scale: 1.05 });
-      }
-      if (subtitleRef.current) {
-        heroChaos.to(subtitleRef.current, { rotationY: -8, rotationX: 7, x: -6, y: 5, scale: 1.02 }, "<");
-      }
-      if (buttonRef.current) {
-        heroChaos.to(buttonRef.current, { rotationY: 12, rotationX: 6, x: 5, scale: 1.03 }, "<");
-      }
-
-      // Float the colored ring in 3D space as well
-      const ringRefs = gsap.utils.toArray(".hero-ring");
-      if (ringRefs.length > 0) {
-        gsap.to(ringRefs, {
-          rotationY: 360,
-          rotationX: 45,
-          x: 20,
-          y: -20,
-          duration: 24,
-          repeat: -1,
-          ease: "power1.inOut"
-        });
-      }
+      };
+      const onLeave = () => {
+        gsap.to(card, { rotationY: 0, rotationX: 0, scale: 1, duration: 0.5, ease: "power2.out" });
+      };
+      card.addEventListener("mousemove", onMove);
+      card.addEventListener("mouseleave", onLeave);
     });
 
     return () => ctx.revert();
   }, []);
 
-  const featuresRef = useRef(null);
-  const cardsRef = useRef([]);
+  return (
+    <section ref={sectionRef} className="max-w-7xl mx-auto px-6 py-28">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+        className="text-center mb-16"
+      >
+        <span className="tag mb-4 inline-block">Everything You Need</span>
+        <h2
+          className="font-display text-[clamp(3rem,7vw,6rem)] mb-4"
+          style={{ color: "var(--text-primary)", lineHeight: 1 }}
+        >
+          BUILT FOR <span className="text-accent">CHAMPIONS</span>
+        </h2>
+        <div className="section-divider" />
+        <p className="mt-5 max-w-xl mx-auto" style={{ color: "var(--text-secondary)" }}>
+          Every feature designed around one goal: making you unstoppable.
+        </p>
+      </motion.div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {FEATURES.map((f, i) => {
+          const Icon = f.icon;
+          return (
+            <Link
+              key={f.title}
+              to={f.link}
+              ref={el => cardsRef.current[i] = el}
+              className="ft-card glass-card card-3d block p-7 group cursor-pointer"
+              style={{ transformStyle: "preserve-3d", textDecoration: "none" }}
+            >
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+                style={{
+                  background: `linear-gradient(135deg, ${f.color}22, ${f.color}44)`,
+                  border: `1px solid ${f.color}44`,
+                }}
+              >
+                <Icon size={22} style={{ color: f.color }} />
+              </div>
+              <h3
+                className="font-bold text-lg mb-2 group-hover:text-[var(--accent-primary)] transition-colors"
+                style={{ color: "var(--text-primary)" }}
+              >
+                {f.title}
+              </h3>
+              <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--text-secondary)" }}>
+                {f.desc}
+              </p>
+              <span
+                className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider group-hover:gap-3 transition-all"
+                style={{ color: "var(--accent-primary)" }}
+              >
+                Explore <ArrowRight size={13} />
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Stats Section
+// ────────────────────────────────────────────────────────────────────────────
+function StatsSection() {
+  const sectionRef = useRef(null);
+  const [counted, setCounted] = useState(false);
 
   useEffect(() => {
-    // Small delay to ensure DOM is ready
-    const timeoutId = setTimeout(() => {
-      const ctx = gsap.context(() => {
-        // Features section animations - wait for elements to exist
-        const featureCards = gsap.utils.toArray(".feature-card");
-        if (featureCards.length > 0 && featuresRef.current) {
-          gsap.fromTo(featureCards, 
-            { y: 100, opacity: 0, rotationX: -30 },
-            { 
-              y: 0, 
-              opacity: 1, 
-              rotationX: 0, 
-              duration: 1, 
-              stagger: 0.2,
-              ease: "power2.out",
-              scrollTrigger: {
-                trigger: featuresRef.current,
-                start: "top 80%",
-                toggleActions: "play none none reverse"
-              }
-            }
-          );
-        }
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top 80%",
+        onEnter: () => setCounted(true),
+      });
 
-        // Hover effects for cards
-        cardsRef.current.forEach((card, index) => {
-          if (card) {
-            const handleMouseEnter = () => {
-              gsap.to(card, { 
-                rotationY: 10, 
-                scale: 1.05, 
-                duration: 0.3, 
-                ease: "power2.out" 
-              });
-            };
-            const handleMouseLeave = () => {
-              gsap.to(card, { 
-                rotationY: 0, 
-                scale: 1, 
-                duration: 0.3, 
-                ease: "power2.out" 
-              });
-            };
-            
-            card.addEventListener('mouseenter', handleMouseEnter);
-            card.addEventListener('mouseleave', handleMouseLeave);
-            
-            return () => {
-              card.removeEventListener('mouseenter', handleMouseEnter);
-              card.removeEventListener('mouseleave', handleMouseLeave);
-            };
+      gsap.fromTo(".stat-pill",
+        { y: 60, opacity: 0, scale: 0.8 },
+        {
+          y: 0, opacity: 1, scale: 1,
+          stagger: 0.15, duration: 0.8, ease: "elastic.out(1, 0.6)",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 80%",
           }
-        });
-      });
-
-      return () => ctx.revert();
-    }, 100);
-
-    return () => clearTimeout(timeoutId);
-  }, []);
-
-  const statsRef = useRef(null);
-  const statCardsRef = useRef([]);
-
-  useEffect(() => {
-    // Small delay to ensure DOM is ready
-    const timeoutId = setTimeout(() => {
-      const ctx = gsap.context(() => {
-        // Stats section animations - wait for elements to exist
-        const statCards = gsap.utils.toArray(".stat-card");
-        if (statCards.length > 0 && statsRef.current) {
-          gsap.fromTo(statCards, 
-            { y: 80, opacity: 0, rotationX: -20, scale: 0.8 },
-            { 
-              y: 0, 
-              opacity: 1, 
-              rotationX: 0,
-              scale: 1,
-              duration: 1.2, 
-              stagger: 0.3,
-              ease: "elastic.out(1, 0.5)",
-              scrollTrigger: {
-                trigger: statsRef.current,
-                start: "top 85%",
-                toggleActions: "play none none reverse"
-              }
-            }
-          );
-
-          // Continuous floating animation for stat cards
-          gsap.to(statCards, {
-            y: -10,
-            duration: 2,
-            ease: "power1.inOut",
-            yoyo: true,
-            repeat: -1,
-            stagger: 0.2
-          });
         }
+      );
+
+      // Float stagger
+      gsap.to(".stat-pill", {
+        y: -10, duration: 2.5, yoyo: true, repeat: -1, ease: "power1.inOut", stagger: 0.3
       });
-
-      return () => ctx.revert();
-    }, 100);
-
-    return () => clearTimeout(timeoutId);
+    });
+    return () => ctx.revert();
   }, []);
 
-  const sections = [
-    {
-      title: "Upper Body Strength",
-      description: "Build powerful arms, chest, and back with targeted exercises",
-      img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=800&q=80",
-      link: "/workouts",
-      category: "strength"
-    },
-    {
-      title: "Lower Body Power",
-      description: "Develop strong legs and glutes with compound movements",
-      img: "https://images.unsplash.com/photo-1536922246289-88c42f957773?auto=format&fit=crop&w=800&q=80",
-      link: "/workouts",
-      category: "strength"
-    },
-    {
-      title: "Cardio Blast",
-      description: "Boost your endurance and burn calories with intense cardio",
-      img: "https://images.unsplash.com/photo-1574680178050-55c6a6a96e0a?auto=format&fit=crop&w=800&q=80",
-      link: "/workouts",
-      category: "cardio"
-    },
-    {
-      title: "Healthy Nutrition",
-      description: "Discover delicious and nutritious meal plans for your goals",
-      img: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=800&q=80",
-      link: "/nutrition",
-      category: "nutrition"
-    },
-    {
-      title: "Supplement Guide",
-      description: "Optimize your results with science-backed supplements",
-      img: "https://images.unsplash.com/photo-1599058917765-a780eda07a3e?auto=format&fit=crop&w=800&q=80",
-      link: "/nutrition",
-      category: "nutrition"
-    },
-    {
-      title: "Flexibility & Recovery",
-      description: "Improve mobility and accelerate recovery with proper stretching",
-      img: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=800&q=80",
-      link: "/workouts",
-      category: "recovery"
-    },
-    {
-      title: "Mindfulness & Meditation",
-      description: "Enhance mental focus and reduce stress through meditation",
-      img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80",
-      link: "/workouts",
-      category: "mental"
-    },
-    {
-      title: "Progress Tracking",
-      description: "Monitor your journey with advanced analytics and insights",
-      img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
-      link: "/dashboard",
-      category: "tracking"
-    },
-    {
-      title: "Community Support",
-      description: "Connect with like-minded fitness enthusiasts worldwide",
-      img: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&w=800&q=80",
-      link: "/community",
-      category: "community"
-    }
+  const STATS = [
+    { val: "95%",  label: "Success Rate",   sub: "Users hitting goals" },
+    { val: "10K+", label: "Active Members", sub: "Worldwide community" },
+    { val: "4.9★", label: "App Rating",     sub: "5-star reviews" },
+    { val: "24/7", label: "AI Support",     sub: "Always coaching you" },
   ];
 
   return (
-    <BrowserRouter>
-      <MainLayout>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+    <section
+      ref={sectionRef}
+      className="py-24 relative overflow-hidden"
+      style={{ background: "var(--bg-surface)" }}
+    >
+      <div
+        className="absolute inset-0 opacity-30 pointer-events-none"
+        style={{ backgroundImage: "radial-gradient(circle at 50% 50%, var(--accent-glow) 0%, transparent 60%)" }}
+      />
+      <div className="max-w-7xl mx-auto px-6">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="font-display text-[clamp(2.5rem,6vw,5rem)] text-center mb-14"
+          style={{ color: "var(--text-primary)" }}
+        >
+          NUMBERS THAT <span className="text-accent">SPEAK</span>
+        </motion.h2>
 
-          {/* Protected Routes */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <>
-                  {/* Hero Section */}
-                  <section ref={heroRef} className="h-screen flex flex-col justify-center items-center relative overflow-hidden bg-gradient-to-br from-[#060a1e] via-[#0f1f3f] to-[#03102a] perspective-1000 text-white">
-                    <motion.div
-                      initial="hidden"
-                      animate="visible"
-                      variants={staggerChildren}
-                      className="relative z-10 text-center space-y-8 transform-gpu"
-                    >
-                      <motion.h1 
-                        ref={titleRef}
-                        variants={fadeInUp}
-                        className="text-6xl md:text-8xl font-black mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#73ffdb] via-[#00e5ff] to-[#6de5ff] tracking-tight shadow-[0_0_20px_rgba(0, 255, 230, 0.65)] transform-gpu"
-                        style={{ transformStyle: 'preserve-3d' }}
-                      >
-                        Welcome to FitTrack
-                      </motion.h1>
-                      <motion.p 
-                        ref={subtitleRef}
-                        variants={fadeInUp}
-                        className="max-w-3xl mx-auto text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed transform-gpu"
-                        style={{ transformStyle: 'preserve-3d' }}
-                      >
-                        Transform your body, track your progress, and achieve your fitness goals with our comprehensive platform
-                      </motion.p>
-                      <motion.div ref={buttonRef} variants={fadeInUp} className="transform-gpu" style={{ transformStyle: 'preserve-3d' }}>
-                        <Link
-                          to="/dashboard"
-                          className="inline-block bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-black font-bold px-12 py-4 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-green-500/30 hover:shadow-green-500/50"
-                        >
-                          Start Your Journey
-                        </Link>
-                      </motion.div>
-                    </motion.div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          {STATS.map((s) => (
+            <div
+              key={s.label}
+              className="stat-pill glass-card card-3d p-7 text-center"
+            >
+              <div className="stat-number text-5xl mb-2">{s.val}</div>
+              <div className="font-bold text-sm mb-1" style={{ color: "var(--text-primary)" }}>{s.label}</div>
+              <div className="text-xs" style={{ color: "var(--text-muted)" }}>{s.sub}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
-                    {/* Animated Background */}
-                    <div ref={bg1Ref} className="absolute top-20 left-20 w-72 h-72 bg-green-500 rounded-full mix-blend-soft-light filter blur-xl opacity-20 transform-gpu" style={{ transformStyle: 'preserve-3d' }} />
-                    <div ref={bg2Ref} className="absolute bottom-20 right-20 w-96 h-96 bg-teal-500 rounded-full mix-blend-soft-light filter blur-xl opacity-15 transform-gpu" style={{ transformStyle: 'preserve-3d' }} />
-                    <div className="hero-ring absolute inset-1/3 w-80 h-80 border-2 border-purple-400/40 rounded-full opacity-30 mix-blend-screen transform-gpu" style={{ transformStyle: 'preserve-3d', boxShadow: '0 0 50px rgba(142, 94, 255, 0.4)' }} />
-                    
-                    {/* Additional 3D elements */}
-                    <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-purple-500 rounded-full mix-blend-soft-light filter blur-lg opacity-10 animate-bounce" />
-                    <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-blue-500 rounded-full mix-blend-soft-light filter blur-lg opacity-10 animate-pulse" />
-                  </section>
+// ────────────────────────────────────────────────────────────────────────────
+// CTA Banner
+// ────────────────────────────────────────────────────────────────────────────
+function CTABanner() {
+  return (
+    <section className="py-24 px-6">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.92 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+        className="max-w-4xl mx-auto glass-card p-16 text-center relative overflow-hidden"
+      >
+        <div className="orb orb-orange w-64 h-64 -top-20 -right-20 opacity-20" />
+        <div className="orb orb-yellow w-48 h-48 -bottom-16 -left-16 opacity-15" />
+        <div className="relative z-10">
+          <span className="tag mb-6 inline-block">Ready to Transform?</span>
+          <h2
+            className="font-display text-[clamp(3rem,7vw,5.5rem)] mb-4"
+            style={{ color: "var(--text-primary)", lineHeight: 1 }}
+          >
+            START <span className="text-accent">TODAY</span>
+          </h2>
+          <p className="text-lg mb-8 max-w-md mx-auto" style={{ color: "var(--text-secondary)" }}>
+            Join thousands already training smarter. Your strongest self is waiting.
+          </p>
+          <Link to="/dashboard" className="btn-accent text-base px-10 py-4 inline-flex items-center gap-2">
+            Go to Dashboard <ArrowRight size={20} />
+          </Link>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
 
-                  {/* Features Grid */}
-                  <section ref={featuresRef} className="max-w-7xl mx-auto p-6 py-20">
-                    <motion.div
-                      initial="hidden"
-                      whileInView="visible"
-                      viewport={{ once: true }}
-                      variants={staggerChildren}
-                      className="text-center mb-16"
-                    >
-                      <motion.h2 variants={fadeInUp} className="text-5xl font-bold text-green-400 mb-6">
-                        Discover Your Potential
-                      </motion.h2>
-                      <motion.p variants={fadeInUp} className="max-w-2xl mx-auto text-xl text-gray-400">
-                        Everything you need for your fitness journey in one place
-                      </motion.p>
-                    </motion.div>
+// ────────────────────────────────────────────────────────────────────────────
+// Home Page
+// ────────────────────────────────────────────────────────────────────────────
+function HomePage() {
+  return (
+    <>
+      <HeroSection />
+      <FeaturesSection />
+      <StatsSection />
+      <CTABanner />
+    </>
+  );
+}
 
-                    <motion.div
-                      initial="hidden"
-                      whileInView="visible"
-                      viewport={{ once: true }}
-                      variants={staggerChildren}
-                      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                    >
-                      {sections.map((section, index) => (
-                        <div 
-                          key={index} 
-                          ref={el => cardsRef.current[index] = el}
-                          className="feature-card transform-gpu"
-                          style={{ transformStyle: 'preserve-3d' }}
-                        >
-                          <Link
-                            to={section.link}
-                            className="block bg-gray-900/80 backdrop-blur-lg rounded-2xl overflow-hidden shadow-2xl hover:shadow-green-500/20 transition-all duration-300 group border border-gray-700/50"
-                          >
-                            <div className="relative overflow-hidden">
-                              <img src={section.img} alt={section.title} className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"/>
-                              <div className="absolute top-4 right-4 bg-green-500/90 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-semibold">
-                                {section.category}
-                              </div>
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"/>
-                            </div>
-                            <div className="p-6">
-                              <h3 className="text-2xl font-bold text-green-400 mb-3 group-hover:text-green-300 transition-colors">
-                                {section.title}
-                              </h3>
-                              <p className="text-gray-400 mb-4 leading-relaxed">{section.description}</p>
-                              <span className="inline-flex items-center text-green-500 font-semibold group-hover:text-green-400 transition-colors">
-                                Explore Now
-                                <motion.span initial={{ x: 0 }} whileHover={{ x: 5 }} className="ml-2">→</motion.span>
-                              </span>
-                            </div>
-                          </Link>
-                        </div>
-                      ))}
-                    </motion.div>
-                  </section>
+// ────────────────────────────────────────────────────────────────────────────
+// App Root
+// ────────────────────────────────────────────────────────────────────────────
+export default function App() {
+  return (
+    <ThemeProvider>
+      <BrowserRouter>
+        <MainLayout>
+          <Routes>
+            <Route path="/login"    element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-                  {/* Stats Section */}
-                  <motion.section 
-                    ref={statsRef} 
-                    initial="hidden" 
-                    whileInView="visible" 
-                    viewport={{ once: true }} 
-                    variants={staggerChildren} 
-                    className="bg-gradient-to-r from-gray-900 to-black py-20 relative overflow-hidden"
-                  >
-                    {/* Background pattern */}
-                    <div className="absolute inset-0 opacity-5">
-                      <div className="absolute top-10 left-10 w-32 h-32 border border-green-500 rounded-full"></div>
-                      <div className="absolute top-20 right-20 w-24 h-24 border border-teal-500 rounded-full"></div>
-                      <div className="absolute bottom-10 left-1/3 w-40 h-40 border border-purple-500 rounded-full"></div>
-                    </div>
-                    
-                    <div className="max-w-6xl mx-auto text-center relative z-10">
-                      <motion.h2 variants={fadeInUp} className="text-4xl font-bold text-green-400 mb-12">
-                        Why Thousands Choose FitTrack
-                      </motion.h2>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                          { number: "95%", label: "Success Rate", desc: "Users achieving their goals" },
-                          { number: "10K+", label: "Active Users", desc: "Worldwide community" },
-                          { number: "24/7", label: "Support", desc: "Always here to help you" }
-                        ].map((stat, idx) => (
-                          <div 
-                            key={idx} 
-                            className="stat-card transform-gpu bg-gray-800/80 backdrop-blur-lg rounded-2xl p-6 hover:bg-gray-750/80 transition-all duration-300 border border-gray-700/50"
-                            style={{ transformStyle: 'preserve-3d' }}
-                          >
-                            <div className="text-5xl font-bold text-green-400 mb-4 transform-gpu" style={{ transform: 'translateZ(20px)' }}>{stat.number}</div>
-                            <div className="text-xl font-semibold text-white mb-2">{stat.label}</div>
-                            <div className="text-gray-400">{stat.desc}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.section>
-                </>
-              </ProtectedRoute>
-            }
-          />
+            <Route path="/"         element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/workouts"  element={<ProtectedRoute><Workouts /></ProtectedRoute>} />
+            <Route path="/nutrition" element={<ProtectedRoute><Nutrition /></ProtectedRoute>} />
+            <Route path="/about"     element={<ProtectedRoute><About /></ProtectedRoute>} />
+            <Route path="/contact"   element={<ProtectedRoute><ContactForm /></ProtectedRoute>} />
+            <Route path="/coach"     element={<ProtectedRoute><AICoach /></ProtectedRoute>} />
 
-          {/* Other protected routes */}
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/workouts" element={<ProtectedRoute><Workouts /></ProtectedRoute>} />
-          <Route path="/nutrition" element={<ProtectedRoute><Nutrition /></ProtectedRoute>} />
-          <Route path="/about" element={<ProtectedRoute><About /></ProtectedRoute>} />
-          <Route path="/contact" element={<ProtectedRoute><ContactForm /></ProtectedRoute>} />
-          <Route path="/coach" element={<ProtectedRoute><AICoach /></ProtectedRoute>} />
-
-          {/* Catch-all redirect */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </MainLayout>
-    </BrowserRouter>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </MainLayout>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
