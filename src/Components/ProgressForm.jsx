@@ -11,11 +11,11 @@ const moodOptions = [
 ];
 
 const energyOptions = [
-  { value: 1, label: "Very Low", color: "#ef4444" },
-  { value: 2, label: "Low",      color: "#f97316" },
-  { value: 3, label: "Medium",   color: "#eab308" },
-  { value: 4, label: "High",     color: "var(--accent-secondary)" },
-  { value: 5, label: "Max",      color: "var(--accent-primary)" },
+  { value: 1, label: "Very Low", color: "bg-red-500" },
+  { value: 2, label: "Low", color: "bg-orange-500" },
+  { value: 3, label: "Medium", color: "bg-yellow-500" },
+  { value: 4, label: "High", color: "bg-green-400" },
+  { value: 5, label: "Max", color: "bg-green-500" },
 ];
 
 export default function ProgressForm({ addEntry }) {
@@ -53,10 +53,21 @@ export default function ProgressForm({ addEntry }) {
       notes,
     });
 
-    setCaloriesIn(""); setCaloriesOut(""); setWeight(""); setTargetWeight("");
-    setMood(null); setEnergy(null); setWaist(""); setChest(""); setArms("");
-    setWorkoutDone(false); setNotes("");
+    setCaloriesIn("");
+    setCaloriesOut("");
+    setWeight("");
+    setTargetWeight("");
+    setMood(null);
+    setEnergy(null);
+    setWaist("");
+    setChest("");
+    setArms("");
+    setWorkoutDone(false);
+    setNotes("");
   };
+
+  const inputCls =
+    "w-full p-3 rounded-xl bg-gray-800/80 text-gray-100 border border-gray-700 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500/50 transition-all duration-200 placeholder-gray-500";
 
   return (
     <motion.form
@@ -64,65 +75,95 @@ export default function ProgressForm({ addEntry }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="space-y-5"
+      className="bg-gray-900/80 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-green-500/20 space-y-5"
     >
+      <h2 className="text-2xl text-green-400 font-bold flex items-center gap-2">
+        <Flame size={22} className="text-orange-400" />
+        Log Today's Entry
+      </h2>
+
+      {/* Core Fields */}
       <div className="grid grid-cols-2 gap-3">
-        {[
-          { label: "Calories Consumed", val: caloriesIn, set: setCaloriesIn, ph: "e.g. 2200", step: "1" },
-          { label: "Calories Burned",   val: caloriesOut, set: setCaloriesOut, ph: "e.g. 400", step: "1" },
-          { label: "Current Weight (kg)", val: weight, set: setWeight, ph: "e.g. 82.5", step: "0.1" },
-          { label: "Target Weight (kg)",  val: targetWeight, set: setTargetWeight, ph: "e.g. 75.0", step: "0.1" },
-        ].map(i => (
-          <div key={i.label}>
-            <label className="text-xs mb-1 block font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>{i.label}</label>
-            <input
-              type="number"
-              step={i.step}
-              placeholder={i.ph}
-              value={i.val}
-              onChange={(e) => i.set(e.target.value)}
-              className="input-field"
-              required
-            />
-          </div>
-        ))}
+        <div>
+          <label className="text-xs text-gray-400 mb-1 block">Calories Consumed</label>
+          <input
+            type="number"
+            placeholder="e.g. 2200"
+            value={caloriesIn}
+            onChange={(e) => setCaloriesIn(e.target.value)}
+            className={inputCls}
+            required
+          />
+        </div>
+        <div>
+          <label className="text-xs text-gray-400 mb-1 block">Calories Burned</label>
+          <input
+            type="number"
+            placeholder="e.g. 400"
+            value={caloriesOut}
+            onChange={(e) => setCaloriesOut(e.target.value)}
+            className={inputCls}
+            required
+          />
+        </div>
+        <div>
+          <label className="text-xs text-gray-400 mb-1 block">Current Weight (kg)</label>
+          <input
+            type="number"
+            step="0.1"
+            placeholder="e.g. 82.5"
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+            className={inputCls}
+            required
+          />
+        </div>
+        <div>
+          <label className="text-xs text-gray-400 mb-1 block">Target Weight (kg)</label>
+          <input
+            type="number"
+            step="0.1"
+            placeholder="e.g. 75.0"
+            value={targetWeight}
+            onChange={(e) => setTargetWeight(e.target.value)}
+            className={inputCls}
+            required
+          />
+        </div>
       </div>
 
       {/* Mood Selector */}
       <div>
-        <label className="text-xs mb-2 flex items-center gap-1 font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+        <label className="text-xs text-gray-400 mb-2 block flex items-center gap-1">
           <Heart size={12} className="text-pink-400" /> Today's Mood
         </label>
         <div className="flex gap-2">
-          {moodOptions.map((m) => {
-            const isSel = mood === m.value;
-            return (
-              <motion.button
-                key={m.value}
-                type="button"
-                onClick={() => setMood(m.value)}
-                whileHover={{ scale: 1.15 }}
-                whileTap={{ scale: 0.9 }}
-                className="flex-1 flex flex-col items-center py-2 rounded-xl transition-all duration-200"
-                style={{
-                  background: isSel ? "var(--accent-glow)" : "var(--bg-elevated)",
-                  border: isSel ? "1px solid var(--accent-primary)" : "1px solid var(--border-subtle)"
-                }}
-              >
-                <span className="text-xl">{m.emoji}</span>
-                <span className="text-xs mt-0.5" style={{ color: isSel ? "var(--accent-primary)" : "var(--text-muted)" }}>{m.label}</span>
-              </motion.button>
-            );
-          })}
+          {moodOptions.map((m) => (
+            <motion.button
+              key={m.value}
+              type="button"
+              onClick={() => setMood(m.value)}
+              whileHover={{ scale: 1.15 }}
+              whileTap={{ scale: 0.9 }}
+              className={`flex-1 flex flex-col items-center py-2 rounded-xl border transition-all duration-200 ${
+                mood === m.value
+                  ? "border-green-500 bg-green-500/20"
+                  : "border-gray-700 bg-gray-800/50 hover:border-gray-500"
+              }`}
+            >
+              <span className="text-xl">{m.emoji}</span>
+              <span className="text-xs text-gray-400 mt-0.5">{m.label}</span>
+            </motion.button>
+          ))}
         </div>
       </div>
 
       {/* Energy Selector */}
       <div>
-        <label className="text-xs mb-2 flex items-center gap-1 font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-          <Zap size={12} style={{ color: "var(--accent-primary)" }} /> Energy Level
+        <label className="text-xs text-gray-400 mb-2 block flex items-center gap-1">
+          <Zap size={12} className="text-yellow-400" /> Energy Level
         </label>
-        <div className="flex gap-2 items-end h-20">
+        <div className="flex gap-2 items-end">
           {energyOptions.map((e) => (
             <motion.button
               key={e.value}
@@ -130,32 +171,30 @@ export default function ProgressForm({ addEntry }) {
               onClick={() => setEnergy(e.value)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.9 }}
-              className="flex-1 flex flex-col justify-end items-center gap-1 h-full"
+              className="flex-1 flex flex-col items-center gap-1"
             >
               <div
-                className="w-full rounded-t-sm transition-all duration-200"
-                style={{
-                  background: e.color,
-                  height: `${e.value * 12 + 10}px`, /* Increased height */
-                  opacity: energy === e.value ? 1 : 0.3,
-                  boxShadow: energy === e.value ? `0 0 10px ${e.color}` : "none"
-                }}
+                className={`w-full rounded-t-sm transition-all duration-200 ${e.color} ${
+                  energy === e.value ? "opacity-100 shadow-lg" : "opacity-40"
+                }`}
+                style={{ height: `${e.value * 8 + 8}px` }}
               />
-              <span className="text-[10px] leading-tight text-center font-semibold uppercase tracking-wider" style={{ color: energy === e.value ? "var(--text-primary)" : "var(--text-muted)" }}>{e.label}</span>
+              <span className="text-xs text-gray-400">{e.label}</span>
             </motion.button>
           ))}
         </div>
       </div>
 
       {/* Workout Done Toggle */}
-      <div className="flex items-center justify-between rounded-xl px-4 py-3" style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}>
-        <span className="text-sm font-semibold" style={{ color: "var(--text-secondary)" }}>Workout completed today?</span>
+      <div className="flex items-center justify-between bg-gray-800/50 rounded-xl px-4 py-3 border border-gray-700">
+        <span className="text-gray-300 text-sm">Workout completed today?</span>
         <motion.button
           type="button"
           onClick={() => setWorkoutDone(!workoutDone)}
           whileTap={{ scale: 0.9 }}
-          className="w-12 h-6 rounded-full transition-colors duration-300 relative"
-          style={{ background: workoutDone ? "var(--accent-primary)" : "var(--text-muted)" }}
+          className={`w-12 h-6 rounded-full transition-colors duration-300 relative ${
+            workoutDone ? "bg-green-500" : "bg-gray-600"
+          }`}
         >
           <motion.div
             className="w-5 h-5 bg-white rounded-full absolute top-0.5"
@@ -169,8 +208,7 @@ export default function ProgressForm({ addEntry }) {
       <motion.button
         type="button"
         onClick={() => setShowExtra(!showExtra)}
-        className="w-full flex items-center justify-between text-sm py-1 font-semibold uppercase tracking-widest transition-colors"
-        style={{ color: showExtra ? "var(--accent-primary)" : "var(--text-muted)" }}
+        className="w-full flex items-center justify-between text-sm text-gray-400 hover:text-green-400 transition-colors py-1"
         whileHover={{ x: 2 }}
       >
         <span>Body Measurements (optional)</span>
@@ -187,31 +225,45 @@ export default function ProgressForm({ addEntry }) {
             className="space-y-3 overflow-hidden"
           >
             <div className="grid grid-cols-3 gap-3">
-              {[
-                { label: "Waist (cm)", val: waist, set: setWaist },
-                { label: "Chest (cm)", val: chest, set: setChest },
-                { label: "Arms (cm)",  val: arms, set: setArms },
-              ].map(i => (
-                <div key={i.label}>
-                  <label className="text-xs mb-1 block font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>{i.label}</label>
-                  <input
-                    type="number"
-                    placeholder="e.g. 82"
-                    value={i.val}
-                    onChange={(e) => i.set(e.target.value)}
-                    className="input-field"
-                  />
-                </div>
-              ))}
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Waist (cm)</label>
+                <input
+                  type="number"
+                  placeholder="e.g. 82"
+                  value={waist}
+                  onChange={(e) => setWaist(e.target.value)}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Chest (cm)</label>
+                <input
+                  type="number"
+                  placeholder="e.g. 96"
+                  value={chest}
+                  onChange={(e) => setChest(e.target.value)}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-400 mb-1 block">Arms (cm)</label>
+                <input
+                  type="number"
+                  placeholder="e.g. 35"
+                  value={arms}
+                  onChange={(e) => setArms(e.target.value)}
+                  className={inputCls}
+                />
+              </div>
             </div>
             <div>
-              <label className="text-xs mb-1 block font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Notes</label>
+              <label className="text-xs text-gray-400 mb-1 block">Notes</label>
               <textarea
                 placeholder="How did you feel? Any notes for today..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={2}
-                className="input-field resize-none"
+                className={`${inputCls} resize-none`}
               />
             </div>
           </motion.div>
@@ -220,9 +272,12 @@ export default function ProgressForm({ addEntry }) {
 
       <motion.button
         type="submit"
-        whileHover={{ scale: 1.02 }}
+        whileHover={{
+          scale: 1.02,
+          boxShadow: "0px 0px 20px rgba(74, 222, 128, 0.4)",
+        }}
         whileTap={{ scale: 0.97 }}
-        className="btn-accent w-full justify-center"
+        className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-400 hover:to-teal-400 text-black font-bold py-3 rounded-xl text-base transition-all duration-200 shadow-lg shadow-green-500/20"
       >
         Log Entry
       </motion.button>

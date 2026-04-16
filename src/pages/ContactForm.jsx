@@ -1,49 +1,98 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { gsap } from "gsap";
-import api from "../Utils/axios";
-import { Send, PartyPopper, Mail, User, MessageSquare } from "lucide-react";
+import api from "../Utils/axios"; // Your axios instance
 
 export default function ContactForm() {
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const containerRef = useRef(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(containerRef.current,
-        { rotationY: 20, scale: 0.95, opacity: 0, y: 30 },
-        { rotationY: 0, scale: 1, opacity: 1, y: 0, duration: 1.2, ease: "back.out(1.7)" }
-      );
-    });
-    return () => ctx.revert();
-  }, []);
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const successVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const hoverEffect = {
+    scale: 1.02,
+    transition: { duration: 0.2 }
+  };
+
+  const tapEffect = {
+    scale: 0.98
+  };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError("");
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setError(""); // Clear error when user types
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate form
     if (!formData.name || !formData.email || !formData.message) {
       setError("Please fill in all fields");
       return;
     }
+
+    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError("Please enter a valid email address");
       return;
     }
+
     setIsSubmitting(true);
     setError("");
+
     try {
-      await api.post("/contact", formData);
+      // Send to backend API - FIXED ENDPOINT
+      const response = await api.post("/contact", formData);
+      
+      console.log("Message saved successfully:", response.data);
       setSubmitted(true);
       setFormData({ name: "", email: "", message: "" });
+      
     } catch (err) {
+      console.error("Error sending message:", err);
       setError(err.response?.data?.message || "Failed to send message. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -51,98 +100,222 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-6">
-      <div className="orb orb-orange w-96 h-96 -top-32 -left-32" />
-      <div className="orb orb-yellow w-[500px] h-[500px] top-1/3 -right-64" />
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-green-900 text-gray-200 flex items-center justify-center p-6">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="bg-gray-900/80 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-green-500/20 max-w-md w-full relative overflow-hidden"
+      >
+        {/* Animated background elements */}
+        <motion.div
+          className="absolute -top-20 -left-20 w-40 h-40 bg-green-500 rounded-full mix-blend-soft-light filter blur-xl opacity-20"
+          animate={{
+            rotate: 360,
+            scale: [1, 1.2, 1]
+          }}
+          transition={{
+            rotate: { duration: 8, repeat: Infinity, ease: "linear" },
+            scale: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+          }}
+        />
+        
+        <motion.div
+          className="absolute -bottom-20 -right-20 w-60 h-60 bg-teal-500 rounded-full mix-blend-soft-light filter blur-xl opacity-15"
+          animate={{
+            rotate: -360,
+            scale: [1.2, 1, 1.2]
+          }}
+          transition={{
+            rotate: { duration: 12, repeat: Infinity, ease: "linear" },
+            scale: { duration: 6, repeat: Infinity, ease: "easeInOut" }
+          }}
+        />
 
-      <div ref={containerRef} className="max-w-md w-full relative z-10" style={{ perspective: "1200px" }}>
-        <div className="glass-card card-3d p-8 md:p-10 relative overflow-hidden">
-          
-          <AnimatePresence mode="wait">
-            {submitted ? (
+        <AnimatePresence mode="wait">
+          {submitted ? (
+            <motion.div
+              key="success"
+              variants={successVariants}
+              initial="hidden"
+              animate="visible"
+              className="text-center space-y-6"
+            >
               <motion.div
-                key="success"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                className="text-center space-y-6"
+                animate={{
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 5, -5, 0]
+                }}
+                transition={{ duration: 1, repeat: Infinity, repeatDelay: 2 }}
+                className="text-6xl mb-4"
               >
-                <div className="flex justify-center">
-                  <motion.div
-                    animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
-                    transition={{ duration: 1, repeat: Infinity, repeatDelay: 2 }}
-                    className="w-20 h-20 rounded-full flex items-center justify-center"
-                    style={{ background: "var(--accent-glow-y)", color: "var(--accent-secondary)" }}
+                🎉
+              </motion.div>
+              
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-3xl font-bold text-green-400 mb-2"
+              >
+                Message Sent!
+              </motion.h2>
+              
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="text-gray-300 mb-6"
+              >
+                Thank you for reaching out! We'll get back to you within 24 hours.
+              </motion.p>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setSubmitted(false)}
+                className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-black font-semibold px-8 py-3 rounded-full transition-all duration-300"
+              >
+                Send Another Message
+              </motion.button>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="form"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.h1
+                variants={itemVariants}
+                className="text-4xl font-bold text-green-400 mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400"
+              >
+                Get In Touch
+              </motion.h1>
+              
+              <motion.p
+                variants={itemVariants}
+                className="text-gray-400 text-center mb-8"
+              >
+                Have questions? We'd love to hear from you!
+              </motion.p>
+
+              {/* Error Message */}
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-red-600/80 text-white p-3 rounded-xl mb-4 text-center"
+                >
+                  {error}
+                </motion.div>
+              )}
+
+              <motion.form
+                variants={containerVariants}
+                onSubmit={handleSubmit}
+                className="space-y-6"
+              >
+                <motion.div variants={itemVariants}>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your Name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full p-4 rounded-xl bg-gray-800/50 border border-gray-700 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all duration-300"
+                    required
+                  />
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Your Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full p-4 rounded-xl bg-gray-800/50 border border-gray-700 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all duration-300"
+                    required
+                  />
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                  <textarea
+                    name="message"
+                    placeholder="Your Message..."
+                    value={formData.message}
+                    onChange={handleChange}
+                    rows="5"
+                    className="w-full p-4 rounded-xl bg-gray-800/50 border border-gray-700 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all duration-300 resize-none"
+                    required
+                  />
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                  <motion.button
+                    type="submit"
+                    disabled={isSubmitting}
+                    whileHover={hoverEffect}
+                    whileTap={tapEffect}
+                    className="w-full py-4 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-black font-bold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden"
                   >
-                    <PartyPopper size={40} />
-                  </motion.div>
-                </div>
-                
-                <h2 className="text-3xl font-display uppercase tracking-widest text-accent mb-2">Message Sent!</h2>
-                
-                <p className="mb-6 font-semibold" style={{ color: "var(--text-secondary)" }}>
-                  Thank you for reaching out! We'll get back to you within 24 hours.
-                </p>
-                
-                <button onClick={() => setSubmitted(false)} className="btn-accent w-full justify-center">
-                  Send Another Message
-                </button>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="form"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <div className="text-center mb-8">
-                  <h1 className="font-display text-4xl text-accent tracking-widest mb-2">GET IN TOUCH</h1>
-                  <p className="font-semibold" style={{ color: "var(--text-muted)" }}>Have questions? We'd love to hear from you!</p>
-                </div>
-
-                {error && (
-                  <div className="bg-red-600/10 text-red-500 border border-red-500/30 p-3 rounded-xl mb-6 text-center font-bold text-sm">
-                    {error}
-                  </div>
-                )}
-
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div>
-                    <label className="text-xs font-semibold uppercase tracking-widest flex items-center gap-2 mb-2" style={{ color: "var(--text-muted)" }}>
-                      <User size={14} /> Your Name
-                    </label>
-                    <input type="text" name="name" value={formData.name} onChange={handleChange} className="input-field" placeholder="John Doe" required />
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold uppercase tracking-widest flex items-center gap-2 mb-2" style={{ color: "var(--text-muted)" }}>
-                      <Mail size={14} /> Your Email
-                    </label>
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} className="input-field" placeholder="john@example.com" required />
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold uppercase tracking-widest flex items-center gap-2 mb-2" style={{ color: "var(--text-muted)" }}>
-                      <MessageSquare size={14} /> Your Message
-                    </label>
-                    <textarea name="message" value={formData.message} onChange={handleChange} rows="5" className="input-field resize-none" placeholder="How can we help?" required />
-                  </div>
-
-                  <button type="submit" disabled={isSubmitting} className="btn-accent w-full justify-center mt-2 group relative overflow-hidden" style={{ opacity: isSubmitting ? 0.7 : 1 }}>
                     {isSubmitting ? (
-                      <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="w-5 h-5 border-2 border-white border-t-transparent rounded-full" />
+                      <motion.span
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        className="inline-block"
+                      >
+                        ⏳
+                      </motion.span>
                     ) : (
-                      <>
-                        <Send size={18} className="group-hover:translate-x-1 transition-transform" /> Send Message
-                      </>
+                      <span className="flex items-center justify-center">
+                        <motion.span
+                          initial={{ x: -20, opacity: 0 }}
+                          animate={{ x: 0, opacity: 1 }}
+                          className="mr-2"
+                        >
+                          ✉️
+                        </motion.span>
+                        Send Message
+                      </span>
                     )}
-                  </button>
-                </form>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
+                    
+                    {/* Button shine effect */}
+                    <motion.div
+                      className="absolute inset-0 bg-white/20"
+                      initial={{ x: "-100%" }}
+                      whileHover={{ x: "100%" }}
+                      transition={{ duration: 0.6 }}
+                    />
+                  </motion.button>
+                </motion.div>
+              </motion.form>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Floating particles */}
+        {[1, 2, 3, 4].map((i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-green-400 rounded-full"
+            style={{
+              top: `${20 + i * 15}%`,
+              left: `${10 + i * 20}%`,
+            }}
+            animate={{
+              y: [0, -10, 0],
+              opacity: [0.3, 0.7, 0.3],
+            }}
+            transition={{
+              duration: 2 + i,
+              repeat: Infinity,
+              delay: i * 0.5,
+            }}
+          />
+        ))}
+      </motion.div>
     </div>
   );
 }
