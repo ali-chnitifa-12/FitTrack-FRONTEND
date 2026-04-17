@@ -14,6 +14,7 @@ import AICoach from "./pages/AICoach.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import Subscription from "./pages/Subscription.jsx";
 import { AuthContext } from "./context/AuthContext.jsx";
+import { Toaster } from "react-hot-toast";
 
 // ---------- Animation Variants ----------
 // ... rest of your code
@@ -102,6 +103,20 @@ function MainLayout({ children }) {
         </motion.div>
       </AnimatePresence>
       {!hideLayout && <Footer />}
+      <Toaster 
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: '#1f2937',
+            color: '#fff',
+            border: '1px solid rgba(74, 222, 128, 0.2)',
+            borderRadius: '12px',
+          },
+          success: {
+            iconTheme: { primary: '#4ade80', secondary: '#000' },
+          },
+        }}
+      />
     </div>
   );
 }

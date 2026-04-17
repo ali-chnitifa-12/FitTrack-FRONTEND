@@ -4,6 +4,8 @@ import { gsap } from "gsap";
 import { AuthContext } from "../context/AuthContext";
 import api from "../Utils/axios";
 import FoodScanner from "../Components/FoodScanner";
+import toast from "react-hot-toast";
+import confetti from "canvas-confetti";
 
 // ── Macro Donut Chart ────────────────────────────────────────────────────────
 function MacroDonut({ carbs, protein, fats, totalCalories }) {
@@ -126,7 +128,19 @@ function WaterTracker() {
   const [glasses, setGlasses] = useState(0);
   const goal = 8;
 
-  const toggle = (i) => setGlasses(i + 1 === glasses ? i : i + 1);
+  const toggle = (i) => {
+    const newGlasses = i + 1 === glasses ? i : i + 1;
+    setGlasses(newGlasses);
+    if (newGlasses === goal) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#60a5fa', '#3b82f6', '#ffffff']
+      });
+      toast.success("Daily water goal reached! Stay hydrated! 💧");
+    }
+  };
 
   return (
     <motion.div
@@ -423,6 +437,7 @@ export default function Nutrition() {
     a.download = `fittrack-nutrition-${new Date().toISOString().split("T")[0]}.txt`;
     a.click();
     URL.revokeObjectURL(url);
+    toast.success("Plan exported successfully! ⬇️");
   };
 
   const handleCalculate = async (e) => {
@@ -448,16 +463,26 @@ export default function Nutrition() {
             protein: macroResult.protein, fats: macroResult.fats,
           }, { headers: { Authorization: `Bearer ${user.token}` } });
           loadHistory();
+          toast.success("Nutrition plan calculated and saved! 🥗");
         } catch {
           saveToHistory({ date: new Date().toLocaleDateString(), age, weight, height, gender, activity, bodyType, goal, tdee: adjustedCalories, ...macroResult });
+          toast.success("Plan calculated! Saved locally.");
         }
       } else {
         saveToHistory({ date: new Date().toLocaleDateString(), age, weight, height, gender, activity, bodyType, goal, tdee: adjustedCalories, ...macroResult });
+        toast.success("Plan calculated! Sign in to save across devices.");
       }
     } catch (err) {
-      if (err.response?.status === 401) setError("Session expired. Please login again.");
-      else if (err.code === "ERR_NETWORK" || err.response?.status >= 500) setError("Cannot connect to server. Using local calculation.");
-      else setError("Failed to calculate. Please try again.");
+      if (err.response?.status === 401) {
+        setError("Session expired. Please login again.");
+        toast.error("Session expired.");
+      } else if (err.code === "ERR_NETWORK" || err.response?.status >= 500) {
+        setError("Cannot connect to server. Using local calculation.");
+        toast.error("Server unreachable. Using local calculation.");
+      } else {
+        setError("Failed to calculate. Please try again.");
+        toast.error("Failed to calculate.");
+      }
     } finally {
       setLoading(false);
     }

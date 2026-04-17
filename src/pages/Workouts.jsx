@@ -1,6 +1,8 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { motion, AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
+import confetti from "canvas-confetti";
 
 // ── Rest Timer Component ─────────────────────────────────────────────────────
 function RestTimer() {
@@ -246,8 +248,33 @@ export default function Workouts() {
   const muscleGroupEmojis = { "Upper Body": "💪", "Lower Body": "🦵", Core: "🎯", Cardio: "🏃" };
   const bodyTypes = ["ectomorph", "mesomorph", "endomorph"];
 
-  const toggleExercise = (key) =>
-    setChecked((prev) => ({ ...prev, [key]: !prev[key] }));
+  const toggleExercise = (key) => {
+    setChecked((prev) => {
+      const newState = { ...prev, [key]: !prev[key] };
+      // Check if newly marked true
+      if (newState[key]) {
+        // Calculate new total to see if we hit 100%
+        const { total } = getTotalProgress(bodyType);
+        let doneWithNew = 0;
+        Object.keys(exercises[bodyType]).forEach(part => {
+          exercises[bodyType][part].forEach((_, i) => {
+            if (newState[`${bodyType}-${part}-${i}`]) doneWithNew++;
+          });
+        });
+        
+        if (total > 0 && doneWithNew === total && !prev[key]) {
+          confetti({
+            particleCount: 150,
+            spread: 80,
+            origin: { y: 0.6 },
+            colors: ['#4ade80', '#2dd4bf', '#fbbf24']
+          });
+          toast.success("Amazing job! You completely crushed today's workout! 🎉💪", { duration: 4000 });
+        }
+      }
+      return newState;
+    });
+  };
 
   const getGroupProgress = (type, part) => {
     const exList = exercises[type][part];
