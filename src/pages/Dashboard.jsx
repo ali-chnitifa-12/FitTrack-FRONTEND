@@ -276,6 +276,10 @@ export default function Dashboard() {
   if (loading) return <DashboardSkeleton />;
 
   const showOnboarding = progressData.length === 0 && !dismissOnboarding;
+  
+  // Has the user completed a log today?
+  const hasLoggedToday = progressData.length > 0 && 
+    new Date(progressData[progressData.length - 1].date).toDateString() === new Date().toDateString();
 
   return (
     <div className="w-full flex-1 relative p-4 md:p-6 flex items-center justify-center text-white">
@@ -315,15 +319,33 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <motion.div
               ref={welcomeRef}
-              className="bg-gradient-to-br from-[#02162f] to-[#042852] p-6 rounded-2xl shadow-lg border border-blue-500/20 relative overflow-hidden"
+              className={`p-6 rounded-2xl shadow-lg border relative overflow-hidden transition-all duration-500 ${
+                hasLoggedToday 
+                ? "bg-gradient-to-br from-green-900/40 to-teal-900/40 border-green-500/40" 
+                : "bg-gradient-to-br from-[#02162f] to-[#042852] border-blue-500/20"
+              }`}
             >
-              <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-                <span className="text-blue-400">👋</span> Welcome Back
-              </h2>
-              <p className="text-gray-300 text-sm leading-relaxed mb-4">
-                {user ? `Keep the momentum going, ${user.name}! Your goals are closer than yesterday.` : "Log in to track your fitness journey."}
-              </p>
-              <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-blue-500 rounded-full mix-blend-soft-light filter blur-2xl opacity-20" />
+              {hasLoggedToday ? (
+                <>
+                  <h2 className="text-xl font-bold text-green-400 mb-2 flex items-center gap-2">
+                    <span className="text-green-500 text-2xl">✅</span> All Logged In!
+                  </h2>
+                  <p className="text-gray-300 text-sm leading-relaxed mb-4">
+                    Great job, {user?.name}! You've successfully completely your entry for today. Rest up or crush your workout!
+                  </p>
+                  <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-green-500 rounded-full mix-blend-soft-light filter blur-2xl opacity-20" />
+                </>
+              ) : (
+                <>
+                  <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                    <span className="text-blue-400">👋</span> Welcome Back
+                  </h2>
+                  <p className="text-gray-300 text-sm leading-relaxed mb-4">
+                    {user ? `Keep the momentum going, ${user.name}! Don't forget to log your daily progress.` : "Log in to track your fitness journey."}
+                  </p>
+                  <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-blue-500 rounded-full mix-blend-soft-light filter blur-2xl opacity-20" />
+                </>
+              )}
             </motion.div>
 
             <motion.div

@@ -39,6 +39,17 @@ export default function ProgressChart({ data = [] }) {
   const [activeTab, setActiveTab] = useState("Weight");
   const hasData = data && data.length > 0;
 
+  // Recharts requires strict Numbers, so we map and parse any backend strings
+  const parsedData = data.map((d) => ({
+    ...d,
+    weight: Number(d.weight),
+    targetWeight: Number(d.targetWeight),
+    caloriesIn: Number(d.caloriesIn),
+    caloriesOut: Number(d.caloriesOut),
+    mood: Number(d.mood),
+    energy: Number(d.energy),
+  }));
+
   // Derived stats
   const latest = hasData ? data[data.length - 1] : null;
   const first = hasData ? data[0] : null;
@@ -63,6 +74,11 @@ export default function ProgressChart({ data = [] }) {
   const bmi = latest
     ? null // height not tracked yet — placeholder
     : null;
+
+  const minWeight = hasData ? Math.min(...parsedData.map(d => d.weight), ...parsedData.map(d => d.targetWeight)) : 0;
+  const maxWeight = hasData ? Math.max(...parsedData.map(d => d.weight), ...parsedData.map(d => d.targetWeight)) : 100;
+  // Create padding for graph Y-bounds safely
+  const yDomainPad = Math.max((maxWeight - minWeight) * 0.5, 5);
 
   const WeightIcon =
     weightChange === null ? Minus : Number(weightChange) < 0 ? TrendingDown : TrendingUp;
@@ -154,7 +170,7 @@ export default function ProgressChart({ data = [] }) {
               transition={{ duration: 0.3 }}
             >
               <ResponsiveContainer width="100%" height={220}>
-                <AreaChart data={data}>
+                <AreaChart data={parsedData}>
                   <defs>
                     <linearGradient id="weightGrad" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#4ade80" stopOpacity={0.3} />
@@ -163,7 +179,10 @@ export default function ProgressChart({ data = [] }) {
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
                   <XAxis dataKey="date" stroke="#6b7280" tick={{ fontSize: 11 }} />
-                  <YAxis stroke="#6b7280" tick={{ fontSize: 11 }} />
+                  <YAxis 
+                    domain={[Math.max(0, minWeight - yDomainPad).toFixed(0), (maxWeight + yDomainPad).toFixed(0)]} 
+                    stroke="#6b7280" tick={{ fontSize: 11 }} 
+                  />
                   <Tooltip content={<CustomTooltip />} />
                   <ReferenceLine
                     y={latest?.targetWeight}
@@ -193,7 +212,7 @@ export default function ProgressChart({ data = [] }) {
               transition={{ duration: 0.3 }}
             >
               <ResponsiveContainer width="100%" height={220}>
-                <BarChart data={data} barGap={4}>
+                <BarChart data={parsedData} barGap={4}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
                   <XAxis dataKey="date" stroke="#6b7280" tick={{ fontSize: 11 }} />
                   <YAxis stroke="#6b7280" tick={{ fontSize: 11 }} />
@@ -214,7 +233,7 @@ export default function ProgressChart({ data = [] }) {
               transition={{ duration: 0.3 }}
             >
               <ResponsiveContainer width="100%" height={220}>
-                <LineChart data={data}>
+                <LineChart data={parsedData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
                   <XAxis dataKey="date" stroke="#6b7280" tick={{ fontSize: 11 }} />
                   <YAxis domain={[0, 5]} stroke="#6b7280" tick={{ fontSize: 11 }} />
