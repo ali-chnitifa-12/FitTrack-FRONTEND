@@ -8,6 +8,7 @@ import Workouts from "./pages/Workouts.jsx";
 import Nutrition from "./pages/Nutrition.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
 import ContactForm from "./pages/ContactForm.jsx";
 import AICoach from "./pages/AICoach.jsx";
@@ -194,199 +195,16 @@ export default function App() {
       <MainLayout>
         <Routes>
           {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<ContactForm />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
           {/* Protected Routes */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <>
-                  {/* Hero Section */}
-                  <section className="h-screen flex flex-col justify-center items-center relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-green-900">
-                    <motion.div
-                      initial="hidden"
-                      animate="visible"
-                      variants={staggerChildren}
-                      className="relative z-10 text-center space-y-8"
-                    >
-                      <motion.h1 
-                        variants={fadeInUp}
-                        className="text-6xl md:text-8xl font-bold text-green-400 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400"
-                      >
-                        Welcome to FitTrack
-                      </motion.h1>
-                      
-                      <motion.p 
-                        variants={fadeInUp}
-                        className="max-w-3xl mx-auto text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed"
-                      >
-                        Transform your body, track your progress, and achieve your fitness goals with our comprehensive platform
-                      </motion.p>
-                      
-                      <motion.div variants={fadeInUp}>
-                        <Link
-                          to="/dashboard"
-                          className="inline-block bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-black font-bold px-12 py-4 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-green-500/30"
-                        >
-                          Start Your Journey
-                        </Link>
-                      </motion.div>
-                    </motion.div>
-
-                    {/* Animated Background Elements */}
-                    <motion.div
-                      className="absolute top-20 left-20 w-72 h-72 bg-green-500 rounded-full mix-blend-soft-light filter blur-xl opacity-20 animate-pulse"
-                      animate={{
-                        scale: [1, 1.2, 1],
-                        rotate: [0, 180, 360]
-                      }}
-                      transition={{
-                        duration: 8,
-                        repeat: Infinity,
-                        ease: "linear"
-                      }}
-                    />
-                    
-                    <motion.div
-                      className="absolute bottom-20 right-20 w-96 h-96 bg-teal-500 rounded-full mix-blend-soft-light filter blur-xl opacity-15"
-                      animate={{
-                        scale: [1.2, 1, 1.2],
-                        rotate: [360, 0, 360]
-                      }}
-                      transition={{
-                        duration: 12,
-                        repeat: Infinity,
-                        ease: "linear"
-                      }}
-                    />
-                  </section>
-
-                  {/* Features Grid */}
-                  <section className="max-w-7xl mx-auto p-6 py-20">
-                    <motion.div
-                      initial="hidden"
-                      whileInView="visible"
-                      viewport={{ once: true }}
-                      variants={staggerChildren}
-                      className="text-center mb-16"
-                    >
-                      <motion.h2 
-                        variants={fadeInUp}
-                        className="text-5xl font-bold text-green-400 mb-6"
-                      >
-                        Discover Your Potential
-                      </motion.h2>
-                      <motion.p 
-                        variants={fadeInUp}
-                        className="max-w-2xl mx-auto text-xl text-gray-400"
-                      >
-                        Everything you need for your fitness journey in one place
-                      </motion.p>
-                    </motion.div>
-
-                    <motion.div
-                      initial="hidden"
-                      whileInView="visible"
-                      viewport={{ once: true }}
-                      variants={staggerChildren}
-                      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                    >
-                      {sections.map((section, index) => (
-                        <motion.div
-                          key={index}
-                          variants={scaleIn}
-                          whileHover={{ 
-                            scale: 1.05,
-                            rotateY: 5,
-                            transition: { duration: 0.3 }
-                          }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Link
-                            to={section.link}
-                            className="block bg-gray-900 rounded-2xl overflow-hidden shadow-2xl hover:shadow-green-500/20 transition-all duration-300 group"
-                          >
-                            <div className="relative overflow-hidden">
-                              <img
-                                src={section.img}
-                                alt={section.title}
-                                className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
-                              />
-                              <div className="absolute top-4 right-4 bg-green-500 text-black px-3 py-1 rounded-full text-sm font-semibold">
-                                {section.category}
-                              </div>
-                              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
-                            </div>
-                            
-                            <div className="p-6">
-                              <h3 className="text-2xl font-bold text-green-400 mb-3 group-hover:text-green-300 transition-colors">
-                                {section.title}
-                              </h3>
-                              <p className="text-gray-400 mb-4 leading-relaxed">
-                                {section.description}
-                              </p>
-                              <span className="inline-flex items-center text-green-500 font-semibold group-hover:text-green-400 transition-colors">
-                                Explore Now 
-                                <motion.span
-                                  initial={{ x: 0 }}
-                                  whileHover={{ x: 5 }}
-                                  className="ml-2"
-                                >
-                                  ÔåÆ
-                                </motion.span>
-                              </span>
-                            </div>
-                          </Link>
-                        </motion.div>
-                      ))}
-                    </motion.div>
-                  </section>
-
-                  {/* Stats Section */}
-                  <motion.section
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={staggerChildren}
-                    className="bg-gradient-to-r from-gray-900 to-black py-20"
-                  >
-                    <div className="max-w-6xl mx-auto text-center">
-                      <motion.h2 variants={fadeInUp} className="text-4xl font-bold text-green-400 mb-12">
-                        Why Thousands Choose FitTrack
-                      </motion.h2>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                          { number: "95%", label: "Success Rate", desc: "Users achieving their goals" },
-                          { number: "10K+", label: "Active Users", desc: "Worldwide community" },
-                          { number: "24/7", label: "Support", desc: "Always here to help you" }
-                        ].map((stat, index) => (
-                          <motion.div
-                            key={index}
-                            variants={fadeInUp}
-                            className="text-center p-6 bg-gray-800 rounded-2xl hover:bg-gray-750 transition-colors"
-                          >
-                            <div className="text-5xl font-bold text-green-400 mb-4">{stat.number}</div>
-                            <div className="text-xl font-semibold text-white mb-2">{stat.label}</div>
-                            <div className="text-gray-400">{stat.desc}</div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.section>
-                </>
-              </ProtectedRoute>
-            }
-          />
-          
-          {/* Other protected routes */}
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/workouts" element={<ProtectedRoute><Workouts /></ProtectedRoute>} />
           <Route path="/nutrition" element={<ProtectedRoute><Nutrition /></ProtectedRoute>} />
-          <Route path="/about" element={<ProtectedRoute><About /></ProtectedRoute>} />
-          <Route path="/contact" element={<ProtectedRoute><ContactForm /></ProtectedRoute>} />
           <Route path="/coach" element={<ProtectedRoute><AICoach /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
           <Route path="/subscription" element={<ProtectedRoute><Subscription /></ProtectedRoute>} />
