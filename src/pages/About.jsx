@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ExternalLink, Github, Mail } from "lucide-react";
 
 export default function About() {
   const fadeInUp = {
@@ -69,39 +68,45 @@ export default function About() {
             initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
             className="lg:col-span-5 space-y-8"
           >
-            {/* Meet The Creator Card */}
+            {/* System Architecture Card */}
             <motion.div variants={fadeInUp} className="bg-gradient-to-b from-gray-900 to-black p-[1px] rounded-3xl overflow-hidden shadow-2xl relative group">
               <div className="absolute inset-0 bg-gradient-to-b from-green-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="bg-gray-900/90 h-full rounded-[23px] p-8 relative z-10 backdrop-blur-xl border border-gray-800 group-hover:border-green-500/30 transition-colors">
                 <h3 className="text-xs uppercase tracking-widest text-green-400 font-bold mb-6 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" /> Lead Engineer
+                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" /> Platform Architecture
                 </h3>
                 
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-green-400 to-teal-500 p-1">
-                    <img src="https://ui-avatars.com/api/?name=Ali+C&background=000&color=4ade80" alt="Ali" className="w-full h-full rounded-full object-cover border-2 border-black" />
-                  </div>
-                  <div>
-                    <div className="text-xl font-bold text-white">Ali C.</div>
-                    <div className="text-gray-400 text-sm font-medium">Full Stack Developer</div>
-                  </div>
-                </div>
-
-                <p className="text-gray-300 text-sm leading-relaxed mb-8">
-                  Dedicated to crafting seamless, highly-performant web applications. Passionate about marrying robust architectural patterns with pixel-perfect UI.
+                <h4 className="text-2xl font-bold text-white mb-4">Under the Hood</h4>
+                <p className="text-gray-400 text-sm leading-relaxed mb-8">
+                  FitTrack is engineered using modern web technologies. We prioritized a blisteringly fast user experience, hyper-responsive layouts, and robust security protocols.
                 </p>
 
-                <div className="flex gap-4">
-                  <a href="#" className="flex items-center justify-center p-3 rounded-xl bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700 transition-colors">
-                    <Github size={20} />
-                  </a>
-                  <a href="mailto:alichnitifa30@gmail.com" className="flex items-center justify-center p-3 rounded-xl bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700 transition-colors">
-                    <Mail size={20} />
-                  </a>
-                  <a href="#" className="flex items-center justify-center py-3 px-4 flex-1 rounded-xl bg-green-500/10 text-green-400 hover:bg-green-500/20 transition-colors text-sm font-bold border border-green-500/20">
-                    <ExternalLink size={16} className="mr-2" /> Portfolio
-                  </a>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4 bg-black/50 p-3 rounded-xl border border-gray-800">
+                    <div className="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-lg">⚛️</div>
+                    <div className="flex-1">
+                      <div className="font-bold text-white text-sm">React ecosystem</div>
+                      <div className="text-xs text-gray-500">Component-driven architecture</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-4 bg-black/50 p-3 rounded-xl border border-gray-800">
+                    <div className="w-10 h-10 rounded-lg bg-pink-500/10 border border-pink-500/30 text-pink-400 flex items-center justify-center text-lg">✨</div>
+                    <div className="flex-1">
+                      <div className="font-bold text-white text-sm">Framer Motion & GSAP</div>
+                      <div className="text-xs text-gray-500">Hardware-accelerated animations</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4 bg-black/50 p-3 rounded-xl border border-gray-800">
+                    <div className="w-10 h-10 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 flex items-center justify-center text-lg">🧠</div>
+                    <div className="flex-1">
+                      <div className="font-bold text-white text-sm">Google Gemini AI</div>
+                      <div className="text-xs text-gray-500">Advanced algorithmic coaching</div>
+                    </div>
+                  </div>
                 </div>
+
               </div>
             </motion.div>
 
