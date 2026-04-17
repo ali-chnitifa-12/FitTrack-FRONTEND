@@ -3,7 +3,8 @@ import api from "../Utils/axios.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 // Components
 import ProgressForm from "../Components/ProgressForm.jsx";
@@ -14,10 +15,7 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2
-    }
+    transition: { staggerChildren: 0.15, delayChildren: 0.2 }
   }
 };
 
@@ -26,10 +24,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut"
-    }
+    transition: { duration: 0.6, ease: "easeOut" }
   }
 };
 
@@ -49,14 +44,114 @@ const quotes = [
   "You don't get the body you want by wishing for it, but by working for it.",
 ];
 
+// --- Skeleton Loader Component ---
+function DashboardSkeleton() {
+  return (
+    <div className="w-full flex-1 relative p-6 flex items-center justify-center">
+      <div className="bg-gray-900 p-4 md:p-8 rounded-3xl shadow-xl max-w-6xl w-full border border-gray-800">
+        <div className="animate-pulse space-y-8">
+          {/* Header Skeleton */}
+          <div className="flex justify-between items-center">
+            <div className="h-10 bg-gray-800 rounded-xl w-48 blur-sm"></div>
+            <div className="hidden md:flex items-center space-x-3 bg-gray-800/50 p-3 rounded-xl blur-sm">
+              <div className="w-10 h-10 bg-gray-700 rounded-full"></div>
+              <div className="space-y-2">
+                <div className="h-3 bg-gray-700 rounded w-20"></div>
+                <div className="h-2 bg-gray-700 rounded w-16"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Welcome & Challenge Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="h-40 bg-gray-800 rounded-2xl blur-[2px]"></div>
+            <div className="h-40 bg-gray-800 rounded-2xl blur-[2px]"></div>
+          </div>
+
+          {/* Form & Chart Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="h-96 bg-gray-800 rounded-2xl blur-[2px]"></div>
+            <div className="h-96 bg-gray-800 rounded-2xl blur-[2px]"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Empty State Chart Component ---
+function EmptyChartState() {
+  return (
+    <div className="h-full min-h-[300px] flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-gray-700/50 rounded-2xl bg-gray-800/30">
+      <div className="relative w-24 h-24 mb-4">
+        <svg className="absolute inset-0 w-full h-full text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+        </svg>
+        <motion.div 
+          animate={{ y: [0, -10, 0] }} 
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          <span className="text-4xl">📈</span>
+        </motion.div>
+      </div>
+      <h3 className="text-xl font-bold text-gray-300 mb-2">No Data Yet</h3>
+      <p className="text-sm text-gray-500 mb-4 max-w-sm">
+        Start tracking your weight and calories to see your progress chart magically appear here.
+      </p>
+    </div>
+  );
+}
+
+// --- Onboarding Wizard Component ---
+function OnboardingWizard({ setDismissed }) {
+  const steps = [
+    { title: "Calculate Macros", desc: "Head over to the Nutrition page to find out exactly how much you should be eating.", link: "/nutrition", icon: "🥗" },
+    { title: "Choose Your Routine", desc: "Set your body type in the Workouts page to get a customized weekly split.", link: "/workouts", icon: "🏋️" },
+    { title: "Log Your Day 1", desc: "Add your very first weight entry below to officially start your journey.", icon: "⚖️" }
+  ];
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, height: 0, scale: 0.95 }}
+      animate={{ opacity: 1, height: "auto", scale: 1 }}
+      className="bg-gradient-to-r from-green-500/10 to-teal-500/10 border border-green-500/30 p-6 rounded-2xl mb-8 relative overflow-hidden"
+    >
+      <div className="absolute top-0 right-0 p-4">
+        <button onClick={() => setDismissed(true)} className="text-gray-400 hover:text-white transition-colors text-sm font-semibold">✕ Dismiss</button>
+      </div>
+      <h2 className="text-2xl font-bold text-green-400 mb-2">👋 Welcome to FitTrack!</h2>
+      <p className="text-gray-300 mb-6 font-medium">To get the most out of your journey, here are your first 3 steps:</p>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {steps.map((step, i) => (
+          <div key={i} className="bg-gray-900/60 p-4 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-all flex flex-col h-full">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-2xl bg-gray-800 p-2 rounded-lg">{step.icon}</span>
+              <h3 className="font-bold text-white text-sm">Step {i + 1}: {step.title}</h3>
+            </div>
+            <p className="text-xs text-gray-400 flex-1 leading-relaxed">{step.desc}</p>
+            {step.link && (
+              <Link to={step.link} className="mt-3 text-xs font-bold text-green-400 hover:text-green-300 flex items-center gap-1">
+                Go there <span aria-hidden="true">&rarr;</span>
+              </Link>
+            )}
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+// ── Main Component ───────────────────────────────────────────────────────────
 export default function Dashboard() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [progressData, setProgressData] = useState([]);
-  const [showChart, setShowChart] = useState(false);
   const [estimatedTime, setEstimatedTime] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [dismissOnboarding, setDismissOnboarding] = useState(false);
   const [searchParams] = useSearchParams();
   const paymentSuccess = searchParams.get("payment_success") === "true";
 
@@ -67,56 +162,22 @@ export default function Dashboard() {
   const particlesRef = useRef([]);
 
   useEffect(() => {
+    if (loading) return; // Wait until loaded before animating
     const timer = setTimeout(() => {
       if (!containerRef.current) return;
-
       const ctx = gsap.context(() => {
         // Container entrance
         gsap.fromTo(containerRef.current, 
-          { rotationY: -45, scale: 0.9, opacity: 0 },
-          { rotationY: 0, scale: 1, opacity: 1, duration: 1.2, ease: "back.out(1.7)" }
+          { y: 40, scale: 0.96, opacity: 0 },
+          { y: 0, scale: 1, opacity: 1, duration: 0.8, ease: "power3.out" }
         );
 
         // Welcome and challenge cards
         const cards = [welcomeRef.current, challengeRef.current].filter(el => el);
         if (cards.length > 0) {
           gsap.fromTo(cards, 
-            { y: 50, opacity: 0, rotationX: -20 },
-            { 
-              y: 0, 
-              opacity: 1, 
-              rotationX: 0,
-              duration: 0.8, 
-              stagger: 0.2, 
-              delay: 0.5,
-              ease: "power2.out" 
-            }
-          );
-
-          // Crazy rotating 3D loop for cards
-          gsap.to(cards, {
-            rotationY: 360,
-            transformPerspective: 1000,
-            transformOrigin: "50% 50%",
-            duration: 14,
-            repeat: -1,
-            ease: "linear"
-          });
-          gsap.to(cards, {
-            rotationX: 10,
-            yoyo: true,
-            repeat: -1,
-            duration: 6,
-            ease: "sine.inOut",
-            stagger: 0.2
-          });
-        }
-
-        // Quote animation
-        if (quoteRef.current) {
-          gsap.fromTo(quoteRef.current, 
-            { scale: 0.8, opacity: 0, rotationY: 45 },
-            { scale: 1, opacity: 1, rotationY: 0, duration: 1, delay: 1, ease: "elastic.out(1, 0.5)" }
+            { y: 30, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.6, stagger: 0.15, delay: 0.2, ease: "power2.out" }
           );
         }
 
@@ -124,58 +185,16 @@ export default function Dashboard() {
         particlesRef.current.forEach((particle, index) => {
           if (particle) {
             gsap.to(particle, {
-              y: -25,
-              opacity: 0.9,
-              duration: 3 + index * 0.5,
-              ease: "power1.inOut",
-              yoyo: true,
-              repeat: -1,
-              delay: index * 0.3
+              y: -25, opacity: 0.6, duration: 3 + index * 0.5,
+              ease: "sine.inOut", yoyo: true, repeat: -1, delay: index * 0.3
             });
           }
         });
-
-        // Background continuous animations
-        const bg1Elements = gsap.utils.toArray(".dashboard-bg-1");
-        if (bg1Elements.length > 0) {
-          gsap.to(bg1Elements, {
-            rotation: 360,
-            scale: 1.3,
-            duration: 18,
-            repeat: -1,
-            ease: "none"
-          });
-        }
-
-        const bg2Elements = gsap.utils.toArray(".dashboard-bg-2");
-        if (bg2Elements.length > 0) {
-          gsap.to(bg2Elements, {
-            rotation: -360,
-            scale: 1.4,
-            duration: 22,
-            repeat: -1,
-            ease: "none"
-          });
-        }
-
-        const neonRing = gsap.utils.toArray(".dashboard-neon-ring");
-        if (neonRing.length > 0) {
-          gsap.to(neonRing, {
-            rotation: 360,
-            scale: 1.1,
-            duration: 16,
-            repeat: -1,
-            ease: "sine.inOut",
-            yoyo: true
-          });
-        }
       });
-
       return () => ctx.revert();
-    }, 100);
-
+    }, 50);
     return () => clearTimeout(timer);
-  }, []);
+  }, [loading]);
 
   const [challenge, setChallenge] = useState(dailyChallenges[0]);
   const [quote, setQuote] = useState(quotes[0]);
@@ -192,34 +211,22 @@ export default function Dashboard() {
       setLoading(false);
       return;
     }
-
     if (!user.token) {
-      setError("No authentication token found. Please login again.");
+      toast.error("Authentication error. Please login.");
       setLoading(false);
       return;
     }
-
-    setLoading(true);
-    setError("");
-
-    api.get("/dashboard", { 
-      headers: { 
-        Authorization: `Bearer ${user.token}` 
-      } 
-    })
+    api.get("/dashboard", { headers: { Authorization: `Bearer ${user.token}` } })
       .then((res) => {
         setProgressData(res.data.progress || []);
-        setShowChart(res.data.progress?.length > 0);
-        setError("");
       })
       .catch((err) => {
-        console.error("Dashboard fetch error:", err);
         if (err.response?.status === 401) {
-          setError("Session expired. Please login again.");
+          toast.error("Session expired.");
           logout();
           navigate("/login");
         } else {
-          setError("Failed to load dashboard data. Please try again.");
+          toast.error("Failed to load dashboard data. Assuming empty state.");
         }
       })
       .finally(() => {
@@ -230,22 +237,16 @@ export default function Dashboard() {
   // Add new progress entry
   const addEntry = (entry) => {
     if (!user || !user.token) {
-      setError("Please login to add progress entries");
+      toast.error("Please login to add progress entries");
       return;
     }
 
-    setError("");
+    const toastId = toast.loading("Saving progress...");
 
-    api
-      .post("/progress", entry, { 
-        headers: { 
-          Authorization: `Bearer ${user.token}` 
-        } 
-      })
+    api.post("/progress", entry, { headers: { Authorization: `Bearer ${user.token}` } })
       .then((res) => {
         setProgressData(res.data.progress || []);
-        setShowChart(true);
-        setError("");
+        toast.success("Progress saved successfully! 🚀", { id: toastId });
 
         const latest = res.data.progress[res.data.progress.length - 1];
         if (latest.weight && latest.targetWeight && latest.caloriesIn && latest.caloriesOut) {
@@ -262,209 +263,147 @@ export default function Dashboard() {
         }
       })
       .catch((err) => {
-        console.error("Add entry error:", err);
         if (err.response?.status === 401) {
-          setError("Session expired. Please login again.");
+          toast.error("Session expired.", { id: toastId });
           logout();
           navigate("/login");
         } else {
-          setError("Failed to add progress entry. Please try again.");
+          toast.error("Failed to add progress entry.", { id: toastId });
         }
       });
   };
 
-  if (loading) {
-    return (
-      <div className="w-full flex-1 flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-green-500 text-xl"
-        >
-          <div className="flex items-center justify-center">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full mr-3"
-            />
-            Loading dashboard...
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
+  if (loading) return <DashboardSkeleton />;
+
+  const showOnboarding = progressData.length === 0 && !dismissOnboarding;
 
   return (
-    <div className="w-full flex-1 relative p-6 flex items-center justify-center text-white">
+    <div className="w-full flex-1 relative p-4 md:p-6 flex items-center justify-center text-white">
       <motion.div
         ref={containerRef}
-        initial={{ opacity: 0, scale: 0.92, rotationY: 8 }}
-        animate={{ opacity: 1, scale: 1, rotationY: 0 }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-        className="bg-gray-900 p-4 md:p-8 rounded-3xl shadow-xl max-w-6xl w-full relative overflow-hidden"
+        className="bg-gray-900/90 backdrop-blur-md p-5 md:p-8 rounded-3xl shadow-2xl max-w-6xl w-full relative overflow-hidden border border-gray-800"
       >
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="relative z-10 space-y-8"
-        >
-          {/* Error Message */}
-          <AnimatePresence>
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="bg-red-600/80 text-white p-4 rounded-xl text-center backdrop-blur-sm"
-              >
-                {error}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
+        <div className="relative z-10 space-y-8">
+          
           {/* Header */}
-          <motion.header
-            variants={itemVariants}
-            className="flex justify-center md:justify-between items-center"
-          >
-            <h1 className="text-3xl md:text-5xl font-extrabold text-green-400 tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400 text-center md:text-left">
+          <header className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4">
+            <h1 className="text-3xl md:text-5xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400">
               Dashboard
             </h1>
             {user && (
               <motion.div 
-                className="hidden md:flex items-center space-x-3 bg-gray-800/50 p-3 rounded-xl"
-                whileHover={{ scale: 1.05 }}
+                className="flex items-center space-x-3 bg-gray-800/80 p-3 rounded-2xl border border-gray-700/50"
+                whileHover={{ scale: 1.02 }}
               >
-                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-black font-bold">
+                <div className="w-10 h-10 bg-gradient-to-tr from-green-500 to-teal-400 rounded-full flex items-center justify-center text-black font-extrabold shadow-lg shadow-green-500/20">
                   {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                 </div>
                 <div>
-                  <p className="text-green-400 font-semibold">{user.name}</p>
-                  <p className="text-xs text-gray-400">Welcome back!</p>
+                  <p className="text-gray-100 font-bold text-sm tracking-wide">{user.name}</p>
+                  <p className="text-xs text-green-400 font-medium">Ready to work?</p>
                 </div>
               </motion.div>
             )}
-          </motion.header>
+          </header>
 
-          {/* Welcome & Daily Challenge */}
+          {/* Optional Onboarding */}
+          <AnimatePresence>
+            {showOnboarding && <OnboardingWizard setDismissed={setDismissOnboarding} />}
+          </AnimatePresence>
+
+          {/* Welcome & Daily Challenge Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <motion.div
               ref={welcomeRef}
-              variants={itemVariants}
-              className="bg-[#02162f]/85 p-6 rounded-2xl shadow-[0_0_35px_rgba(6,206,255,0.35)] border border-cyan-400/30 relative overflow-hidden transform-gpu"
-              style={{ transformStyle: 'preserve-3d' }}
+              className="bg-gradient-to-br from-[#02162f] to-[#042852] p-6 rounded-2xl shadow-lg border border-blue-500/20 relative overflow-hidden"
             >
-              <h2 className="text-2xl font-bold text-green-400 mb-3">Welcome</h2>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                {user
-                  ? `Hello, ${user.name}! Ready to crush your goals today?`
-                  : "Welcome! Log in to track your fitness journey."}
+              <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                <span className="text-blue-400">👋</span> Welcome Back
+              </h2>
+              <p className="text-gray-300 text-sm leading-relaxed mb-4">
+                {user ? `Keep the momentum going, ${user.name}! Your goals are closer than yesterday.` : "Log in to track your fitness journey."}
               </p>
-              <motion.div
-                className="absolute -bottom-4 -right-4 w-24 h-24 bg-green-500 rounded-full mix-blend-soft-light filter blur-xl opacity-10"
-                animate={{
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
+              <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-blue-500 rounded-full mix-blend-soft-light filter blur-2xl opacity-20" />
             </motion.div>
 
             <motion.div
               ref={challengeRef}
-              variants={itemVariants}
-              className="bg-[#022f44]/85 p-6 rounded-2xl shadow-[0_0_35px_rgba(99,255,241,0.3)] border border-cyan-300/30 relative overflow-hidden transform-gpu"
-              style={{ transformStyle: 'preserve-3d' }}
+              className="bg-gradient-to-br from-[#022f44] to-[#014161] p-6 rounded-2xl shadow-lg border border-cyan-500/20 relative overflow-hidden flex flex-col justify-between"
             >
-              <h2 className="text-2xl font-bold text-green-400 mb-3">Daily Challenge</h2>
-              <p className="text-gray-300 text-lg mb-4">{challenge}</p>
-              <motion.button
-                whileHover={{ scale: 1.05, boxShadow: "0px 0px 15px rgba(74, 222, 128, 0.3)" }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  const index = Math.floor(Math.random() * dailyChallenges.length);
-                  setChallenge(dailyChallenges[index]);
-                }}
-                className="px-5 py-2 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-600 text-black rounded-lg font-bold transition duration-200 shadow-lg shadow-cyan-500/30"
+              <div>
+                <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                  <span className="text-cyan-400">⚡</span> Daily Challenge
+                </h2>
+                <p className="text-gray-200 text-lg font-medium mb-4">{challenge}</p>
+              </div>
+              <button
+                onClick={() => setChallenge(dailyChallenges[Math.floor(Math.random() * dailyChallenges.length)])}
+                className="self-start text-xs font-bold px-4 py-2 bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 rounded-lg transition-colors border border-cyan-500/30"
               >
-                New Challenge
-              </motion.button>
+                Shuffle 🔀
+              </button>
             </motion.div>
           </div>
 
-          {/* Progress Form + Chart */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ProgressForm addEntry={addEntry} />
-            <AnimatePresence>
-              {showChart && progressData.length > 0 && (
-                <motion.div
-                  key="progress-chart"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 30 }}
-                  transition={{ duration: 0.6 }}
-                  className="bg-gray-800/50 p-3 md:p-6 rounded-2xl border border-green-500/20 overflow-hidden"
-                >
-                  {estimatedTime && (
-                    <motion.p 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-green-400 font-semibold mb-4 p-3 bg-gray-700/50 rounded-xl text-center"
-                    >
-                      {estimatedTime}
-                    </motion.p>
+          {/* Progress Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Form */}
+            <div className="lg:col-span-5">
+              <ProgressForm addEntry={addEntry} />
+            </div>
+            
+            {/* Chart */}
+            <div className="lg:col-span-7 flex flex-col">
+              <div className="bg-gray-800/40 p-4 md:p-6 rounded-3xl border border-gray-700/50 flex-1 flex flex-col shadow-inner backdrop-blur-sm">
+                <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  📈 Progress Analytics
+                </h3>
+                {estimatedTime && (
+                  <motion.div 
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                    className="mb-4 p-3 bg-green-500/10 border border-green-500/30 text-green-400 font-medium rounded-xl text-sm"
+                  >
+                    🎯 Goal Prediction: {estimatedTime}
+                  </motion.div>
+                )}
+                
+                <div className="flex-1 w-full relative">
+                  {progressData.length > 0 ? (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-full">
+                      <ProgressChart data={progressData} />
+                    </motion.div>
+                  ) : (
+                    <EmptyChartState />
                   )}
-                  <ProgressChart data={progressData} />
-                </motion.div>
-              )}
-            </AnimatePresence>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Motivational Quote */}
-          <motion.div
-            ref={quoteRef}
-            variants={itemVariants}
-            className="bg-gray-800/50 p-6 rounded-2xl shadow-lg border border-green-500/30 text-center relative overflow-hidden transform-gpu"
-            style={{ transformStyle: 'preserve-3d' }}
-          >
-            <h2 className="text-2xl font-bold text-green-400 mb-3">Daily Motivation</h2>
+          {/* Motivational Quote Bottom Row */}
+          <div className="bg-gray-800/30 p-6 rounded-2xl border border-gray-700/50 text-center relative overflow-hidden backdrop-blur-sm group">
             <motion.blockquote 
-              className="text-gray-300 text-lg italic mb-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
+              className="text-gray-300 text-lg italic font-light tracking-wide"
             >
               "{quote}"
             </motion.blockquote>
-            <motion.button
-              whileHover={{ scale: 1.05, boxShadow: "0px 0px 15px rgba(74, 222, 128, 0.3)" }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                const index = Math.floor(Math.random() * quotes.length);
-                setQuote(quotes[index]);
-              }}
-              className="px-5 py-2 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-black rounded-lg font-semibold transition duration-200"
+            <button
+              onClick={() => setQuote(quotes[Math.floor(Math.random() * quotes.length)])}
+              className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded-lg text-gray-300"
             >
               New Quote
-            </motion.button>
-          </motion.div>
-        </motion.div>
+            </button>
+          </div>
 
-        {/* Floating particles */}
+        </div>
+
+        {/* Ambient background particles */}
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <div
             key={i}
             ref={el => particlesRef.current[i-1] = el}
-            className="absolute w-2 h-2 bg-green-400 rounded-full transform-gpu"
-            style={{
-              top: `${10 + i * 12}%`,
-              left: `${5 + i * 15}%`,
-              transformStyle: 'preserve-3d'
-            }}
+            className="absolute w-1.5 h-1.5 bg-green-400 rounded-full blur-[1px] opacity-20 pointer-events-none"
+            style={{ top: `${15 + i * 12}%`, left: `${10 + i * 15}%` }}
           />
         ))}
       </motion.div>
