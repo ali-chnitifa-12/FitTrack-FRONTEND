@@ -178,6 +178,8 @@ export default function Workouts() {
                 className="relative group flex flex-col items-center"
                 variants={itemVariants}
               >
+                <motion.button
+                  onClick={() => setBodyType(type)}
                   className={`px-3 md:px-6 py-3 rounded-xl font-semibold text-sm md:text-lg transition duration-200 flex items-center ${
                     bodyType === type
                       ? "bg-green-500 text-black"
