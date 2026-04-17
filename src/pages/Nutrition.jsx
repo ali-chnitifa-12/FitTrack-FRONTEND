@@ -268,28 +268,41 @@ export default function Nutrition() {
   }, [user]);
 
   const loadHistory = async () => {
+    let loadedHistory = [];
     if (user && user.token) {
       try {
         const response = await api.get("/nutrition/goals", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
-        setHistory(
-          response.data.nutritionGoals.map((item) => ({
-            id: item.id,
-            date: new Date(item.createdAt).toLocaleDateString(),
-            age: item.age, weight: item.weight, height: item.height,
-            gender: item.gender, activity: item.activityLevel,
-            bodyType: item.bodyType, goal: item.goal,
-            tdee: item.tdee, carbs: item.carbs, protein: item.protein, fats: item.fats,
-          }))
-        );
+        loadedHistory = response.data.nutritionGoals.map((item) => ({
+          id: item.id,
+          date: new Date(item.createdAt).toLocaleDateString(),
+          age: item.age, weight: item.weight, height: item.height,
+          gender: item.gender, activity: item.activityLevel,
+          bodyType: item.bodyType, goal: item.goal,
+          tdee: item.tdee, carbs: item.carbs, protein: item.protein, fats: item.fats,
+        }));
       } catch {
-        const storedHistory = JSON.parse(localStorage.getItem("nutritionHistory")) || [];
-        setHistory(storedHistory);
+        loadedHistory = JSON.parse(localStorage.getItem("nutritionHistory")) || [];
       }
     } else {
-      const storedHistory = JSON.parse(localStorage.getItem("nutritionHistory")) || [];
-      setHistory(storedHistory);
+      loadedHistory = JSON.parse(localStorage.getItem("nutritionHistory")) || [];
+    }
+    
+    setHistory(loadedHistory);
+
+    // Auto-load the most recent calculation if we haven't already calculated one
+    if (loadedHistory.length > 0) {
+      const latest = loadedHistory[0];
+      setAge(latest.age || "");
+      setWeight(latest.weight || "");
+      setHeight(latest.height || "");
+      if (latest.gender) setGender(latest.gender);
+      if (latest.activity) setActivity(latest.activity);
+      if (latest.bodyType) setBodyType(latest.bodyType);
+      if (latest.goal) setGoal(latest.goal);
+      setTdee(latest.tdee);
+      setMacros({ carbs: latest.carbs, protein: latest.protein, fats: latest.fats });
     }
   };
 
