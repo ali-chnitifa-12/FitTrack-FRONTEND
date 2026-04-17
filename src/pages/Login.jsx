@@ -94,7 +94,7 @@ export default function Login() {
       <form
         ref={formRef}
         onSubmit={handleSubmit}
-        className="bg-gray-900/90 backdrop-blur-lg rounded-xl shadow-2xl p-8 w-96 border border-gray-700/50 transform-gpu"
+        className="bg-gray-900/90 backdrop-blur-lg rounded-xl shadow-2xl p-6 md:p-8 w-[90%] max-w-md border border-gray-700/50 transform-gpu"
         style={{ transformStyle: 'preserve-3d' }}
       >
         <h2 ref={titleRef} className="text-3xl font-bold text-center mb-6 text-green-500 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400">

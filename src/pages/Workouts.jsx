@@ -141,7 +141,7 @@ export default function Workouts() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-900/80 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-green-500/20 max-w-6xl w-full relative overflow-hidden"
+        className="bg-gray-900/80 backdrop-blur-md p-4 md:p-8 rounded-3xl shadow-2xl border border-green-500/20 max-w-6xl w-full relative overflow-hidden"
       >
         <motion.div
           variants={containerVariants}
@@ -152,7 +152,7 @@ export default function Workouts() {
           {/* Title */}
           <motion.h1
             variants={itemVariants}
-            className="text-5xl font-bold text-green-400 mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400"
+            className="text-3xl md:text-5xl font-bold text-green-400 mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400"
           >
             Workouts & Training Plans
           </motion.h1>
@@ -170,7 +170,7 @@ export default function Workouts() {
           {/* Body Type Selector */}
           <motion.div
             variants={containerVariants}
-            className="flex justify-center mb-10 space-x-4"
+            className="flex flex-wrap justify-center mb-10 gap-3 md:space-x-4"
           >
             {bodyTypes.map((type) => (
               <motion.div
@@ -178,20 +178,13 @@ export default function Workouts() {
                 className="relative group flex flex-col items-center"
                 variants={itemVariants}
               >
-                <motion.button
-                  onClick={() => setBodyType(type)}
-                  whileHover={{ 
-                    scale: 1.05,
-                    boxShadow: "0px 0px 15px rgba(74, 222, 128, 0.5)"
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`px-6 py-3 rounded-xl font-semibold text-lg transition duration-200 flex items-center ${
+                  className={`px-3 md:px-6 py-3 rounded-xl font-semibold text-sm md:text-lg transition duration-200 flex items-center ${
                     bodyType === type
                       ? "bg-green-500 text-black"
                       : "bg-gray-800 text-gray-200 hover:bg-green-600 hover:text-black"
                   }`}
                 >
-                  <span className="mr-2 text-xl">{bodyTypeInfo[type].image}</span>
+                  <span className="mr-1 md:mr-2 text-lg md:text-xl">{bodyTypeInfo[type].image}</span>
                   {type.charAt(0).toUpperCase() + type.slice(1)}
                 </motion.button>
                 <div className="absolute bottom-full mb-2 w-48 bg-gray-900 text-white text-sm p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">

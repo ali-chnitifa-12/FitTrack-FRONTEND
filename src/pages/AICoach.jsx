@@ -65,7 +65,7 @@ function MessageBubble({ msg }) {
 
       {/* Bubble */}
       <div
-        className={`max-w-[78%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
+        className={`max-w-[90%] md:max-w-[78%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
           isAI
             ? "bg-gray-800/80 border border-gray-700/50 text-gray-100 rounded-bl-sm"
             : "bg-gradient-to-br from-green-500/90 to-teal-500/80 text-black font-medium rounded-br-sm"
@@ -185,14 +185,14 @@ export default function AICoach() {
         >
           <div className="flex items-center gap-4">
             {/* Animated AI orb */}
-            <motion.div
-              className="relative w-14 h-14"
+             <motion.div
+              className="relative w-10 h-10 md:w-14 md:h-14"
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             >
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-green-500 to-teal-500 opacity-20 blur-md" />
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center shadow-xl shadow-green-500/30">
-                <Sparkles size={26} className="text-black" />
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center shadow-xl shadow-green-500/30">
+                <Sparkles size={20} className="text-black md:size-26" />
               </div>
             </motion.div>
 

@@ -72,15 +72,15 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav ref={navRef} className="bg-black/95 backdrop-blur-md p-6 shadow-md fixed top-0 left-0 right-0 z-50 border-b border-gray-800/50">
+    <nav ref={navRef} className="bg-black/95 backdrop-blur-md p-4 md:p-6 shadow-md fixed top-0 left-0 right-0 z-50 border-b border-gray-800/50">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo + App Name */}
         <Link to="/" className="flex items-center space-x-4 group">
           <div ref={logoRef} className="transform-gpu" style={{ transformStyle: 'preserve-3d' }}>
-            <motion.img
+             <motion.img
               src="/gym.jpg"
               alt="FitTrack Logo"
-              className="w-12 h-12 object-cover rounded-full shadow-lg shadow-green-500/30 group-hover:shadow-green-500/50 transition-shadow duration-300"
+              className="w-10 h-10 md:w-12 md:h-12 object-cover rounded-full shadow-lg shadow-green-500/30 group-hover:shadow-green-500/50 transition-shadow duration-300"
               whileHover={{ rotateY: 180 }}
               transition={{ duration: 0.6 }}
             />

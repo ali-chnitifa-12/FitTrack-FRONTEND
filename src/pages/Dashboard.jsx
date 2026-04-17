@@ -301,7 +301,7 @@ export default function Dashboard() {
         initial={{ opacity: 0, scale: 0.92, rotationY: 8 }}
         animate={{ opacity: 1, scale: 1, rotationY: 0 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
-        className="bg-gray-900 p-8 rounded-3xl shadow-xl max-w-6xl w-full relative overflow-hidden"
+        className="bg-gray-900 p-4 md:p-8 rounded-3xl shadow-xl max-w-6xl w-full relative overflow-hidden"
       >
         <motion.div
           variants={containerVariants}
@@ -328,7 +328,7 @@ export default function Dashboard() {
             variants={itemVariants}
             className="flex justify-center md:justify-between items-center"
           >
-            <h1 className="text-5xl font-extrabold text-green-400 tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400">
+            <h1 className="text-3xl md:text-5xl font-extrabold text-green-400 tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400 text-center md:text-left">
               Dashboard
             </h1>
             {user && (
@@ -407,7 +407,7 @@ export default function Dashboard() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 30 }}
                   transition={{ duration: 0.6 }}
-                  className="bg-gray-800/50 p-6 rounded-2xl border border-green-500/20"
+                  className="bg-gray-800/50 p-3 md:p-6 rounded-2xl border border-green-500/20 overflow-hidden"
                 >
                   {estimatedTime && (
                     <motion.p 

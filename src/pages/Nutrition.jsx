@@ -372,7 +372,7 @@ export default function Nutrition() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-900/80 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-green-500/30 max-w-5xl w-full relative overflow-hidden"
+        className="bg-gray-900/80 backdrop-blur-md p-4 md:p-8 rounded-3xl shadow-xl border border-green-500/30 max-w-5xl w-full relative overflow-hidden"
       >
         <motion.div variants={containerVariants} initial="hidden" animate="visible" className="relative z-10">
           {/* Error Message */}
@@ -386,7 +386,7 @@ export default function Nutrition() {
             </motion.div>
           )}
 
-          <motion.h1 variants={itemVariants} className="text-4xl font-bold mb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400">
+          <motion.h1 variants={itemVariants} className="text-3xl md:text-4xl font-bold mb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400">
             Nutrition Calculator
           </motion.h1>
 
@@ -470,10 +470,10 @@ export default function Nutrition() {
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.5 }}
-                className="mb-8 bg-gray-800/50 p-6 rounded-2xl border border-green-500/30 transform-gpu"
+                className="mb-8 bg-gray-800/50 p-4 md:p-6 rounded-2xl border border-green-500/30 transform-gpu"
                 style={{ transformStyle: 'preserve-3d' }}
               >
-                <h3 className="text-3xl font-bold text-green-400 mb-4">Your Results ({goal})</h3>
+                <h3 className="text-2xl md:text-3xl font-bold text-green-400 mb-4">Your Results ({goal})</h3>
                 <div className="flex flex-col md:flex-row md:space-x-6 mb-6">
                   <p className="text-xl text-gray-100 mb-4 md:mb-0">Calories/day: <strong className="text-green-400">{tdee} kcal</strong></p>
                   <div className="flex flex-col space-y-2">

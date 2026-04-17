@@ -55,7 +55,7 @@ export default function About() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-900/80 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-green-500/20 max-w-4xl w-full relative overflow-hidden"
+        className="bg-gray-900/80 backdrop-blur-md p-6 md:p-8 rounded-3xl shadow-2xl border border-green-500/20 max-w-4xl w-full relative overflow-hidden"
       >
         {/* Animated background elements */}
         <motion.div
@@ -90,7 +90,7 @@ export default function About() {
         >
           <motion.h1
             variants={itemVariants}
-            className="text-5xl font-bold text-green-400 mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400"
+            className="text-3xl md:text-5xl font-bold text-green-400 mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400"
           >
             About FitTrack
           </motion.h1>
@@ -173,7 +173,7 @@ export default function About() {
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="text-2xl font-bold text-green-400"
+              className="text-xl md:text-2xl font-bold text-green-400"
             >
               🚀 Stay motivated. Stay healthy. Stay strong.
             </motion.p>
