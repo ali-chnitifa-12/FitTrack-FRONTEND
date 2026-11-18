@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import api from "../Utils/axios";
+import analytics from "../Utils/analytics";
 import toast from "react-hot-toast";
 
 const GOALS = [
@@ -132,6 +133,7 @@ export default function OnboardingModal({ isOpen, onClose, onComplete }) {
       }
 
       toast.success("Profile initialized! Welcome to FitTrack.");
+      analytics.trackOnboardingCompleted(goal);
       if (onComplete) onComplete(result);
       onClose();
     } catch (err) {

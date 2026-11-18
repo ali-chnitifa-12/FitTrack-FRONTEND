@@ -1,9 +1,10 @@
-﻿import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import api from "../Utils/axios";
 import { compressImage } from "../Utils/imageCompressor";
+import analytics from "../Utils/analytics";
 import toast from "react-hot-toast";
 
 export default function FoodScanner({ onAnalyzed, onFoodLogged }) {
@@ -92,6 +93,7 @@ export default function FoodScanner({ onAnalyzed, onFoodLogged }) {
         setEditedCarbs(data.carbs || 0);
         setEditedFats(data.fats || 0);
         setPortionMultiplier(1.0);
+        analytics.trackScanUsed();
 
         if (onAnalyzed) {
           onAnalyzed(data);
@@ -104,6 +106,7 @@ export default function FoodScanner({ onAnalyzed, onFoodLogged }) {
       const resData = err.response?.data;
       if (resData?.code === "QUOTA_EXCEEDED") {
         setIsQuotaExceeded(true);
+        analytics.trackLimitReached("scan");
         setError(resData.error || "Daily AI scan quota reached (3/3). Upgrade to Premium for unlimited scans!");
       } else {
         setError(resData?.error || err.message || "An error occurred during analysis.");
@@ -137,6 +140,7 @@ export default function FoodScanner({ onAnalyzed, onFoodLogged }) {
 
       const res = await api.post("/meals", payload);
       toast.success(`Logged ${payload.foodName} (${finalCalories} kcal) to ${mealType}!`);
+      analytics.trackMealLogged("ai_scan");
       if (onFoodLogged) onFoodLogged(res.data.meal);
       closeScanner();
     } catch (err) {

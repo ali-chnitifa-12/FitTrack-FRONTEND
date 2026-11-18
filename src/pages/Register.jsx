@@ -3,6 +3,7 @@ import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../Utils/axios";
+import analytics from "../Utils/analytics";
 
 export default function Register() {
   const { login } = useContext(AuthContext);
@@ -28,6 +29,7 @@ export default function Register() {
       // Save user in context and localStorage
       login({ ...data.user, token: data.token });
       localStorage.setItem("token", data.token);
+      analytics.trackSignup();
 
       navigate("/dashboard");
     } catch (err) {
