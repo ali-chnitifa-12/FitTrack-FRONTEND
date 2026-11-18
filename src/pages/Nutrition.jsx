@@ -534,14 +534,14 @@ export default function Nutrition() {
               <button
                 type="button"
                 onClick={() => setActiveTab("diary")}
-                className={px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center gap-2 }
+                className={`px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center gap-2 ${activeTab === "diary" ? "bg-green-500 text-black shadow-md shadow-green-500/30" : "text-gray-400 hover:text-white"}`}
               >
                 <span>📖</span> Daily Meals Diary
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab("calculator")}
-                className={px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center gap-2 }
+                className={`px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center gap-2 ${activeTab === "diary" ? "bg-green-500 text-black shadow-md shadow-green-500/30" : "text-gray-400 hover:text-white"}`}
               >
                 <span>🧮</span> Macro Targets Calculator
               </button>
