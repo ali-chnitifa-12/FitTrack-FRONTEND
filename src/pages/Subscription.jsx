@@ -1,4 +1,4 @@
-﻿// src/pages/Subscription.jsx
+// src/pages/Subscription.jsx
 import React, { useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, X, Sparkles, Shield, Zap, Mail, ArrowRight, CheckCircle2 } from "lucide-react";
