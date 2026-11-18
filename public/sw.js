@@ -1,11 +1,11 @@
 // public/sw.js - FitTrack Progressive Web App Service Worker
-const CACHE_NAME = "fittrack-v1";
+const CACHE_NAME = "fittrack-v2";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
   "/manifest.json",
-  "/icon-192.svg",
-  "/icon-512.svg"
+  "/icon-192.png",
+  "/icon-512.png"
 ];
 
 // Install: Cache critical shell assets
@@ -22,7 +22,7 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+        keys.filter((key) => key.startsWith("fittrack-") && key !== CACHE_NAME).map((key) => caches.delete(key))
       );
     }).then(() => self.clients.claim())
   );

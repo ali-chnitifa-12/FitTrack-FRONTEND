@@ -3,6 +3,7 @@ import { useContext, lazy, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "./Components/Navbar.jsx";
 import Footer from "./Components/Footer.jsx";
+import InstallBanner from "./Components/InstallBanner.jsx";
 import { AuthContext } from "./context/AuthContext.jsx";
 import { Toaster } from "react-hot-toast";
 
@@ -125,6 +126,7 @@ export default function App() {
           </Routes>
         </Suspense>
       </MainLayout>
+      <InstallBanner />
     </BrowserRouter>
   );
 }
