@@ -6,6 +6,7 @@ import { AuthContext } from "../context/AuthContext";
 import { PLANS } from "../config/plans";
 import api from "../Utils/axios";
 import toast from "react-hot-toast";
+import analytics from "../Utils/analytics";
 
 export default function Subscription() {
   const { user } = useContext(AuthContext);

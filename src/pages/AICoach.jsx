@@ -4,6 +4,7 @@ import { Send, Bot, User, Sparkles, Trash2, RefreshCcw, ChevronDown } from "luci
 import { AuthContext } from "../context/AuthContext.jsx";
 import api from "../Utils/axios.jsx";
 import DisclaimerBanner from "../Components/DisclaimerBanner.jsx";
+import analytics from "../Utils/analytics";
 
 // Starter suggestions shown before first message
 const suggestions = [
@@ -141,6 +142,7 @@ export default function AICoach() {
       console.error("AI chat error:", err);
 
       if (err.response?.status === 429 || err.response?.data?.code === "QUOTA_EXCEEDED") {
+        analytics.trackLimitReached("chat"); // user hit their daily AI chat quota
         setError(err.response?.data?.error || "Daily AI Coach message limit reached. Upgrade to Premium for extended access!");
       } else if (err.response?.status === 401) {
         setError("Session expired. Please login again.");
