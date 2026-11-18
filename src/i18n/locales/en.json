@@ -5,6 +5,12 @@
     "direction": "ltr"
   },
   "nav": {
+    "menu": "Menu",
+    "close": "Close",
+    "main": "Main navigation",
+    "footer": "Support and legal",
+    "privacy": "Privacy",
+    "terms": "Terms",
     "dashboard": "Dashboard",
     "workouts": "Workouts",
     "nutrition": "Nutrition",
@@ -12,9 +18,9 @@
     "subscription": "Plans",
     "about": "About",
     "contact": "Contact",
-    "login": "Login",
+    "login": "Sign in",
     "register": "Register",
-    "logout": "Logout"
+    "logout": "Sign out"
   },
   "common": {
     "loading": "Loading...",

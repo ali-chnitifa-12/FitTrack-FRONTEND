@@ -334,7 +334,7 @@ export default function Workouts() {
                 onClick={() => setBodyType(type)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`px-4 md:px-7 py-3 rounded-xl font-semibold text-sm md:text-base flex items-center gap-2 transition-all duration-200 ${
+                className={`min-h-11 px-3 md:px-7 py-3 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all duration-200 ${
                   bodyType === type
                     ? "bg-green-500 text-black shadow-lg shadow-green-500/30"
                     : "bg-gray-800 text-gray-200 hover:bg-green-600/20 border border-gray-700 hover:border-green-500/50"
@@ -416,7 +416,7 @@ export default function Workouts() {
                 className="mb-6 overflow-hidden"
               >
                 <div className="bg-gray-800/30 p-4 rounded-2xl border border-green-500/20">
-                  <h3 className="text-green-400 font-bold text-lg mb-4">📅 Weekly Training Schedule</h3>
+                  <h3 className="text-green-400 font-bold text-lg mb-4">Weekly training schedule</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
                     {Object.entries(weeklySchedule[bodyType]).map(([day, info]) => (
                       <div key={day} className={`p-3 rounded-xl border text-center ${info.color}`}>
@@ -441,7 +441,7 @@ export default function Workouts() {
                 className="mb-6 overflow-hidden"
               >
                 <div className="bg-gray-800/30 p-4 rounded-2xl border border-teal-500/20 overflow-x-auto">
-                  <h3 className="text-teal-400 font-bold text-lg mb-4">📊 Body Type Comparison</h3>
+                  <h3 className="text-teal-400 font-bold text-lg mb-4">Compare routines</h3>
                   <table className="w-full text-sm text-left min-w-[400px]">
                     <thead>
                       <tr className="text-gray-400 border-b border-gray-700">
@@ -578,7 +578,7 @@ export default function Workouts() {
                 variants={itemVariants}
                 className="bg-gradient-to-br from-green-500/10 to-teal-500/10 p-4 rounded-2xl border border-green-500/20"
               >
-                <h3 className="text-green-400 font-bold mb-3">💡 Workout Tips</h3>
+                <h3 className="text-green-400 font-bold mb-3">Workout tips</h3>
                 <ul className="space-y-2 text-sm text-gray-300">
                   {[
                     "Warm up 5–10 min before any session",

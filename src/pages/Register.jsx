@@ -12,10 +12,12 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (submitting) return;
     setError("");
 
     if (!agreed) {
@@ -23,69 +25,76 @@ export default function Register() {
       return;
     }
 
+    setSubmitting(true);
     try {
       const { data } = await api.post("/auth/register", { name, email, password });
 
       // Save user in context and localStorage
       login({ ...data.user, token: data.token });
-      localStorage.setItem("token", data.token);
       analytics.trackSignup();
 
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || err.message || "Registration failed");
+      setError(err.response?.data?.message || "Could not create your account. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black">
+    <div className="fit-auth">
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-900 rounded-xl shadow-lg p-6 md:p-8 w-[90%] max-w-md"
+        className="fit-auth-card"
       >
-        <h2 className="text-3xl font-bold text-center mb-6 text-green-500">
-          Register
-        </h2>
+        <h1>Create your FitTrack account</h1>
+        <p className="fit-auth-intro">Start tracking meals, workouts, and progress.</p>
 
-        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+        {error && <p role="alert" className="rounded-lg bg-red-900/30 p-3 text-sm text-red-200">{error}</p>}
+
+        <label className="fit-field-label" htmlFor="name">Full name</label>
 
         <input
           id="name"
           name="name"
+          autoComplete="name"
           type="text"
-          placeholder="Full Name"
-          aria-label="Full Name"
-          className="w-full p-3 mb-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+
+          className="fit-auth-input"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
         />
 
+        <label className="fit-field-label" htmlFor="email">Email address</label>
+
         <input
           id="email"
           name="email"
           type="email"
-          placeholder="Email"
-          aria-label="Email Address"
-          className="w-full p-3 mb-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+            autoComplete="email"
+
+          className="fit-auth-input"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
 
+        <label className="fit-field-label" htmlFor="password">Password</label>
+
         <input
           id="password"
           name="password"
           type="password"
-          placeholder="Password"
-          aria-label="Password"
-          className="w-full p-3 mb-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+          autoComplete="new-password"
+
+          className="fit-auth-input"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
 
-        <div className="flex items-start gap-2.5 mb-5 text-left">
+        <div className="flex items-start gap-2.5 mt-4 mb-5 text-left">
           <input
             id="termsConsent"
             name="termsConsent"
@@ -95,7 +104,7 @@ export default function Register() {
             className="mt-1 w-4 h-4 rounded bg-gray-800 border-gray-700 text-green-500 focus:ring-green-500 focus:ring-offset-gray-900 cursor-pointer"
             required
           />
-          <label htmlFor="termsConsent" className="text-xs text-gray-400 leading-snug cursor-pointer">
+          <label htmlFor="termsConsent" className="text-sm text-gray-300 leading-relaxed cursor-pointer">
             I agree to the{" "}
             <Link to="/terms" target="_blank" className="text-green-400 hover:underline">
               Terms of Service
@@ -110,18 +119,19 @@ export default function Register() {
 
         <button
           type="submit"
-          className="w-full bg-green-500 hover:bg-green-600 text-black font-semibold py-3 rounded-lg transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={!agreed}
+          className="fit-button fit-button-primary w-full disabled:opacity-60 disabled:cursor-not-allowed"
+          disabled={!agreed || submitting}
         >
-          Register
+          {submitting ? "Creating account…" : "Create account"}
         </button>
 
         <p className="text-center mt-4 text-gray-400">
           Already have an account?{" "}
           <Link to="/login" className="text-green-500 hover:underline">
-            Login
+            Sign in
           </Link>
         </p>
+        <Link to="/" className="fit-auth-back">Back to home</Link>
       </form>
     </div>
   );

@@ -9,7 +9,7 @@ import DisclaimerBanner from "../Components/DisclaimerBanner";
 import toast from "react-hot-toast";
 import confetti from "canvas-confetti";
 
-// â”€â”€ Macro Donut Chart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Macro Donut Chart ────────────────────────────────────────────────────────
 function MacroDonut({ carbs, protein, fats, totalCalories }) {
   const totalKcal = carbs * 4 + protein * 4 + fats * 9;
   const carbPct = Math.round((carbs * 4 / totalKcal) * 100);
@@ -77,7 +77,7 @@ function MacroDonut({ carbs, protein, fats, totalCalories }) {
   );
 }
 
-// â”€â”€ BMI Scale â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── BMI Scale ────────────────────────────────────────────────────────────────
 function BMIScale({ weight, height }) {
   if (!weight || !height) return null;
   const bmi = parseFloat(weight) / Math.pow(parseFloat(height) / 100, 2);
@@ -98,7 +98,7 @@ function BMIScale({ weight, height }) {
       className="bg-gray-800/50 p-4 rounded-2xl border border-green-500/20"
     >
       <h4 className="text-green-400 font-bold mb-3 flex items-center gap-2 text-sm">
-        âš–ï¸ BMI Indicator
+        ⚖ BMI Indicator
       </h4>
       <div
         className="relative h-5 rounded-full mb-2"
@@ -113,19 +113,19 @@ function BMIScale({ weight, height }) {
         />
       </div>
       <div className="flex justify-between text-[10px] text-gray-500 mt-1">
-        <span>15 Â· Under</span>
-        <span>18.5 Â· Normal</span>
-        <span>25 Â· Over</span>
-        <span>30+ Â· Obese</span>
+        <span>15  /  Under</span>
+        <span>18.5  /  Normal</span>
+        <span>25  /  Over</span>
+        <span>30+  /  Obese</span>
       </div>
       <p className={`text-center font-bold mt-2 text-sm ${color}`}>
-        BMI: {bmi.toFixed(1)} â€” {label}
+        BMI: {bmi.toFixed(1)} – {label}
       </p>
     </motion.div>
   );
 }
 
-// â”€â”€ Water Tracker â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Water Tracker ────────────────────────────────────────────────────────────
 function WaterTracker() {
   const [glasses, setGlasses] = useState(0);
   const goal = 8;
@@ -140,7 +140,7 @@ function WaterTracker() {
         origin: { y: 0.6 },
         colors: ['#60a5fa', '#3b82f6', '#ffffff']
       });
-      toast.success("Daily water goal reached! Stay hydrated! ðŸ’§");
+      toast.success("Daily water goal reached! Stay hydrated! 💧");
     }
   };
 
@@ -152,23 +152,25 @@ function WaterTracker() {
       className="bg-gray-800/50 p-4 rounded-2xl border border-blue-500/20"
     >
       <h4 className="text-blue-400 font-bold mb-3 flex items-center gap-2 text-sm">
-        ðŸ’§ Daily Water Intake
+        Water intake
       </h4>
       <div className="flex gap-1.5 flex-wrap mb-2">
         {Array.from({ length: goal }).map((_, i) => (
           <motion.button
             key={i}
             onClick={() => toggle(i)}
+            aria-label={`Mark glass ${i + 1} of ${goal}`}
+            aria-pressed={i < glasses}
             whileTap={{ scale: 0.75 }}
             whileHover={{ scale: 1.2 }}
-            className={`text-xl transition-all duration-200 ${i < glasses ? "opacity-100" : "opacity-25"}`}
+            className={`min-h-11 min-w-11 rounded-lg border text-sm font-semibold transition-colors ${i < glasses ? "border-blue-400/50 bg-blue-400/20 text-blue-100" : "border-gray-600 bg-gray-900 text-gray-300"}`}
           >
-            ðŸ’§
+            {i + 1}
           </motion.button>
         ))}
       </div>
       <p className="text-xs text-gray-400">
-        {glasses}/{goal} glasses Â· {glasses * 250}ml / {goal * 250}ml
+        {glasses}/{goal} glasses  /  {glasses * 250}ml / {goal * 250}ml
       </p>
       <div className="mt-2 h-1.5 bg-gray-700 rounded-full overflow-hidden">
         <motion.div
@@ -185,7 +187,7 @@ function WaterTracker() {
             exit={{ opacity: 0 }}
             className="text-green-400 text-xs font-bold mt-2"
           >
-            ðŸŽ‰ Daily goal reached!
+             Daily goal reached!
           </motion.p>
         )}
       </AnimatePresence>
@@ -193,7 +195,7 @@ function WaterTracker() {
   );
 }
 
-// â”€â”€ Main Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Main Component ───────────────────────────────────────────────────────────
 export default function Nutrition() {
   const { user } = useContext(AuthContext);
   const containerRef = useRef(null);
@@ -374,12 +376,10 @@ export default function Nutrition() {
   };
 
   const suggestedFoods = {
-    carbs:   { label: "Carbs",   foods: "Rice, Oats, Potatoes, Whole Bread", emoji: "ðŸŒ¾" },
-    protein: { label: "Protein", foods: "Chicken, Eggs, Fish, Tofu",         emoji: "ðŸ¥©" },
-    fats:    { label: "Fats",    foods: "Avocado, Olive Oil, Nuts",           emoji: "ðŸ¥‘" },
+    carbs:   { label: "Carbs",   foods: "Rice, Oats, Potatoes, Whole Bread" },
+    protein: { label: "Protein", foods: "Chicken, Eggs, Fish, Tofu" },
+    fats:    { label: "Fats",    foods: "Avocado, Olive Oil, Nuts" },
   };
-
-  const mealEmojis = { Breakfast: "ðŸŒ…", Lunch: "â˜€ï¸", Dinner: "ðŸŒ™", "Snack 1": "ðŸŽ", "Snack 2": "ðŸ¥œ" };
 
   const generateMealPlan = () => {
     if (!macros) return [];
@@ -415,12 +415,10 @@ export default function Nutrition() {
     if (!tdee || !macros) return;
     const activityLabels = { "1.2": "Sedentary", "1.375": "Lightly Active", "1.55": "Moderate", "1.725": "Very Active", "1.9": "Extra Active" };
     const lines = [
-      "â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—",
-      "â•‘      FITTRACK â€” NUTRITION PLAN       â•‘",
-      "â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•",
+      "FitTrack Nutrition Plan",
       `Generated : ${new Date().toLocaleDateString()}`,
       "",
-      "â”€â”€â”€ YOUR PROFILE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€",
+      "YOUR PROFILE",
       `Age        : ${age} years`,
       `Weight     : ${weight} kg`,
       `Height     : ${height} cm`,
@@ -429,23 +427,23 @@ export default function Nutrition() {
       `Body Type  : ${bodyType}`,
       `Goal       : ${goal.toUpperCase()}`,
       "",
-      "â”€â”€â”€ DAILY TARGETS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€",
+      "DAILY TARGETS",
       `Calories   : ${tdee} kcal/day`,
       `Carbs      : ${macros.carbs} g`,
       `Protein    : ${macros.protein} g`,
       `Fats       : ${macros.fats} g`,
       "",
-      "â”€â”€â”€ SUGGESTED FOODS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€",
+      "SUGGESTED FOODS",
       `Carbs   : Rice, Oats, Potatoes, Whole Bread`,
       `Protein : Chicken, Eggs, Fish, Tofu`,
       `Fats    : Avocado, Olive Oil, Nuts`,
       "",
-      "â”€â”€â”€ DAY 1 MEAL PLAN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€",
+      "─── DAY 1 MEAL PLAN ────────────────────",
       ...(detailedMealPlan[0]?.meals.map(
         (m) => `${m.type.padEnd(12)}: ${m.calories} kcal | C:${m.carbs}g P:${m.protein}g F:${m.fats}g`
       ) || []),
       "",
-      "Generated by FitTrack â€¢ Stay consistent! ðŸ’ª",
+      "Generated by FitTrack",
     ];
     const blob = new Blob([lines.join("\n")], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
@@ -454,7 +452,7 @@ export default function Nutrition() {
     a.download = `fittrack-nutrition-${new Date().toISOString().split("T")[0]}.txt`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success("Plan exported successfully! â¬‡ï¸");
+    toast.success("Plan exported successfully! ");
   };
 
   const handleCalculate = async (e) => {
@@ -480,7 +478,7 @@ export default function Nutrition() {
             protein: macroResult.protein, fats: macroResult.fats,
           }, { headers: { Authorization: `Bearer ${user.token}` } });
           loadHistory();
-          toast.success("Nutrition plan calculated and saved! ðŸ¥—");
+          toast.success("Nutrition plan calculated and saved! ");
         } catch {
           saveToHistory({ date: new Date().toLocaleDateString(), age, weight, height, gender, activity, bodyType, goal, tdee: adjustedCalories, ...macroResult });
           toast.success("Plan calculated! Saved locally.");
@@ -533,22 +531,25 @@ export default function Nutrition() {
           {/* Medical & Safety Disclaimer */}
           <DisclaimerBanner className="mb-6" />
 
-          {/* Top Section Tabs */}
-          <div className="flex justify-center mb-6">
-            <div className="bg-gray-800/90 p-1.5 rounded-2xl border border-gray-700 flex gap-2 shadow-lg">
+          <h1 className="text-3xl font-bold text-white sm:text-4xl">Nutrition</h1>
+          <p className="mb-5 mt-2 text-sm text-gray-300">Log meals or calculate your daily calorie and nutrition targets.</p>
+          <div className="mb-5">
+            <div className="grid w-full max-w-md grid-cols-2 gap-1 rounded-xl border border-gray-700 bg-gray-800/90 p-1">
               <button
                 type="button"
+                aria-pressed={activeTab === "diary"}
                 onClick={() => setActiveTab("diary")}
-                className={`px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center gap-2 ${activeTab === "diary" ? "bg-green-500 text-black shadow-md shadow-green-500/30" : "text-gray-400 hover:text-white"}`}
+                className={`min-h-11 rounded-lg px-2 text-sm font-semibold transition-colors ${activeTab === "diary" ? "bg-green-500 text-black shadow-md shadow-green-500/30" : "text-gray-400 hover:text-white"}`}
               >
-                <span>📖</span> Daily Meals Diary
+                Meal diary
               </button>
               <button
                 type="button"
+                aria-pressed={activeTab === "calculator"}
                 onClick={() => setActiveTab("calculator")}
-                className={`px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center gap-2 ${activeTab === "calculator" ? "bg-green-500 text-black shadow-md shadow-green-500/30" : "text-gray-400 hover:text-white"}`}
+                className={`min-h-11 rounded-lg px-2 text-sm font-semibold transition-colors ${activeTab === "calculator" ? "bg-green-500 text-black shadow-md shadow-green-500/30" : "text-gray-400 hover:text-white"}`}
               >
-                <span>🧮</span> Macro Targets Calculator
+                Daily targets
               </button>
             </div>
           </div>
@@ -560,12 +561,12 @@ export default function Nutrition() {
           {activeTab === "calculator" && (
             <>
               {/* Title */}
-              <motion.h1
+              <motion.h2
                 variants={itemVariants}
                 className="text-3xl md:text-4xl font-bold mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400"
               >
-                Nutrition Calculator
-              </motion.h1>
+                Calculate your daily targets
+              </motion.h2>
           <motion.p variants={itemVariants} className="text-gray-400 text-center mb-6">
             Calculate your daily calorie needs and personalized macro targets
           </motion.p>
@@ -601,8 +602,8 @@ export default function Nutrition() {
             {[
               { id: "gender",   label: "Gender",         value: gender,   setter: setGender,   options: [{ v: "male",    l: "Male" }, { v: "female", l: "Female" }] },
               { id: "activity", label: "Activity Level",  value: activity, setter: setActivity, options: [{ v: "1.2", l: "Sedentary" }, { v: "1.375", l: "Lightly Active" }, { v: "1.55", l: "Moderate" }, { v: "1.725", l: "Very Active" }, { v: "1.9", l: "Extra Active" }] },
-              { id: "bodyType", label: "Body Type",       value: bodyType, setter: setBodyType, options: [{ v: "ectomorph", l: "Ectomorph ðŸƒ" }, { v: "mesomorph", l: "Mesomorph ðŸ’ª" }, { v: "endomorph", l: "Endomorph ðŸ”¥" }] },
-              { id: "goal",     label: "Goal",            value: goal,     setter: setGoal,     options: [{ v: "maintain", l: "Maintain" }, { v: "bulk", l: "Bulk ðŸ“ˆ" }, { v: "cut", l: "Cut ðŸ“‰" }] },
+              { id: "bodyType", label: "Body Type",       value: bodyType, setter: setBodyType, options: [{ v: "ectomorph", l: "Ectomorph " }, { v: "mesomorph", l: "Mesomorph " }, { v: "endomorph", l: "Endomorph " }] },
+              { id: "goal",     label: "Goal",            value: goal,     setter: setGoal,     options: [{ v: "maintain", l: "Maintain weight" }, { v: "bulk", l: "Gain weight" }, { v: "cut", l: "Lose weight" }] },
             ].map((field) => (
               <motion.div key={field.id} variants={itemVariants} className="form-element transform-gpu" style={{ transformStyle: "preserve-3d" }}>
                 <label htmlFor={field.id} className="block mb-2 font-semibold text-gray-300 text-sm">{field.label}</label>
@@ -632,7 +633,7 @@ export default function Nutrition() {
                     />
                     Calculating...
                   </div>
-                ) : "Calculate Nutrition Plan ðŸš€"}
+                ) : "Calculate daily targets"}
               </motion.button>
             </motion.div>
           </motion.form>
@@ -659,7 +660,7 @@ export default function Nutrition() {
                     whileTap={{ scale: 0.95 }}
                     className="flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/40 text-green-400 rounded-xl text-sm font-semibold hover:bg-green-500/20 transition-all"
                   >
-                    â¬‡ï¸ Export Plan
+                     Export Plan
                   </motion.button>
                 </div>
 
@@ -679,11 +680,10 @@ export default function Nutrition() {
 
                 {/* Suggested Foods */}
                 <div className="mb-5">
-                  <h4 className="font-bold text-lg text-green-400 mb-3">ðŸ½ï¸ Suggested Foods</h4>
+                  <h4 className="font-bold text-lg text-green-400 mb-3"> Suggested Foods</h4>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {Object.values(suggestedFoods).map((sf) => (
                       <div key={sf.label} className="bg-gray-800/50 p-3 rounded-xl border border-gray-700/50 flex items-start gap-2">
-                        <span className="text-xl flex-shrink-0">{sf.emoji}</span>
                         <div>
                           <div className="text-green-400 font-semibold text-sm">{sf.label}</div>
                           <div className="text-gray-400 text-xs">{sf.foods}</div>
@@ -696,7 +696,7 @@ export default function Nutrition() {
                 {/* Meal Plan */}
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-lg font-bold text-green-400">ðŸ“… Weekly Meal Plan</h4>
+                    <h4 className="text-lg font-bold text-green-400"> Weekly Meal Plan</h4>
                     <motion.button
                       onClick={() => setShowHistory(!showHistory)}
                       whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
@@ -744,7 +744,6 @@ export default function Nutrition() {
                             className="bg-gray-800/50 p-3 rounded-xl border border-gray-700/50 hover:border-green-500/30 transition-all"
                           >
                             <div className="flex items-center gap-2 mb-2">
-                              <span className="text-xl">{mealEmojis[meal.type] || "ðŸ´"}</span>
                               <span className="text-green-400 font-bold text-sm">{meal.type}</span>
                             </div>
                             <div className="text-xs text-gray-400 mb-2">{meal.calories} kcal</div>
@@ -777,7 +776,7 @@ export default function Nutrition() {
                 className="bg-gray-800/50 p-5 rounded-2xl border border-green-500/20 mb-4"
               >
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl font-bold text-green-400">ðŸ•“ Last Calculations</h3>
+                  <h3 className="text-xl font-bold text-green-400"> Recent calculations</h3>
                   <motion.button
                     onClick={handleDeleteAll}
                     whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
@@ -799,7 +798,7 @@ export default function Nutrition() {
                         <div className="text-sm">
                           <span className="text-green-400 font-semibold mr-2">{item.date}</span>
                           <span className="text-gray-300 capitalize">{item.goal}</span>
-                          <span className="text-gray-400 ml-2">Â· {item.tdee} kcal</span>
+                          <span className="text-gray-400 ml-2"> /  {item.tdee} kcal</span>
                         </div>
                         <motion.button
                           onClick={() => handleDelete(idx)}

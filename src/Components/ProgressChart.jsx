@@ -72,7 +72,7 @@ export default function ProgressChart({ data = [] }) {
 
   // BMI
   const _bmi = latest
-    ? null // height not tracked yet â€” placeholder
+    ? null // height not tracked yet – placeholder
     : null;
 
   const minWeight = hasData ? Math.min(...parsedData.map(d => d.weight), ...parsedData.map(d => d.targetWeight)) : 0;
@@ -98,14 +98,14 @@ export default function ProgressChart({ data = [] }) {
             <p className="text-xs text-gray-400 mb-1">Weight Change</p>
             <p className={`text-xl font-bold ${weightColor} flex items-center justify-center gap-1`}>
               <WeightIcon size={16} />
-              {weightChange !== null ? `${weightChange} kg` : "â€”"}
+              {weightChange !== null ? `${weightChange} kg` : "No data"}
             </p>
           </div>
           <div className="bg-gray-800/60 rounded-xl p-3 border border-gray-700/50 text-center">
             <p className="text-xs text-gray-400 mb-1">To Target</p>
             <p className="text-xl font-bold text-yellow-400 flex items-center justify-center gap-1">
               <Target size={16} />
-              {weightToGo !== null ? `${weightToGo} kg` : "â€”"}
+              {weightToGo !== null ? `${weightToGo} kg` : "No data"}
             </p>
           </div>
           <div className="bg-gray-800/60 rounded-xl p-3 border border-gray-700/50 text-center">
@@ -139,7 +139,6 @@ export default function ProgressChart({ data = [] }) {
 
       {!hasData ? (
         <div className="text-center py-8">
-          <p className="text-gray-500 text-4xl mb-3">ðŸ“Š</p>
           <p className="text-gray-400 italic">No progress data yet.</p>
           <p className="text-gray-500 text-sm mt-1">Log your first entry to see charts!</p>
         </div>
@@ -257,7 +256,7 @@ export default function ProgressChart({ data = [] }) {
                   />
                 </LineChart>
               </ResponsiveContainer>
-              <p className="text-xs text-gray-500 text-center mt-2">Scale: 1 (Low) â†’ 5 (High)</p>
+              <p className="text-xs text-gray-500 text-center mt-2">Scale: 1 (Low) → 5 (High)</p>
             </motion.div>
           )}
         </>

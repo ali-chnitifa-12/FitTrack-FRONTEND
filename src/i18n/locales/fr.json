@@ -6,6 +6,12 @@
     "reviewStatus": "First-pass translation - needs native review"
   },
   "nav": {
+    "menu": "Menu",
+    "close": "Fermer",
+    "main": "Navigation principale",
+    "footer": "Aide et mentions légales",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
     "dashboard": "Tableau de bord",
     "workouts": "Entraînements",
     "nutrition": "Nutrition",

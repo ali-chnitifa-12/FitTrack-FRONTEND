@@ -6,6 +6,12 @@
     "reviewStatus": "First-pass translation - needs native review"
   },
   "nav": {
+    "menu": "القائمة",
+    "close": "إغلاق",
+    "main": "التنقل الرئيسي",
+    "footer": "الدعم والمعلومات القانونية",
+    "privacy": "الخصوصية",
+    "terms": "الشروط",
     "dashboard": "لوحة التحكم",
     "workouts": "التمارين",
     "nutrition": "التغذية",

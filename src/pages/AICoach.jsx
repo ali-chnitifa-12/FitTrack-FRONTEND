@@ -67,7 +67,7 @@ function MessageBubble({ msg }) {
 
       {/* Bubble */}
       <div
-        className={`max-w-[90%] md:max-w-[78%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
+        className={`max-w-[90%] md:max-w-[78%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap break-words ${
           isAI
             ? "bg-gray-800/80 border border-gray-700/50 text-gray-100 rounded-bl-sm"
             : "bg-gradient-to-br from-green-500/90 to-teal-500/80 text-black font-medium rounded-br-sm"
@@ -87,7 +87,7 @@ export default function AICoach() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: `Hey ${user?.name || "there"}! ðŸ‘‹ I'm your AI fitness coach, powered by Gemini.\n\nI know your progress data and I'm here to give you personalized advice. Ask me anything about your workouts, nutrition, recovery, or goals!`,
+      content: `Hi ${user?.name || "there"}! Ask me for a workout idea, help planning meals, or recovery tips.`,
       timestamp: Date.now(),
     },
   ]);
@@ -161,7 +161,7 @@ export default function AICoach() {
     setMessages([
       {
         role: "assistant",
-        content: `Fresh start! ðŸŒŸ What would you like to work on today, ${user?.name || "champ"}?`,
+        content: `What would you like to work on today, ${user?.name || "there"}?`,
         timestamp: Date.now(),
       },
     ]);
@@ -170,7 +170,7 @@ export default function AICoach() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#020810] via-[#081526] to-[#0a1f0f] flex flex-col">
       {/* Header */}
-      <div className="pt-8 pb-4 px-6 max-w-4xl mx-auto w-full">
+      <div className="pt-6 pb-4 px-4 sm:px-6 max-w-4xl mx-auto w-full">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -199,7 +199,7 @@ export default function AICoach() {
                   animate={{ opacity: [1, 0.3, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
-                <span className="text-xs text-gray-400">Powered by Gemini AI â€¢ Knows your data</span>
+                <span className="text-xs text-gray-400">Workout, nutrition, and recovery help</span>
               </div>
             </div>
           </div>
@@ -308,7 +308,7 @@ export default function AICoach() {
         </div>
       </div>
 
-      {/* Quick Suggestions â€” shown only when 1 message (intro) */}
+      {/* Quick Suggestions – shown only when 1 message (intro) */}
       {messages.length === 1 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -316,7 +316,7 @@ export default function AICoach() {
           transition={{ delay: 0.4 }}
           className="max-w-4xl mx-auto w-full px-4 pb-6"
         >
-          <p className="text-xs text-gray-500 mb-3 text-center">ðŸ’¡ Try asking:</p>
+          <p className="text-xs text-gray-500 mb-3 text-center">Try one of these questions</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             {suggestions.map((s, i) => (
               <motion.button

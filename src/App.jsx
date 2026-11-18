@@ -64,7 +64,7 @@ function MainLayout({ children }) {
   const hideLayout = ["/login", "/register"].includes(location.pathname);
 
   return (
-    <div className="bg-black text-gray-300 min-h-screen flex flex-col">
+    <div className="fit-shell min-h-dvh flex flex-col">
       {!hideLayout && <Navbar />}
       <AnimatePresence mode="wait">
         <motion.main
@@ -73,7 +73,7 @@ function MainLayout({ children }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className={`flex-1 ${!hideLayout ? "pt-24 lg:pt-32" : ""}`}
+          className="min-w-0 flex-1"
         >
           {children}
         </motion.main>
