@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+/* Accessibility & Performance: Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Accessibility: Visible focus outline for keyboard navigation */
+:focus-visible {
+  outline: 2px solid #22c55e !important;
+  outline-offset: 2px !important;
+}

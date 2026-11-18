@@ -1,23 +1,36 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, lazy, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "./Components/Navbar.jsx";
 import Footer from "./Components/Footer.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
-import Workouts from "./pages/Workouts.jsx";
-import Nutrition from "./pages/Nutrition.jsx";
-import Login from "./pages/Login.jsx";
-import Register from "./pages/Register.jsx";
-import Home from "./pages/Home.jsx";
-import About from "./pages/About.jsx";
-import ContactForm from "./pages/ContactForm.jsx";
-import AICoach from "./pages/AICoach.jsx";
-import AdminDashboard from "./pages/AdminDashboard.jsx";
-import Subscription from "./pages/Subscription.jsx";
-import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
-import TermsOfService from "./pages/TermsOfService.jsx";
 import { AuthContext } from "./context/AuthContext.jsx";
 import { Toaster } from "react-hot-toast";
+
+// Lazy-loaded route components for fast mobile load times
+const Home = lazy(() => import("./pages/Home.jsx"));
+const About = lazy(() => import("./pages/About.jsx"));
+const ContactForm = lazy(() => import("./pages/ContactForm.jsx"));
+const Login = lazy(() => import("./pages/Login.jsx"));
+const Register = lazy(() => import("./pages/Register.jsx"));
+const Dashboard = lazy(() => import("./pages/Dashboard.jsx"));
+const Workouts = lazy(() => import("./pages/Workouts.jsx"));
+const Nutrition = lazy(() => import("./pages/Nutrition.jsx"));
+const AICoach = lazy(() => import("./pages/AICoach.jsx"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard.jsx"));
+const Subscription = lazy(() => import("./pages/Subscription.jsx"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.jsx"));
+const TermsOfService = lazy(() => import("./pages/TermsOfService.jsx"));
+
+function PageLoader() {
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-10 h-10 border-4 border-green-500/20 border-t-green-500 rounded-full animate-spin" />
+        <span className="text-xs font-semibold text-gray-400">Loading FitTrack...</span>
+      </div>
+    </div>
+  );
+}
 
 // ---------- ProtectedRoute Component ----------
 function ProtectedRoute({ children }) {
@@ -88,27 +101,29 @@ export default function App() {
   return (
     <BrowserRouter>
       <MainLayout>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<ContactForm />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<ContactForm />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          {/* Protected Routes (Freemium - full app access with quota limits) */}
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/workouts" element={<ProtectedRoute><Workouts /></ProtectedRoute>} />
-          <Route path="/nutrition" element={<ProtectedRoute><Nutrition /></ProtectedRoute>} />
-          <Route path="/coach" element={<ProtectedRoute><AICoach /></ProtectedRoute>} />
-          <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-          <Route path="/subscription" element={<ProtectedRoute><Subscription /></ProtectedRoute>} />
+            {/* Protected Routes (Freemium - full app access with quota limits) */}
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/workouts" element={<ProtectedRoute><Workouts /></ProtectedRoute>} />
+            <Route path="/nutrition" element={<ProtectedRoute><Nutrition /></ProtectedRoute>} />
+            <Route path="/coach" element={<ProtectedRoute><AICoach /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/subscription" element={<ProtectedRoute><Subscription /></ProtectedRoute>} />
 
-          {/* Catch-all redirect */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            {/* Catch-all redirect */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </MainLayout>
     </BrowserRouter>
   );
