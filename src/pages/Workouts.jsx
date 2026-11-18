@@ -27,6 +27,7 @@ function RestTimer() {
       }, 1000);
     }
     return () => clearInterval(intervalRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active]);
 
   const start = (dur) => {

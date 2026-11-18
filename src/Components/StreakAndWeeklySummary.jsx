@@ -1,5 +1,5 @@
 // src/Components/StreakAndWeeklySummary.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Flame, Calendar, Bell, CheckCircle, TrendingDown, TrendingUp, Minus } from "lucide-react";
 import toast from "react-hot-toast";
 

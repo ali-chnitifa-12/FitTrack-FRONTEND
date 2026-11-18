@@ -465,7 +465,7 @@ export default function Dashboard() {
         <OnboardingModal
           isOpen={showOnboardingModal}
           onClose={() => setShowOnboardingModal(false)}
-          onComplete={(_results) => {
+          onComplete={() => {
             // Refetch or update dashboard data if needed
             api.get("/dashboard", { headers: { Authorization: `Bearer ${user.token}` } })
               .then((res) => setProgressData(res.data.progress || []))
