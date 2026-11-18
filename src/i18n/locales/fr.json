@@ -1,0 +1,70 @@
+{
+  "_meta": {
+    "language": "Français",
+    "code": "fr",
+    "direction": "ltr",
+    "reviewStatus": "First-pass translation - needs native review"
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "workouts": "Entraînements",
+    "nutrition": "Nutrition",
+    "coach": "Coach IA",
+    "subscription": "Abonnements",
+    "about": "À propos",
+    "contact": "Contact",
+    "login": "Connexion",
+    "register": "Inscription",
+    "logout": "Déconnexion"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "back": "Retour",
+    "continue": "Continuer",
+    "dismiss": "Fermer",
+    "notMedicalAdvice": "Avis non médical",
+    "disclaimer": "FitTrack fournit des estimations nutritionnelles et de fitness alimentées par l'IA à titre éducatif. Ceci ne constitue pas un avis médical. Consultez un professionnel de santé.",
+    "calories": "Calories",
+    "protein": "Protéines",
+    "carbs": "Glucides",
+    "fats": "Lipides"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "activeStreak": "Série active",
+    "weeklySummary": "Résumé sur 7 jours",
+    "dailyReminders": "Rappels quotidiens",
+    "progressAnalytics": "Analyse de progression",
+    "welcome": "Bienvenue",
+    "newQuote": "Nouvelle citation",
+    "days": "Jours",
+    "onFire": "En feu ! 🔥"
+  },
+  "nutrition": {
+    "title": "Nutrition & Macros",
+    "dailyDiary": "Journal des repas",
+    "calculator": "Calculateur de macros",
+    "scanFood": "Scanner un plat par IA",
+    "searchFood": "Rechercher / Code-barres",
+    "targetCalories": "Objectif calorique journalier",
+    "moroccanDishes": "Plats marocains"
+  },
+  "scanner": {
+    "title": "Scanner alimentaire IA",
+    "scanPrompt": "Prenez ou téléversez une photo de votre plat",
+    "analyzing": "Analyse des ingrédients et de la portion...",
+    "reviewHeading": "Vérifier les estimations IA",
+    "portion": "Portion",
+    "logToDiary": "Ajouter au journal",
+    "retake": "Scanner un autre plat"
+  },
+  "legal": {
+    "privacyPolicy": "Politique de confidentialité",
+    "termsOfService": "Conditions d'utilisation",
+    "exportData": "Exporter mes données (JSON)",
+    "deleteAccount": "Supprimer mon compte"
+  }
+}

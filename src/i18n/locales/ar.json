@@ -1,0 +1,70 @@
+{
+  "_meta": {
+    "language": "العربية",
+    "code": "ar",
+    "direction": "rtl",
+    "reviewStatus": "First-pass translation - needs native review"
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "workouts": "التمارين",
+    "nutrition": "التغذية",
+    "coach": "المدرب الذكي",
+    "subscription": "الخطط والاشتراك",
+    "about": "حول التطبيق",
+    "contact": "تواصل معنا",
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "logout": "تسجيل الخروج"
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "back": "رجوع",
+    "continue": "متابعة",
+    "dismiss": "إغلاق",
+    "notMedicalAdvice": "ليست استشارة طبية",
+    "disclaimer": "يقدم فيت تراك تقديرات رياضية وغذائية مدعومة بالذكاء الاصطناعي لأغراض تثقيفية فقط. هذه ليست نصيحة طبية. استشر طبيباً قبل تغيير نظامك الغذائي.",
+    "calories": "السعرات الحرارية",
+    "protein": "البروتين",
+    "carbs": "الكربوهيدرات",
+    "fats": "الدهون"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "activeStreak": "سلسلة الالتزام",
+    "weeklySummary": "ملخص 7 أيام",
+    "dailyReminders": "التذكير اليومي",
+    "progressAnalytics": "تحليلات التقدم",
+    "welcome": "مرحباً بك",
+    "newQuote": "حكمة جديدة",
+    "days": "أيام",
+    "onFire": "مشتعل! 🔥"
+  },
+  "nutrition": {
+    "title": "التغذية والماكروز",
+    "dailyDiary": "سجل الوجبات اليومي",
+    "calculator": "حاسبة السعرات والماكروز",
+    "scanFood": "مسح الوجبة بالذكاء الاصطناعي",
+    "searchFood": "بحث عن طعام / الباركود",
+    "targetCalories": "السعرات الحرارية المستهدفة",
+    "moroccanDishes": "أطباق مغربية"
+  },
+  "scanner": {
+    "title": "ماسح الطعام الذكي",
+    "scanPrompt": "التقط صورة لوجبتك أو ارفع صورة",
+    "analyzing": "جاري تحليل المكونات وحجم الحصة...",
+    "reviewHeading": "مراجعة تقديرات الذكاء الاصطناعي",
+    "portion": "الحصة",
+    "logToDiary": "إضافة إلى السجل",
+    "retake": "مسح وجبة أخرى"
+  },
+  "legal": {
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsOfService": "شروط الخدمة",
+    "exportData": "تصدير بياناتي (JSON)",
+    "deleteAccount": "حذف الحساب نهائياً"
+  }
+}
