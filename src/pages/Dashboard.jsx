@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useRef } from "react";
+﻿import { useContext, useState, useEffect, useRef } from "react";
 import api from "../Utils/axios.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,7 +11,7 @@ import ProgressForm from "../Components/ProgressForm.jsx";
 import ProgressChart from "../Components/ProgressChart.jsx";
 
 // --- Animation Variants ---
-const containerVariants = {
+const _containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -19,7 +19,7 @@ const containerVariants = {
   }
 };
 
-const itemVariants = {
+const _itemVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
@@ -92,7 +92,7 @@ function EmptyChartState() {
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           className="absolute inset-0 flex items-center justify-center"
         >
-          <span className="text-4xl">📈</span>
+          <span className="text-4xl">ðŸ“ˆ</span>
         </motion.div>
       </div>
       <h3 className="text-xl font-bold text-gray-300 mb-2">No Data Yet</h3>
@@ -106,9 +106,9 @@ function EmptyChartState() {
 // --- Onboarding Wizard Component ---
 function OnboardingWizard({ setDismissed }) {
   const steps = [
-    { title: "Calculate Macros", desc: "Head over to the Nutrition page to find out exactly how much you should be eating.", link: "/nutrition", icon: "🥗" },
-    { title: "Choose Your Routine", desc: "Set your body type in the Workouts page to get a customized weekly split.", link: "/workouts", icon: "🏋️" },
-    { title: "Log Your Day 1", desc: "Add your very first weight entry below to officially start your journey.", icon: "⚖️" }
+    { title: "Calculate Macros", desc: "Head over to the Nutrition page to find out exactly how much you should be eating.", link: "/nutrition", icon: "ðŸ¥—" },
+    { title: "Choose Your Routine", desc: "Set your body type in the Workouts page to get a customized weekly split.", link: "/workouts", icon: "ðŸ‹ï¸" },
+    { title: "Log Your Day 1", desc: "Add your very first weight entry below to officially start your journey.", icon: "âš–ï¸" }
   ];
 
   return (
@@ -118,9 +118,9 @@ function OnboardingWizard({ setDismissed }) {
       className="bg-gradient-to-r from-green-500/10 to-teal-500/10 border border-green-500/30 p-6 rounded-2xl mb-8 relative overflow-hidden"
     >
       <div className="absolute top-0 right-0 p-4">
-        <button onClick={() => setDismissed(true)} className="text-gray-400 hover:text-white transition-colors text-sm font-semibold">✕ Dismiss</button>
+        <button onClick={() => setDismissed(true)} className="text-gray-400 hover:text-white transition-colors text-sm font-semibold">âœ• Dismiss</button>
       </div>
-      <h2 className="text-2xl font-bold text-green-400 mb-2">👋 Welcome to FitTrack!</h2>
+      <h2 className="text-2xl font-bold text-green-400 mb-2">ðŸ‘‹ Welcome to FitTrack!</h2>
       <p className="text-gray-300 mb-6 font-medium">To get the most out of your journey, here are your first 3 steps:</p>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -143,22 +143,22 @@ function OnboardingWizard({ setDismissed }) {
   );
 }
 
-// ── Main Component ───────────────────────────────────────────────────────────
+// â”€â”€ Main Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function Dashboard() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [progressData, setProgressData] = useState([]);
   const [estimatedTime, setEstimatedTime] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [_error, _setError] = useState("");
   const [dismissOnboarding, setDismissOnboarding] = useState(false);
   const [searchParams] = useSearchParams();
-  const paymentSuccess = searchParams.get("payment_success") === "true";
+  const _paymentSuccess = searchParams.get("payment_success") === "true";
 
   const containerRef = useRef(null);
   const welcomeRef = useRef(null);
   const challengeRef = useRef(null);
-  const quoteRef = useRef(null);
+  const _quoteRef = useRef(null);
   const particlesRef = useRef([]);
 
   useEffect(() => {
@@ -246,7 +246,7 @@ export default function Dashboard() {
     api.post("/progress", entry, { headers: { Authorization: `Bearer ${user.token}` } })
       .then((res) => {
         setProgressData(res.data.progress || []);
-        toast.success("Progress saved successfully! 🚀", { id: toastId });
+        toast.success("Progress saved successfully! ðŸš€", { id: toastId });
 
         const latest = res.data.progress[res.data.progress.length - 1];
         if (latest.weight && latest.targetWeight && latest.caloriesIn && latest.caloriesOut) {
@@ -328,7 +328,7 @@ export default function Dashboard() {
               {hasLoggedToday ? (
                 <>
                   <h2 className="text-xl font-bold text-green-400 mb-2 flex items-center gap-2">
-                    <span className="text-green-500 text-2xl">✅</span> All Logged In!
+                    <span className="text-green-500 text-2xl">âœ…</span> All Logged In!
                   </h2>
                   <p className="text-gray-300 text-sm leading-relaxed mb-4">
                     Great job, {user?.name}! You've successfully completely your entry for today. Rest up or crush your workout!
@@ -338,7 +338,7 @@ export default function Dashboard() {
               ) : (
                 <>
                   <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-                    <span className="text-blue-400">👋</span> Welcome Back
+                    <span className="text-blue-400">ðŸ‘‹</span> Welcome Back
                   </h2>
                   <p className="text-gray-300 text-sm leading-relaxed mb-4">
                     {user ? `Keep the momentum going, ${user.name}! Don't forget to log your daily progress.` : "Log in to track your fitness journey."}
@@ -354,7 +354,7 @@ export default function Dashboard() {
             >
               <div>
                 <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-                  <span className="text-cyan-400">⚡</span> Daily Challenge
+                  <span className="text-cyan-400">âš¡</span> Daily Challenge
                 </h2>
                 <p className="text-gray-200 text-lg font-medium mb-4">{challenge}</p>
               </div>
@@ -362,7 +362,7 @@ export default function Dashboard() {
                 onClick={() => setChallenge(dailyChallenges[Math.floor(Math.random() * dailyChallenges.length)])}
                 className="self-start text-xs font-bold px-4 py-2 bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 rounded-lg transition-colors border border-cyan-500/30"
               >
-                Shuffle 🔀
+                Shuffle ðŸ”€
               </button>
             </motion.div>
           </div>
@@ -378,14 +378,14 @@ export default function Dashboard() {
             <div className="lg:col-span-7 flex flex-col">
               <div className="bg-gray-800/40 p-4 md:p-6 rounded-3xl border border-gray-700/50 flex-1 flex flex-col shadow-inner backdrop-blur-sm">
                 <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  📈 Progress Analytics
+                  ðŸ“ˆ Progress Analytics
                 </h3>
                 {estimatedTime && (
                   <motion.div 
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                     className="mb-4 p-3 bg-green-500/10 border border-green-500/30 text-green-400 font-medium rounded-xl text-sm"
                   >
-                    🎯 Goal Prediction: {estimatedTime}
+                    ðŸŽ¯ Goal Prediction: {estimatedTime}
                   </motion.div>
                 )}
                 

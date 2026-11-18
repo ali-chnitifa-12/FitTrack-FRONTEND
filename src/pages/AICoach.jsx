@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useContext } from "react";
+﻿import { useState, useRef, useEffect, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Bot, User, Sparkles, Trash2, RefreshCcw, ChevronDown } from "lucide-react";
 import { AuthContext } from "../context/AuthContext.jsx";
@@ -85,7 +85,7 @@ export default function AICoach() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: `Hey ${user?.name || "there"}! 👋 I'm your AI fitness coach, powered by Gemini.\n\nI know your progress data and I'm here to give you personalized advice. Ask me anything about your workouts, nutrition, recovery, or goals!`,
+      content: `Hey ${user?.name || "there"}! ðŸ‘‹ I'm your AI fitness coach, powered by Gemini.\n\nI know your progress data and I'm here to give you personalized advice. Ask me anything about your workouts, nutrition, recovery, or goals!`,
       timestamp: Date.now(),
     },
   ]);
@@ -139,24 +139,14 @@ export default function AICoach() {
     } catch (err) {
       console.error("AI chat error:", err);
 
-      if (err.response?.status === 401) {
+      if (err.response?.status === 429 || err.response?.data?.code === "QUOTA_EXCEEDED") {
+        setError(err.response?.data?.error || "Daily AI Coach message limit reached. Upgrade to Premium for extended access!");
+      } else if (err.response?.status === 401) {
         setError("Session expired. Please login again.");
       } else if (err.code === "ERR_NETWORK" || !err.response) {
-        // Graceful fallback — show a demo response if backend not available
-        const fallbackReplies = {
-          default:
-            "I'm having trouble connecting to the server right now. Please make sure the backend is running on port 5000.\n\nOnce connected, I'll have full access to your progress data to give you personalized advice! 💪",
-        };
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: fallbackReplies.default,
-            timestamp: Date.now(),
-          },
-        ]);
+        setError("Network error: Could not connect to FitTrack server. Please check your connection.");
       } else {
-        setError("Failed to get a response. Try again.");
+        setError(err.response?.data?.error || "Failed to get a response. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -168,7 +158,7 @@ export default function AICoach() {
     setMessages([
       {
         role: "assistant",
-        content: `Fresh start! 🌟 What would you like to work on today, ${user?.name || "champ"}?`,
+        content: `Fresh start! ðŸŒŸ What would you like to work on today, ${user?.name || "champ"}?`,
         timestamp: Date.now(),
       },
     ]);
@@ -206,7 +196,7 @@ export default function AICoach() {
                   animate={{ opacity: [1, 0.3, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
-                <span className="text-xs text-gray-400">Powered by Gemini AI • Knows your data</span>
+                <span className="text-xs text-gray-400">Powered by Gemini AI â€¢ Knows your data</span>
               </div>
             </div>
           </div>
@@ -314,7 +304,7 @@ export default function AICoach() {
         </div>
       </div>
 
-      {/* Quick Suggestions — shown only when 1 message (intro) */}
+      {/* Quick Suggestions â€” shown only when 1 message (intro) */}
       {messages.length === 1 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -322,7 +312,7 @@ export default function AICoach() {
           transition={{ delay: 0.4 }}
           className="max-w-4xl mx-auto w-full px-4 pb-6"
         >
-          <p className="text-xs text-gray-500 mb-3 text-center">💡 Try asking:</p>
+          <p className="text-xs text-gray-500 mb-3 text-center">ðŸ’¡ Try asking:</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             {suggestions.map((s, i) => (
               <motion.button
