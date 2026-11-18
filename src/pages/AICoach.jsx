@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Bot, User, Sparkles, Trash2, RefreshCcw, ChevronDown } from "lucide-react";
 import { AuthContext } from "../context/AuthContext.jsx";

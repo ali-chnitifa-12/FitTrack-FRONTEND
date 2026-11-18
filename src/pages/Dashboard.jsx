@@ -1,4 +1,4 @@
-﻿import { useContext, useState, useEffect, useRef } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import api from "../Utils/axios.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { motion, AnimatePresence } from "framer-motion";
@@ -10,6 +10,8 @@ import toast from "react-hot-toast";
 import ProgressForm from "../Components/ProgressForm.jsx";
 import ProgressChart from "../Components/ProgressChart.jsx";
 import DataPrivacySettings from "../Components/DataPrivacySettings.jsx";
+import OnboardingModal from "../Components/OnboardingModal.jsx";
+import StreakAndWeeklySummary from "../Components/StreakAndWeeklySummary.jsx";
 
 // --- Animation Variants ---
 const _containerVariants = {
@@ -153,6 +155,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [_error, _setError] = useState("");
   const [dismissOnboarding, setDismissOnboarding] = useState(false);
+  const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [searchParams] = useSearchParams();
   const _paymentSuccess = searchParams.get("payment_success") === "true";
 
@@ -311,9 +314,17 @@ export default function Dashboard() {
             )}
           </header>
 
+          {/* Streaks, Weekly Progress & Daily Reminder */}
+          <StreakAndWeeklySummary progressData={progressData} />
+
           {/* Optional Onboarding */}
           <AnimatePresence>
-            {showOnboarding && <OnboardingWizard setDismissed={setDismissOnboarding} />}
+            {showOnboarding && (
+              <OnboardingWizard 
+                setDismissed={setDismissOnboarding} 
+                onStartOnboarding={() => setShowOnboardingModal(true)} 
+              />
+            )}
           </AnimatePresence>
 
           {/* Welcome & Daily Challenge Grid */}
@@ -432,6 +443,18 @@ export default function Dashboard() {
             style={{ top: `${15 + i * 12}%`, left: `${10 + i * 15}%` }}
           />
         ))}
+
+        {/* Interactive Onboarding Modal */}
+        <OnboardingModal
+          isOpen={showOnboardingModal}
+          onClose={() => setShowOnboardingModal(false)}
+          onComplete={(_results) => {
+            // Refetch or update dashboard data if needed
+            api.get("/dashboard", { headers: { Authorization: `Bearer ${user.token}` } })
+              .then((res) => setProgressData(res.data.progress || []))
+              .catch(() => {});
+          }}
+        />
       </motion.div>
     </div>
   );
