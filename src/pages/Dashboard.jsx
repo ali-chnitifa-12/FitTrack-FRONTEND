@@ -107,7 +107,7 @@ function EmptyChartState() {
 }
 
 // --- Onboarding Wizard Component ---
-function OnboardingWizard({ setDismissed }) {
+function OnboardingWizard({ setDismissed, onStartOnboarding }) {
   const steps = [
     { title: "Calculate Macros", desc: "Head over to the Nutrition page to find out exactly how much you should be eating.", link: "/nutrition", icon: "ðŸ¥—" },
     { title: "Choose Your Routine", desc: "Set your body type in the Workouts page to get a customized weekly split.", link: "/workouts", icon: "ðŸ‹ï¸" },
@@ -141,6 +141,23 @@ function OnboardingWizard({ setDismissed }) {
             )}
           </div>
         ))}
+      </div>
+
+      <div className="mt-5 pt-4 border-t border-gray-800/80 flex flex-wrap gap-3 items-center justify-between">
+        <button
+          type="button"
+          onClick={onStartOnboarding}
+          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-green-400 to-teal-400 hover:opacity-90 text-black font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-green-500/20"
+        >
+          <span>⚡</span> Calculate Targets (Interactive Onboarding)
+        </button>
+        <button 
+          type="button"
+          onClick={() => setDismissed(true)} 
+          className="text-xs text-gray-400 hover:text-white"
+        >
+          I'll set this up later
+        </button>
       </div>
     </motion.div>
   );
