@@ -4,9 +4,12 @@ import { AuthContext } from "../context/AuthContext.jsx";
 import { Menu, X, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "./LanguageSwitcher.jsx";
 
 export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const navRef = useRef(null);
   const logoRef = useRef(null);
@@ -104,19 +107,20 @@ export default function Navbar() {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           {[
-            { to: "/dashboard", label: "Dashboard" },
-            { to: "/workouts", label: "Workouts" },
-            { to: "/nutrition", label: "Nutrition" },
-            { to: "/coach", label: "AI Coach", isAI: true },
-            { to: "/about", label: "About" },
-            { to: "/contact", label: "Contact" },
-            ...(user && user.isAdmin ? [{ to: "/admin", label: "Admin Panel" }] : [])
+            { to: "/dashboard", label: t("nav.dashboard") },
+            { to: "/workouts", label: t("nav.workouts") },
+            { to: "/nutrition", label: t("nav.nutrition") },
+            { to: "/coach", label: t("nav.coach"), isAI: true },
+            { to: "/subscription", label: t("nav.subscription") },
+            { to: "/about", label: t("nav.about") },
+            { to: "/contact", label: t("nav.contact") },
+            ...(user && user.isAdmin ? [{ to: "/admin", label: "Admin" }] : [])
           ].map((item, index) => (
             <Link 
               key={item.to}
               ref={el => menuItemsRef.current[index] = el}
               to={item.to} 
-              className={`text-lg transition-all duration-300 relative group transform-gpu flex items-center gap-1.5 ${
+              className={`text-sm lg:text-base transition-all duration-300 relative group transform-gpu flex items-center gap-1.5 ${
                 item.isAI
                   ? "text-green-400 font-semibold hover:text-green-300"
                   : "text-gray-300 hover:text-green-400"
@@ -129,20 +133,23 @@ export default function Navbar() {
             </Link>
           ))}
 
+          {/* Language Selector */}
+          <LanguageSwitcher />
+
           {user ? (
             <motion.button
-              ref={el => menuItemsRef.current[5] = el}
+              ref={el => menuItemsRef.current[6] = el}
               onClick={logout}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm md:text-base font-semibold shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform-gpu"
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-xl text-xs md:text-sm font-semibold shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform-gpu"
               whileHover={{ scale: 1.05, rotateX: 5 }}
               whileTap={{ scale: 0.95 }}
               style={{ transformStyle: 'preserve-3d' }}
             >
-              Logout
+              {t("nav.logout")}
             </motion.button>
           ) : (
             <motion.div 
-              ref={el => menuItemsRef.current[5] = el}
+              ref={el => menuItemsRef.current[6] = el}
               whileHover={{ scale: 1.05, rotateX: 5 }} 
               whileTap={{ scale: 0.95 }}
               className="transform-gpu"
@@ -150,28 +157,26 @@ export default function Navbar() {
             >
               <Link
                 to="/login"
-                className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-black px-4 py-2 rounded-lg text-sm md:text-base font-semibold shadow-lg hover:shadow-green-500/30 transition-all duration-300"
+                className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-black px-4 py-2 rounded-xl text-xs md:text-sm font-bold shadow-lg hover:shadow-green-500/30 transition-all duration-300"
               >
-                Login
+                {t("nav.login")}
               </Link>
             </motion.div>
           )}
 
           {user && !user.isAdmin && (
-            <div className="flex flex-col items-end ml-4 border-l border-gray-800 pl-4">
+            <div className="flex flex-col items-end ml-2 border-l border-gray-800 pl-3">
               {user.isSubscribed ? (
-                <span className="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full border border-green-500/30 uppercase font-bold tracking-tighter">
+                <span className="text-[10px] bg-green-500/20 text-green-400 px-2.5 py-0.5 rounded-full border border-green-500/30 uppercase font-bold tracking-wider">
                   Premium
                 </span>
               ) : (
-                <>
-                  <span className="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">
-                    Trial Mode
-                  </span>
-                  <span className="text-xs text-green-400 font-mono">
-                    {Math.max(0, Math.ceil((new Date(user.trialEndsAt) - new Date()) / (1000 * 60 * 60 * 24)))} days left
-                  </span>
-                </>
+                <Link
+                  to="/subscription"
+                  className="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-green-400 px-2 py-0.5 rounded-full border border-gray-700 uppercase font-bold tracking-wider transition-colors"
+                >
+                  Free Plan ⚡
+                </Link>
               )}
             </div>
           )}
@@ -209,14 +214,21 @@ export default function Navbar() {
             transition={{ duration: 0.4, ease: "easeInOut" }}
             style={{ transformStyle: 'preserve-3d' }}
           >
+            {/* Mobile Language Switcher */}
+            <div className="flex items-center justify-between py-2 border-b border-gray-700/40">
+              <span className="text-xs text-gray-400 font-medium">Language / اللغة</span>
+              <LanguageSwitcher />
+            </div>
+
             {[
-              { to: "/dashboard", label: "Dashboard" },
-              { to: "/workouts", label: "Workouts" },
-              { to: "/nutrition", label: "Nutrition" },
-              { to: "/coach", label: "AI Coach", isAI: true },
-              { to: "/about", label: "About" },
-              { to: "/contact", label: "Contact" },
-              ...(user && user.isAdmin ? [{ to: "/admin", label: "Admin Panel" }] : [])
+              { to: "/dashboard", label: t("nav.dashboard") },
+              { to: "/workouts", label: t("nav.workouts") },
+              { to: "/nutrition", label: t("nav.nutrition") },
+              { to: "/coach", label: t("nav.coach"), isAI: true },
+              { to: "/subscription", label: t("nav.subscription") },
+              { to: "/about", label: t("nav.about") },
+              { to: "/contact", label: t("nav.contact") },
+              ...(user && user.isAdmin ? [{ to: "/admin", label: "Admin" }] : [])
             ].map((item) => (
               <motion.div
                 key={item.to}
@@ -227,7 +239,7 @@ export default function Navbar() {
               >
                 <Link
                   to={item.to}
-                  className={`flex items-center gap-2 text-lg transition-colors py-2 border-b border-gray-700/30 last:border-b-0 ${
+                  className={`flex items-center gap-2 text-base transition-colors py-2 border-b border-gray-700/30 last:border-b-0 ${
                     item.isAI ? "text-green-400 font-semibold" : "text-gray-300 hover:text-green-400"
                   }`}
                   onClick={() => setIsOpen(false)}
@@ -244,14 +256,14 @@ export default function Navbar() {
                   logout();
                   setIsOpen(false);
                 }}
-                className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg text-base font-semibold shadow-lg hover:shadow-red-500/30 transition-all duration-300 mt-4"
+                className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl text-sm font-semibold shadow-lg hover:shadow-red-500/30 transition-all duration-300 mt-4"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
-                Logout
+                {t("nav.logout")}
               </motion.button>
             ) : (
               <motion.div 
@@ -265,9 +277,9 @@ export default function Navbar() {
                 <Link
                   to="/login"
                   onClick={() => setIsOpen(false)}
-                  className="block text-center bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-black px-4 py-3 rounded-lg text-base font-semibold shadow-lg hover:shadow-green-500/30 transition-all duration-300"
+                  className="block text-center bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-black px-4 py-3 rounded-xl text-base font-bold shadow-lg hover:shadow-green-500/30 transition-all duration-300"
                 >
-                  Login
+                  {t("nav.login")}
                 </Link>
               </motion.div>
             )}
