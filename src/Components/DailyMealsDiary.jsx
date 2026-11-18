@@ -11,7 +11,7 @@ export default function DailyMealsDiary({ targetMacros, targetCalories }) {
   );
   const [meals, setMeals] = useState([]);
   const [totals, setTotals] = useState({ calories: 0, protein: 0, carbs: 0, fats: 0 });
-  const [loading, setLoading] = useState(false);
+  const [_loading, setLoading] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeMealTypeForAdd, setActiveMealTypeForAdd] = useState("lunch");
   const [copying, setCopying] = useState(false);
@@ -54,7 +54,7 @@ export default function DailyMealsDiary({ targetMacros, targetCalories }) {
       await api.delete(`/meals/${id}`);
       toast.success("Meal removed");
       fetchMeals(selectedDate);
-    } catch (err) {
+    } catch {
       toast.error("Failed to delete meal");
     }
   };
@@ -64,7 +64,7 @@ export default function DailyMealsDiary({ targetMacros, targetCalories }) {
       const res = await api.post(`/meals/${id}/favorite`);
       toast.success(res.data.isFavorite ? "Added to favorites ⭐" : "Removed from favorites");
       fetchMeals(selectedDate);
-    } catch (err) {
+    } catch {
       toast.error("Failed to update favorite");
     }
   };
