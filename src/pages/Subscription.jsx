@@ -33,6 +33,7 @@ export default function Subscription() {
       });
 
       if (data?.url) {
+        analytics.trackUpgradeClicked("subscription_page"); // user is being redirected to checkout
         window.location.href = data.url;
       } else {
         throw new Error("No checkout URL returned.");

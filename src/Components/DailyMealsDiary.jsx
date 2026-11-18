@@ -4,6 +4,7 @@ import api from "../Utils/axios";
 import toast from "react-hot-toast";
 import FoodScanner from "./FoodScanner";
 import FoodSearchModal from "./FoodSearchModal";
+import analytics from "../Utils/analytics";
 
 export default function DailyMealsDiary({ targetMacros, targetCalories }) {
   const [selectedDate, setSelectedDate] = useState(
@@ -322,7 +323,10 @@ export default function DailyMealsDiary({ targetMacros, targetCalories }) {
       <FoodSearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
-        onFoodLogged={() => fetchMeals(selectedDate)}
+        onFoodLogged={() => {
+          analytics.trackMealLogged("manual"); // user added a meal via search/manual entry
+          fetchMeals(selectedDate);
+        }}
         defaultMealType={activeMealTypeForAdd}
       />
     </div>
