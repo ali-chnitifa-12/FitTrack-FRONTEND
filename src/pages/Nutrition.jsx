@@ -5,6 +5,7 @@ import { AuthContext } from "../context/AuthContext";
 import api from "../Utils/axios";
 import FoodScanner from "../Components/FoodScanner";
 import DailyMealsDiary from "../Components/DailyMealsDiary";
+import DisclaimerBanner from "../Components/DisclaimerBanner";
 import toast from "react-hot-toast";
 import confetti from "canvas-confetti";
 
@@ -528,6 +529,9 @@ export default function Nutrition() {
             )}
           </AnimatePresence>
 
+          {/* Medical & Safety Disclaimer */}
+          <DisclaimerBanner className="mb-6" />
+
           {/* Top Section Tabs */}
           <div className="flex justify-center mb-6">
             <div className="bg-gray-800/90 p-1.5 rounded-2xl border border-gray-700 flex gap-2 shadow-lg">
@@ -541,7 +545,7 @@ export default function Nutrition() {
               <button
                 type="button"
                 onClick={() => setActiveTab("calculator")}
-                className={`px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center gap-2 ${activeTab === "diary" ? "bg-green-500 text-black shadow-md shadow-green-500/30" : "text-gray-400 hover:text-white"}`}
+                className={`px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all flex items-center gap-2 ${activeTab === "calculator" ? "bg-green-500 text-black shadow-md shadow-green-500/30" : "text-gray-400 hover:text-white"}`}
               >
                 <span>🧮</span> Macro Targets Calculator
               </button>

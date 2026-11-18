@@ -9,12 +9,18 @@ export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    if (!agreed) {
+      setError("You must agree to the Terms of Service and Privacy Policy to create an account.");
+      return;
+    }
 
     try {
       const { data } = await api.post("/auth/register", { name, email, password });
@@ -77,9 +83,33 @@ export default function Register() {
           required
         />
 
+        <div className="flex items-start gap-2.5 mb-5 text-left">
+          <input
+            id="termsConsent"
+            name="termsConsent"
+            type="checkbox"
+            checked={agreed}
+            onChange={(e) => setAgreed(e.target.checked)}
+            className="mt-1 w-4 h-4 rounded bg-gray-800 border-gray-700 text-green-500 focus:ring-green-500 focus:ring-offset-gray-900 cursor-pointer"
+            required
+          />
+          <label htmlFor="termsConsent" className="text-xs text-gray-400 leading-snug cursor-pointer">
+            I agree to the{" "}
+            <Link to="/terms" target="_blank" className="text-green-400 hover:underline">
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link to="/privacy" target="_blank" className="text-green-400 hover:underline">
+              Privacy Policy
+            </Link>
+            , and acknowledge the health disclaimer.
+          </label>
+        </div>
+
         <button
           type="submit"
-          className="w-full bg-green-500 hover:bg-green-600 text-black font-semibold py-3 rounded-lg transition duration-300"
+          className="w-full bg-green-500 hover:bg-green-600 text-black font-semibold py-3 rounded-lg transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={!agreed}
         >
           Register
         </button>

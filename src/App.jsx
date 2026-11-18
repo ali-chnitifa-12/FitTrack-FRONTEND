@@ -14,6 +14,8 @@ import ContactForm from "./pages/ContactForm.jsx";
 import AICoach from "./pages/AICoach.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import Subscription from "./pages/Subscription.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
+import TermsOfService from "./pages/TermsOfService.jsx";
 import { AuthContext } from "./context/AuthContext.jsx";
 import { Toaster } from "react-hot-toast";
 
@@ -91,6 +93,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<ContactForm />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Send, Bot, User, Sparkles, Trash2, RefreshCcw, ChevronDown } from "lucide-react";
 import { AuthContext } from "../context/AuthContext.jsx";
 import api from "../Utils/axios.jsx";
+import DisclaimerBanner from "../Components/DisclaimerBanner.jsx";
 
 // Starter suggestions shown before first message
 const suggestions = [
@@ -215,6 +216,7 @@ export default function AICoach() {
 
       {/* Chat Container */}
       <div className="flex-1 max-w-4xl mx-auto w-full px-4 pb-4 flex flex-col min-h-0">
+        <DisclaimerBanner className="mb-3" />
         <div className="flex-1 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-800/60 flex flex-col overflow-hidden shadow-2xl">
           {/* Messages */}
           <div

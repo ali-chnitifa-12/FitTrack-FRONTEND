@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 // Components
 import ProgressForm from "../Components/ProgressForm.jsx";
 import ProgressChart from "../Components/ProgressChart.jsx";
+import DataPrivacySettings from "../Components/DataPrivacySettings.jsx";
 
 // --- Animation Variants ---
 const _containerVariants = {
@@ -401,6 +402,9 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+
+          {/* Data Privacy & GDPR Controls */}
+          <DataPrivacySettings />
 
           {/* Motivational Quote Bottom Row */}
           <div className="bg-gray-800/30 p-6 rounded-2xl border border-gray-700/50 text-center relative overflow-hidden backdrop-blur-sm group">

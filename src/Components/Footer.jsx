@@ -102,6 +102,16 @@ export default function Footer() {
                   Contact
                 </a>
               </li>
+              <li>
+                <a href="/privacy" className="text-gray-400 hover:text-green-500 transition-colors duration-300 text-sm block">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="/terms" className="text-gray-400 hover:text-green-500 transition-colors duration-300 text-sm block">
+                  Terms of Service
+                </a>
+              </li>
             </ul>
           </motion.div>
           
