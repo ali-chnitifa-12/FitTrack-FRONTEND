@@ -1,9 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { init as initPlausible } from "@plausible-analytics/tracker";
 import App from "./App.jsx";
 import { AuthProvider } from "./context/AuthProvider.jsx";
 import "./index.css";
 import "./i18n/index.js";
+
+const plausibleDomain = import.meta.env.VITE_PLAUSIBLE_DOMAIN;
+if (import.meta.env.PROD && window.location.hostname === plausibleDomain && navigator.doNotTrack !== "1") {
+  initPlausible({ domain: plausibleDomain });
+}
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
