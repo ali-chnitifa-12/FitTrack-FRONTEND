@@ -1,12 +1,14 @@
 // src/Components/DisclaimerBanner.jsx
 import React, { useState } from "react";
 import { AlertTriangle, X, Info } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function DisclaimerBanner({ 
   variant = "warning", 
   dismissible = true,
   className = "" 
 }) {
+  const { t } = useTranslation();
   const [dismissed, setDismissed] = useState(false);
 
   if (dismissed) return null;
@@ -30,8 +32,8 @@ export default function DisclaimerBanner({
         )}
       </div>
       <div className="flex-1 text-xs sm:text-sm leading-relaxed">
-        <span className="font-semibold text-white mr-1.5">Not Medical Advice:</span>
-        FitTrack provides educational nutrition and fitness estimates powered by AI. This is not medical, dietary, or healthcare advice. Always consult a physician or registered dietitian before starting any aggressive diet or workout program.
+        <span className="font-semibold text-white mr-1.5">{t("common.notMedicalAdvice")}:</span>
+        {t("common.disclaimer")}
       </div>
       {dismissible && (
         <button

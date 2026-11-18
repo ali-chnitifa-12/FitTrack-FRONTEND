@@ -3,10 +3,12 @@ import React, { useState, useContext } from "react";
 import { Download, Trash2, ShieldCheck, AlertTriangle } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import api from "../Utils/axios";
 import toast from "react-hot-toast";
 
 export default function DataPrivacySettings() {
+  const { t } = useTranslation();
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [exporting, setExporting] = useState(false);
@@ -84,7 +86,7 @@ export default function DataPrivacySettings() {
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-gray-700 hover:bg-gray-600 text-white transition-colors disabled:opacity-50"
           >
             <Download className="w-3.5 h-3.5 text-green-400" />
-            {exporting ? "Exporting..." : "Export My Data (JSON)"}
+            {exporting ? t("common.loading") : t("legal.exportData")}
           </button>
 
           <button
@@ -92,7 +94,7 @@ export default function DataPrivacySettings() {
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition-colors"
           >
             <Trash2 className="w-3.5 h-3.5" />
-            Delete Account
+            {t("legal.deleteAccount")}
           </button>
         </div>
       </div>
