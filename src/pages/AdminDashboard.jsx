@@ -1,3 +1,4 @@
+import PageHeading from "../Components/PageHeading.jsx";
 import React, { useState, useEffect, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navigate } from "react-router-dom";
@@ -100,26 +101,14 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="w-full flex-1 p-6 lg:p-12 text-gray-200 mt-8 mb-12">
+    <div className="fit-page fit-container">
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-900 border border-green-500/30 rounded-3xl p-8 max-w-6xl mx-auto shadow-2xl relative overflow-hidden"
+        className="fit-panel"
       >
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-gray-800 pb-6">
-          <div>
-            <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-orange-400 mb-2">
-              Admin Control Panel
-            </h1>
-            <p className="text-gray-400">Manage FitTrack users, subscriptions, and platform access.</p>
-          </div>
-
-          <div className="bg-gray-800/80 px-6 py-3 rounded-xl border border-gray-700 mt-4 md:mt-0 flex items-center space-x-3">
-            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.7)]" />
-            <span className="text-gray-300 font-semibold uppercase tracking-wider">Root Access</span>
-          </div>
-        </div>
+        <PageHeading title="Admin dashboard" description="Manage user accounts and subscriptions." />
 
         <AnimatePresence>
           {error && (
@@ -151,7 +140,7 @@ export default function AdminDashboard() {
           </div>
         ) : (
           <motion.div variants={containerVariants} initial="hidden" animate="visible" className="bg-gray-950/50 rounded-2xl overflow-hidden border border-gray-800">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Users table">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-gray-900 text-gray-400 text-sm uppercase tracking-wider">

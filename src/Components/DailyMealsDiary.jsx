@@ -99,43 +99,44 @@ export default function DailyMealsDiary({ targetMacros, targetCalories }) {
   const calPercent = Math.min(100, Math.round((totals.calories / calorieTarget) * 100));
 
   return (
-    <div className="bg-gray-800/40 border border-green-500/20 rounded-3xl p-5 md:p-8 space-y-6">
+    <div className="space-y-5">
       {/* Top Header & Date Navigation */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-700/60 pb-5">
         <div>
-          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-            <span>📖</span> Daily Food & Meals Diary
+          <h2 className="fit-section-title">
+            Your meals
           </h2>
           <p className="text-xs text-gray-400">
-            Log your daily intake with the AI Food Scanner, Moroccan local dishes, or barcode search.
+            Choose a date to see what you logged.
           </p>
         </div>
 
         {/* Date Selector */}
-        <div className="flex items-center gap-2 bg-gray-900/80 p-1.5 rounded-xl border border-gray-700">
+        <div className="flex max-w-full flex-wrap items-center gap-1">
           <button
             onClick={handlePrevDay}
-            className="px-2.5 py-1 text-gray-400 hover:text-white transition-colors"
-            title="Previous Day"
+            className="fit-button fit-button-secondary text-sm"
+            aria-label="Previous day"
           >
-            ◀
+            Prev
           </button>
           <input
             type="date"
+            aria-label="Meal log date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="bg-transparent text-white font-mono text-xs focus:outline-none cursor-pointer"
+            className="fit-auth-input min-h-11 w-auto text-sm"
           />
           <button
             onClick={handleNextDay}
-            className="px-2.5 py-1 text-gray-400 hover:text-white transition-colors"
-            title="Next Day"
+            className="fit-button fit-button-secondary text-sm"
+            aria-label="Next day"
           >
-            ▶
+            Next
           </button>
           <button
             onClick={handleToday}
-            className="px-2 py-1 text-[11px] bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded font-semibold transition-colors"
+            className="fit-button fit-button-secondary text-sm"
           >
             Today
           </button>
@@ -143,8 +144,8 @@ export default function DailyMealsDiary({ targetMacros, targetCalories }) {
       </div>
 
       {/* Daily Progress Tracker Card */}
-      <div className="bg-gray-900/70 p-4 md:p-6 rounded-2xl border border-gray-700/60 space-y-4">
-        <div className="flex justify-between items-end">
+      <div className="bg-[#09130f] p-3 sm:p-5 rounded-xl border border-[var(--fit-border)] space-y-4">
+        <div className="flex flex-wrap justify-between items-end gap-2">
           <div>
             <span className="text-xs text-gray-400 uppercase tracking-wider block">Calories Consumed</span>
             <div className="flex items-baseline gap-2">
@@ -168,20 +169,20 @@ export default function DailyMealsDiary({ targetMacros, targetCalories }) {
         </div>
 
         {/* Macros Breakdown Cards */}
-        <div className="grid grid-cols-3 gap-3 pt-2">
-          <div className="bg-gray-800/60 p-3 rounded-xl border border-gray-700/40 text-center">
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-3 pt-2">
+          <div className="bg-gray-800/60 p-2 sm:p-3 rounded-xl border border-gray-700/40 text-center">
             <span className="text-xs text-blue-400 font-bold block">{totals.protein}g</span>
             <span className="text-[10px] text-gray-400">
               Protein {targetMacros ? `(${targetMacros.protein}g target)` : ""}
             </span>
           </div>
-          <div className="bg-gray-800/60 p-3 rounded-xl border border-gray-700/40 text-center">
+          <div className="bg-gray-800/60 p-2 sm:p-3 rounded-xl border border-gray-700/40 text-center">
             <span className="text-xs text-green-400 font-bold block">{totals.carbs}g</span>
             <span className="text-[10px] text-gray-400">
               Carbs {targetMacros ? `(${targetMacros.carbs}g target)` : ""}
             </span>
           </div>
-          <div className="bg-gray-800/60 p-3 rounded-xl border border-gray-700/40 text-center">
+          <div className="bg-gray-800/60 p-2 sm:p-3 rounded-xl border border-gray-700/40 text-center">
             <span className="text-xs text-yellow-400 font-bold block">{totals.fats}g</span>
             <span className="text-[10px] text-gray-400">
               Fats {targetMacros ? `(${targetMacros.fats}g target)` : ""}
@@ -196,19 +197,17 @@ export default function DailyMealsDiary({ targetMacros, targetCalories }) {
 
         <button
           onClick={() => openSearchFor("lunch")}
-          className="bg-gray-900 border border-green-500/40 hover:border-green-400 text-green-400 font-bold py-3 px-5 rounded-xl transition-all text-xs flex items-center gap-2 shadow-sm"
+          className="fit-button fit-button-primary text-sm"
         >
-          <span>🇲🇦</span>
-          <span>Moroccan Dishes & Search</span>
+          Search and add food
         </button>
 
         <button
           onClick={handleCopyYesterday}
           disabled={copying}
-          className="bg-gray-900 border border-gray-700 hover:border-gray-500 text-gray-300 py-3 px-4 rounded-xl transition-all text-xs flex items-center gap-2 disabled:opacity-50"
+          className="fit-button fit-button-secondary text-sm disabled:opacity-50"
         >
-          <span>📋</span>
-          <span>{copying ? "Copying..." : "Copy Yesterday's Meals"}</span>
+          <span>{copying ? "Copying..." : "Copy yesterday’s meals"}</span>
         </button>
       </div>
 

@@ -75,7 +75,7 @@ export default function ProgressForm({ addEntry }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-gray-900/80 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-green-500/20 space-y-5"
+      className="fit-panel space-y-5"
     >
       <h2 className="text-2xl text-green-400 font-bold flex items-center gap-2">
         <Flame size={22} className="text-orange-400" />
@@ -293,7 +293,7 @@ export default function ProgressForm({ addEntry }) {
           boxShadow: "0px 0px 20px rgba(74, 222, 128, 0.4)",
         }}
         whileTap={{ scale: 0.97 }}
-        className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-400 hover:to-teal-400 text-black font-bold py-3 rounded-xl text-base transition-all duration-200 shadow-lg shadow-green-500/20"
+        className="fit-button fit-button-primary w-full"
       >
         Log Entry
       </motion.button>

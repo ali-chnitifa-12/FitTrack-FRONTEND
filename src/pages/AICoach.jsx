@@ -1,6 +1,7 @@
+import PageHeading from "../Components/PageHeading.jsx";
 import { useState, useRef, useEffect, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Bot, User, Sparkles, Trash2, RefreshCcw, ChevronDown } from "lucide-react";
+import { Send, Bot, User, RefreshCcw, ChevronDown } from "lucide-react";
 import { AuthContext } from "../context/AuthContext.jsx";
 import api from "../Utils/axios.jsx";
 import DisclaimerBanner from "../Components/DisclaimerBanner.jsx";
@@ -168,63 +169,23 @@ export default function AICoach() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#020810] via-[#081526] to-[#0a1f0f] flex flex-col">
-      {/* Header */}
-      <div className="pt-6 pb-4 px-4 sm:px-6 max-w-4xl mx-auto w-full">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between"
-        >
-          <div className="flex items-center gap-4">
-            {/* Animated AI orb */}
-             <motion.div
-              className="relative w-10 h-10 md:w-14 md:h-14"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            >
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-green-500 to-teal-500 opacity-20 blur-md" />
-              <div className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center shadow-xl shadow-green-500/30">
-                <Sparkles size={20} className="text-black md:size-26" />
-              </div>
-            </motion.div>
-
-            <div>
-              <h1 className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-teal-400">
-                AI Fitness Coach
-              </h1>
-              <div className="flex items-center gap-2 mt-0.5">
-                <motion.div
-                  className="w-2 h-2 bg-green-400 rounded-full"
-                  animate={{ opacity: [1, 0.3, 1] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
-                <span className="text-xs text-gray-400">Workout, nutrition, and recovery help</span>
-              </div>
-            </div>
-          </div>
-
-          <motion.button
-            onClick={clearChat}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-400 transition-colors px-3 py-2 rounded-xl hover:bg-red-500/10"
-          >
-            <Trash2 size={15} />
-            <span className="hidden sm:inline">Clear</span>
-          </motion.button>
-        </motion.div>
-      </div>
-
+    <div className="fit-page fit-container fit-page-reading">
+      <PageHeading
+        title="AI Coach"
+        description="Ask for help with meals, workouts, or recovery."
+        action={messages.length > 1 && (
+          <button type="button" className="fit-button fit-button-secondary" onClick={clearChat}>Clear chat</button>
+        )}
+      />
       {/* Chat Container */}
-      <div className="flex-1 max-w-4xl mx-auto w-full px-4 pb-4 flex flex-col min-h-0">
+      <div className="min-w-0">
         <DisclaimerBanner className="mb-3" />
-        <div className="flex-1 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-800/60 flex flex-col overflow-hidden shadow-2xl">
+        <div className="fit-panel flex flex-col overflow-hidden">
           {/* Messages */}
           <div
             ref={chatRef}
             onScroll={handleScroll}
-            className="flex-1 overflow-y-auto p-5 space-y-5 scroll-smooth"
+            className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-4 scroll-smooth"
             style={{ maxHeight: "calc(100vh - 340px)", minHeight: "300px" }}
           >
             {messages.map((msg, i) => (
@@ -288,10 +249,10 @@ export default function AICoach() {
                     sendMessage();
                   }
                 }}
-                placeholder="Ask your AI coach anything... (Enter to send)"
-                aria-label="Chat Message"
+                placeholder="Type your question"
+                aria-label="Your question"
                 rows={1}
-                className="flex-1 bg-gray-800/80 border border-gray-700 focus:border-green-500/60 focus:outline-none focus:ring-1 focus:ring-green-500/30 text-gray-100 placeholder-gray-500 rounded-xl px-4 py-3 text-sm resize-none transition-all duration-200"
+                className="min-w-0 flex-1 bg-gray-800/80 border border-gray-700 focus:border-green-500/60 focus:outline-none focus:ring-1 focus:ring-green-500/30 text-gray-100 placeholder-gray-500 rounded-xl px-4 py-3 text-sm resize-none transition-all duration-200"
                 style={{ maxHeight: "120px", overflowY: "auto" }}
               />
               <motion.button
@@ -299,9 +260,9 @@ export default function AICoach() {
                 disabled={!input.trim() || loading}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-11 h-11 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/30 transition-opacity disabled:opacity-40 flex-shrink-0"
+                className="fit-button fit-button-primary shrink-0 disabled:opacity-40"
               >
-                <Send size={17} className="text-black" />
+                <Send size={16} aria-hidden="true" /> Send
               </motion.button>
             </form>
           </div>
@@ -314,7 +275,7 @@ export default function AICoach() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="max-w-4xl mx-auto w-full px-4 pb-6"
+          className="pt-5"
         >
           <p className="text-xs text-gray-500 mb-3 text-center">Try one of these questions</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">

@@ -1,3 +1,4 @@
+import PageHeading from "../Components/PageHeading.jsx";
 import { useState, useEffect, useContext, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
@@ -504,13 +505,14 @@ export default function Nutrition() {
   };
 
   return (
-    <div className="w-full flex-1 flex items-center justify-center p-4 md:p-6 text-gray-100">
+    <div className="fit-page fit-container">
+      <PageHeading title="Nutrition" description="Log what you eat or calculate your daily calorie and nutrient targets." />
       <motion.div
         ref={containerRef}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-900/80 backdrop-blur-md p-4 md:p-8 rounded-3xl shadow-xl border border-green-500/30 max-w-5xl w-full relative overflow-hidden"
+        className="fit-panel relative"
       >
         <motion.div variants={containerVariants} initial="hidden" animate="visible" className="relative z-10">
 
@@ -531,15 +533,13 @@ export default function Nutrition() {
           {/* Medical & Safety Disclaimer */}
           <DisclaimerBanner className="mb-6" />
 
-          <h1 className="text-3xl font-bold text-white sm:text-4xl">Nutrition</h1>
-          <p className="mb-5 mt-2 text-sm text-gray-300">Log meals or calculate your daily calorie and nutrition targets.</p>
           <div className="mb-5">
-            <div className="grid w-full max-w-md grid-cols-2 gap-1 rounded-xl border border-gray-700 bg-gray-800/90 p-1">
+            <div className="fit-choice-group">
               <button
                 type="button"
                 aria-pressed={activeTab === "diary"}
                 onClick={() => setActiveTab("diary")}
-                className={`min-h-11 rounded-lg px-2 text-sm font-semibold transition-colors ${activeTab === "diary" ? "bg-green-500 text-black shadow-md shadow-green-500/30" : "text-gray-400 hover:text-white"}`}
+                className="fit-choice"
               >
                 Meal diary
               </button>
@@ -547,7 +547,7 @@ export default function Nutrition() {
                 type="button"
                 aria-pressed={activeTab === "calculator"}
                 onClick={() => setActiveTab("calculator")}
-                className={`min-h-11 rounded-lg px-2 text-sm font-semibold transition-colors ${activeTab === "calculator" ? "bg-green-500 text-black shadow-md shadow-green-500/30" : "text-gray-400 hover:text-white"}`}
+                className="fit-choice"
               >
                 Daily targets
               </button>
@@ -563,12 +563,12 @@ export default function Nutrition() {
               {/* Title */}
               <motion.h2
                 variants={itemVariants}
-                className="text-3xl md:text-4xl font-bold mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400"
+                className="fit-section-title"
               >
                 Calculate your daily targets
               </motion.h2>
-          <motion.p variants={itemVariants} className="text-gray-400 text-center mb-6">
-            Calculate your daily calorie needs and personalized macro targets
+          <motion.p variants={itemVariants} className="text-[var(--fit-muted)] mb-6">
+            Enter your details to estimate your daily calories, protein, carbs, and fat.
           </motion.p>
 
           {/* Food Scanner */}

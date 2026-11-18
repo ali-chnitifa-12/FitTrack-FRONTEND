@@ -1,5 +1,5 @@
 // public/sw.js - FitTrack Progressive Web App Service Worker
-const CACHE_NAME = "fittrack-v3";
+const CACHE_NAME = "fittrack-v4";
 const STATIC_ASSETS = [
   "/",
   "/index.html",

@@ -1,5 +1,5 @@
-import { useContext, useState, useEffect, useRef } from "react";
-import { AuthContext } from "../context/AuthContext.jsx";
+import PageHeading from "../Components/PageHeading.jsx";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import confetti from "canvas-confetti";
@@ -159,7 +159,6 @@ function RestTimer() {
 
 // ── Main Component ───────────────────────────────────────────────────────────
 export default function Workouts() {
-  const { user } = useContext(AuthContext);
   const [bodyType, setBodyType] = useState("mesomorph");
   const [checked, setChecked] = useState({});
   const [showSchedule, setShowSchedule] = useState(false);
@@ -195,16 +194,10 @@ export default function Workouts() {
     },
   };
 
-  const bodyTypeInfo = {
-    ectomorph: { desc: "Naturally thin with fast metabolism. Focus on strength training with adequate caloric surplus.", image: "🏃‍♂️" },
-    mesomorph: { desc: "Naturally athletic & muscular. Responds well to both strength and hypertrophy training.", image: "💪" },
-    endomorph: { desc: "Naturally higher body fat. Combination of cardio & strength with strict nutrition is key.", image: "🔥" },
-  };
-
-  const difficultyInfo = {
-    ectomorph: { label: "Hard", color: "text-red-400", bg: "bg-red-500/10 border-red-500/40", desc: "High caloric surplus & heavy compound lifts required" },
-    mesomorph: { label: "Moderate", color: "text-yellow-400", bg: "bg-yellow-500/10 border-yellow-500/40", desc: "Responds well to varied splits — easiest body type to progress" },
-    endomorph: { label: "Challenging", color: "text-orange-400", bg: "bg-orange-500/10 border-orange-500/40", desc: "High cardio volume & strict diet discipline needed" },
+  const routineInfo = {
+    ectomorph: { label: "Strength focus", description: "Compound lifts with lighter cardio." },
+    mesomorph: { label: "Mixed training", description: "Strength exercises with interval and steady cardio." },
+    endomorph: { label: "Steady cardio", description: "Walking, cycling, or elliptical alongside strength exercises." },
   };
 
   const weeklySchedule = {
@@ -295,74 +288,35 @@ export default function Workouts() {
   const totalPct = totalExercises > 0 ? Math.round((totalDone / totalExercises) * 100) : 0;
 
   return (
-    <div className="w-full flex-1 flex items-center justify-center p-4 md:p-6 text-gray-200">
+    <div className="fit-page fit-container">
+      <PageHeading title="Workouts" description="Choose a training routine, then check off each exercise as you finish it." />
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-900/80 backdrop-blur-md p-4 md:p-8 rounded-3xl shadow-2xl border border-green-500/20 max-w-6xl w-full relative overflow-hidden"
+        className="fit-panel relative"
       >
-        {/* Floating particles */}
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 bg-green-400 rounded-full"
-            style={{ top: `${10 + i * 12}%`, left: `${5 + i * 15}%` }}
-            animate={{ y: [0, -15, 0], opacity: [0.15, 0.4, 0.15] }}
-            transition={{ duration: 3 + i, repeat: Infinity, delay: i * 0.5 }}
-          />
-        ))}
-
         <motion.div variants={containerVariants} initial="hidden" animate="visible" className="relative z-10">
 
-          {/* Title */}
-          <motion.h1
-            variants={itemVariants}
-            className="text-3xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400 mb-2"
-          >
-            Workouts & Training Plans
-          </motion.h1>
-          <motion.p variants={itemVariants} className="text-gray-400 text-center mb-6 text-lg">
-            {user ? `Hey ${user.name}, let's crush today's workout! 🔥` : "Select your body type and start training!"}
-          </motion.p>
-
+          <h2 className="fit-section-title">Choose a routine</h2>
           {/* Body Type Selector */}
-          <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-3 mb-4">
+          <motion.div variants={itemVariants} className="fit-choice-group mb-4">
             {bodyTypes.map((type) => (
               <motion.button
                 key={type}
                 onClick={() => setBodyType(type)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`min-h-11 px-3 md:px-7 py-3 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all duration-200 ${
-                  bodyType === type
-                    ? "bg-green-500 text-black shadow-lg shadow-green-500/30"
-                    : "bg-gray-800 text-gray-200 hover:bg-green-600/20 border border-gray-700 hover:border-green-500/50"
-                }`}
+                className="fit-choice"
+                aria-pressed={bodyType === type}
               >
-                <span>{bodyTypeInfo[type].image}</span>
-                {type.charAt(0).toUpperCase() + type.slice(1)}
+
+                {routineInfo[type].label}
               </motion.button>
             ))}
           </motion.div>
 
-          {/* Difficulty Badge */}
-          <motion.div variants={itemVariants} className="flex justify-center mb-6">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={bodyType}
-                initial={{ opacity: 0, y: -5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 5 }}
-                className={`px-4 py-2 rounded-xl border text-sm flex flex-wrap items-center gap-2 ${difficultyInfo[bodyType].bg}`}
-              >
-                <span className={`font-bold ${difficultyInfo[bodyType].color}`}>
-                  ⚡ Difficulty: {difficultyInfo[bodyType].label}
-                </span>
-                <span className="text-gray-400">— {difficultyInfo[bodyType].desc}</span>
-              </motion.div>
-            </AnimatePresence>
-          </motion.div>
+          <p className="mb-6 text-sm text-[var(--fit-muted)]">{routineInfo[bodyType].description}</p>
 
           {/* Overall Progress Bar */}
           <motion.div variants={itemVariants} className="mb-6 bg-gray-800/50 p-4 rounded-2xl border border-green-500/20">
@@ -387,22 +341,24 @@ export default function Workouts() {
           {/* Toggle Buttons */}
           <motion.div variants={itemVariants} className="flex flex-wrap gap-3 mb-6">
             <motion.button
+              aria-expanded={showSchedule}
               onClick={() => setShowSchedule(!showSchedule)}
               whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
               className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all ${
                 showSchedule ? "bg-green-500/20 border-green-500 text-green-400" : "bg-gray-800 border-gray-600 text-gray-300 hover:border-green-500/50"
               }`}
             >
-              📅 {showSchedule ? "Hide" : "Show"} Weekly Schedule
+              {showSchedule ? "Hide weekly schedule" : "Show weekly schedule"}
             </motion.button>
             <motion.button
+              aria-expanded={showComparison}
               onClick={() => setShowComparison(!showComparison)}
               whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
               className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all ${
                 showComparison ? "bg-teal-500/20 border-teal-500 text-teal-400" : "bg-gray-800 border-gray-600 text-gray-300 hover:border-teal-500/50"
               }`}
             >
-              📊 {showComparison ? "Hide" : "Compare"} Body Types
+              {showComparison ? "Hide comparison" : "Compare routines"}
             </motion.button>
           </motion.div>
 
@@ -446,9 +402,9 @@ export default function Workouts() {
                     <thead>
                       <tr className="text-gray-400 border-b border-gray-700">
                         <th className="py-2 pr-4">Attribute</th>
-                        <th className="py-2 pr-4">🏃‍♂️ Ectomorph</th>
-                        <th className="py-2 pr-4">💪 Mesomorph</th>
-                        <th className="py-2">🔥 Endomorph</th>
+                        <th className="py-2 pr-4">Strength focus</th>
+                        <th className="py-2 pr-4">Mixed training</th>
+                        <th className="py-2">Steady cardio</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -551,27 +507,6 @@ export default function Workouts() {
             {/* Sidebar */}
             <div className="flex flex-col gap-4">
               <RestTimer />
-
-              {/* Body Type Info */}
-              <motion.div
-                variants={itemVariants}
-                className="bg-gray-800/50 p-4 rounded-2xl border border-green-500/20"
-              >
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={bodyType}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <h3 className="text-green-400 font-bold mb-2 flex items-center gap-2 text-base">
-                      {bodyTypeInfo[bodyType].image}{" "}
-                      {bodyType.charAt(0).toUpperCase() + bodyType.slice(1)}
-                    </h3>
-                    <p className="text-gray-400 text-sm leading-relaxed">{bodyTypeInfo[bodyType].desc}</p>
-                  </motion.div>
-                </AnimatePresence>
-              </motion.div>
 
               {/* Workout Tips */}
               <motion.div

@@ -1,3 +1,4 @@
+import PageHeading from "../Components/PageHeading.jsx";
 import { useContext, useState, useEffect, useRef } from "react";
 import api from "../Utils/axios.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
@@ -295,33 +296,14 @@ export default function Dashboard() {
     new Date(progressData[progressData.length - 1].date).toDateString() === new Date().toDateString();
 
   return (
-    <div className="w-full flex-1 relative p-4 md:p-6 flex items-center justify-center text-white">
+    <div className="fit-page fit-container">
       <motion.div
         ref={containerRef}
-        className="bg-gray-900/90 backdrop-blur-md p-5 md:p-8 rounded-3xl shadow-2xl max-w-6xl w-full relative overflow-hidden border border-gray-800"
+        className="relative min-w-0"
       >
-        <div className="relative z-10 space-y-8">
+        <div className="relative z-10 space-y-5">
 
-          {/* Header */}
-          <header className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4">
-            <h1 className="text-3xl md:text-5xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-400">
-              Dashboard
-            </h1>
-            {user && (
-              <motion.div 
-                className="flex items-center space-x-3 bg-gray-800/80 p-3 rounded-2xl border border-gray-700/50"
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="w-10 h-10 bg-gradient-to-tr from-green-500 to-teal-400 rounded-full flex items-center justify-center text-black font-extrabold shadow-lg shadow-green-500/20">
-                  {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-                </div>
-                <div>
-                  <p className="text-gray-100 font-bold text-sm tracking-wide">{user.name}</p>
-                  <p className="text-xs text-green-400 font-medium">Ready to work?</p>
-                </div>
-              </motion.div>
-            )}
-          </header>
+          <PageHeading title="Dashboard" description={user?.name ? `Welcome back, ${user.name}. What would you like to do today?` : "Log your progress and see how you’re doing."} />
 
           <nav aria-label="Quick actions" className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             <a href="#log-progress" className="fit-button fit-button-primary">Log progress</a>
@@ -346,11 +328,7 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <motion.div
               ref={welcomeRef}
-              className={`p-6 rounded-2xl shadow-lg border relative overflow-hidden transition-all duration-500 ${
-                hasLoggedToday 
-                ? "bg-gradient-to-br from-green-900/40 to-teal-900/40 border-green-500/40" 
-                : "bg-gradient-to-br from-[#02162f] to-[#042852] border-blue-500/20"
-              }`}
+              className={`fit-panel relative overflow-hidden`}
             >
               {hasLoggedToday ? (
                 <>
@@ -377,7 +355,7 @@ export default function Dashboard() {
 
             <motion.div
               ref={challengeRef}
-              className="bg-gradient-to-br from-[#022f44] to-[#014161] p-6 rounded-2xl shadow-lg border border-cyan-500/20 relative overflow-hidden flex flex-col justify-between"
+              className="fit-panel flex flex-col justify-between"
             >
               <div>
                 <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
@@ -387,7 +365,7 @@ export default function Dashboard() {
               </div>
               <button
                 onClick={() => setChallenge(dailyChallenges[Math.floor(Math.random() * dailyChallenges.length)])}
-                className="self-start text-xs font-bold px-4 py-2 bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 rounded-lg transition-colors border border-cyan-500/30"
+                className="fit-button fit-button-secondary self-start text-sm"
               >
                 Try another challenge
               </button>
@@ -403,7 +381,7 @@ export default function Dashboard() {
 
             {/* Chart */}
             <div className="min-w-0 lg:col-span-7 flex flex-col">
-              <div className="bg-gray-800/40 p-4 md:p-6 rounded-3xl border border-gray-700/50 flex-1 flex flex-col shadow-inner backdrop-blur-sm">
+              <div className="fit-panel flex-1 flex flex-col">
                 <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                    Progress over time
                 </h3>

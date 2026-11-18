@@ -1,7 +1,8 @@
+import PageHeading from "../Components/PageHeading.jsx";
 // src/pages/Subscription.jsx
 import React, { useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, Sparkles, Shield, Zap, Mail, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Check, X, Shield, Zap, Mail, ArrowRight, CheckCircle2 } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import { PLANS } from "../config/plans";
 import api from "../Utils/axios";
@@ -74,61 +75,47 @@ export default function Subscription() {
     : (currency === "usd" ? `$${proPlan.priceAnnual.usd}/yr` : `${proPlan.priceAnnual.mad} MAD/yr`);
 
   return (
-    <div className="min-h-screen bg-black text-gray-200 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto space-y-12">
-        {/* Header */}
-        <div className="text-center space-y-4 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/30 text-green-400 text-xs font-semibold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" /> Simple, Transparent Pricing
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
-            Level up your fitness with <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-teal-400">FitTrack Pro</span>
-          </h1>
-          <p className="text-base text-gray-400">
-            Enjoy full app access forever on our generous free tier, or upgrade to Pro for 50 daily AI food scans and personalized meal coaching.
-          </p>
-
+    <div className="fit-page fit-container">
+      <div className="space-y-6">
+        <PageHeading title="Plans" description="Compare what’s included with FitTrack Free and what you get with FitTrack Pro." />
+        <div>
           {/* Controls: Billing Period & Currency */}
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+          <div className="flex flex-wrap items-center gap-3">
             {/* Monthly / Annual Toggle */}
-            <div className="bg-gray-900 border border-gray-800 p-1 rounded-2xl flex items-center">
+            <div className="fit-choice-group">
               <button
                 type="button"
                 onClick={() => setBillingPeriod("monthly")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                  billingPeriod === "monthly" ? "bg-green-500 text-black shadow-md" : "text-gray-400 hover:text-white"
-                }`}
+                aria-pressed={billingPeriod === "monthly"}
+                className="fit-choice"
               >
                 Monthly
               </button>
               <button
                 type="button"
                 onClick={() => setBillingPeriod("annual")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-                  billingPeriod === "annual" ? "bg-green-500 text-black shadow-md" : "text-gray-400 hover:text-white"
-                }`}
+                aria-pressed={billingPeriod === "annual"}
+                className="fit-choice"
               >
                 Annual <span className="text-[10px] bg-teal-400 text-black px-1.5 py-0.5 rounded-md font-extrabold">Save 30%</span>
               </button>
             </div>
 
             {/* Currency Toggle */}
-            <div className="bg-gray-900 border border-gray-800 p-1 rounded-2xl flex items-center">
+            <div className="fit-choice-group">
               <button
                 type="button"
                 onClick={() => setCurrency("usd")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                  currency === "usd" ? "bg-gray-700 text-white" : "text-gray-400 hover:text-white"
-                }`}
+                aria-pressed={currency === "usd"}
+                className="fit-choice"
               >
                 USD ($)
               </button>
               <button
                 type="button"
                 onClick={() => setCurrency("mad")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                  currency === "mad" ? "bg-gray-700 text-white" : "text-gray-400 hover:text-white"
-                }`}
+                aria-pressed={currency === "mad"}
+                className="fit-choice"
               >
                 MAD (DH)
               </button>
@@ -144,9 +131,9 @@ export default function Subscription() {
         )}
 
         {/* Plan Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* FREE TIER CARD */}
-          <div className="bg-gray-900/60 border border-gray-800 rounded-3xl p-8 flex flex-col justify-between hover:border-gray-700 transition-all">
+          <div className="fit-panel flex flex-col justify-between">
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <div>
@@ -201,7 +188,7 @@ export default function Subscription() {
           </div>
 
           {/* PRO TIER CARD */}
-          <div className="bg-gradient-to-br from-green-500/10 via-gray-900 to-gray-900 border-2 border-green-500/50 rounded-3xl p-8 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+          <div className="fit-panel flex flex-col justify-between border-green-400/50 relative overflow-hidden">
             {/* Badge */}
             <div className="absolute top-0 right-0 bg-gradient-to-l from-green-400 to-teal-400 text-black font-extrabold text-[11px] uppercase tracking-wider py-1.5 px-4 rounded-bl-2xl shadow-md">
               FitTrack Pro
@@ -254,7 +241,7 @@ export default function Subscription() {
                     type="button"
                     onClick={handleSubscribe}
                     disabled={loading}
-                    className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-green-400 to-teal-400 hover:opacity-90 text-black font-extrabold text-sm shadow-xl shadow-green-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="fit-button fit-button-primary w-full disabled:opacity-50"
                   >
                     {loading ? "Redirecting to Checkout..." : "Upgrade to Pro"}
                     <ArrowRight className="w-4 h-4" />
