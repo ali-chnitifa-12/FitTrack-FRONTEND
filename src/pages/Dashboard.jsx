@@ -48,35 +48,15 @@ const quotes = [
   "You don't get the body you want by wishing for it, but by working for it.",
 ];
 
-// --- Skeleton Loader Component ---
-function DashboardSkeleton() {
+function DashboardLoader() {
   return (
-    <div className="w-full flex-1 relative p-6 flex items-center justify-center">
-      <div className="bg-gray-900 p-4 md:p-8 rounded-3xl shadow-xl max-w-6xl w-full border border-gray-800">
-        <div className="animate-pulse space-y-8">
-          {/* Header Skeleton */}
-          <div className="flex justify-between items-center">
-            <div className="h-10 bg-gray-800 rounded-xl w-48 blur-sm"></div>
-            <div className="hidden md:flex items-center space-x-3 bg-gray-800/50 p-3 rounded-xl blur-sm">
-              <div className="w-10 h-10 bg-gray-700 rounded-full"></div>
-              <div className="space-y-2">
-                <div className="h-3 bg-gray-700 rounded w-20"></div>
-                <div className="h-2 bg-gray-700 rounded w-16"></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Welcome & Challenge Skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="h-40 bg-gray-800 rounded-2xl blur-[2px]"></div>
-            <div className="h-40 bg-gray-800 rounded-2xl blur-[2px]"></div>
-          </div>
-
-          {/* Form & Chart Skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="h-96 bg-gray-800 rounded-2xl blur-[2px]"></div>
-            <div className="h-96 bg-gray-800 rounded-2xl blur-[2px]"></div>
-          </div>
+    <div className="fit-page fit-container">
+      <PageHeading title="Dashboard" />
+      <div className="fit-panel flex min-h-52 items-center justify-center gap-4" role="status">
+        <span className="size-9 shrink-0 animate-spin rounded-full border-4 border-green-300/25 border-t-green-300" aria-hidden="true" />
+        <div>
+          <p className="font-semibold">Loading your dashboard</p>
+          <p className="text-sm text-[var(--fit-muted)]">Getting your latest progress…</p>
         </div>
       </div>
     </div>
@@ -163,7 +143,8 @@ export default function Dashboard() {
   const [progressData, setProgressData] = useState([]);
   const [estimatedTime, setEstimatedTime] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [_error, _setError] = useState("");
+  const [loadError, setLoadError] = useState("");
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const [dismissOnboarding, setDismissOnboarding] = useState(false);
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [searchParams] = useSearchParams();
@@ -219,34 +200,39 @@ export default function Dashboard() {
     setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
   }, []);
 
-  // Fetch progress from backend
+  const reloadDashboard = () => {
+    setLoading(true);
+    setLoadError("");
+    setLoadAttempt((attempt) => attempt + 1);
+  };
+
   useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
-    if (!user.token) {
-      toast.error("Authentication error. Please login.");
-      setLoading(false);
-      return;
-    }
-    api.get("/dashboard", { headers: { Authorization: `Bearer ${user.token}` } })
-      .then((res) => {
-        setProgressData(res.data.progress || []);
+    if (!user?.token) return;
+    const request = new AbortController();
+
+    api.get("/dashboard", { signal: request.signal, timeout: 35000 })
+      .then(({ data }) => {
+        if (!Array.isArray(data?.progress)) throw new Error("Invalid dashboard response");
+        if (!request.signal.aborted) setProgressData(data.progress);
       })
-      .catch((err) => {
-        if (err.response?.status === 401) {
-          toast.error("Session expired.");
+      .catch((error) => {
+        if (request.signal.aborted) return;
+        if (error.response?.status === 401) {
+          toast.error("Your session expired. Please sign in again.");
           logout();
-          navigate("/login");
-        } else {
-          toast.error("Failed to load dashboard data. Assuming empty state.");
+          navigate("/login", { replace: true });
+          return;
         }
+        setLoadError(navigator.onLine
+          ? "We couldn’t load your progress. Please try again."
+          : "You’re offline. Reconnect to the internet, then try again.");
       })
       .finally(() => {
-        setLoading(false);
+        if (!request.signal.aborted) setLoading(false);
       });
-  }, [user, logout, navigate]);
+
+    return () => request.abort();
+  }, [user?.token, logout, navigate, loadAttempt]);
 
   // Add new progress entry
   const addEntry = (entry) => {
@@ -287,7 +273,20 @@ export default function Dashboard() {
       });
   };
 
-  if (loading) return <DashboardSkeleton />;
+  if (loading) return <DashboardLoader />;
+
+  if (loadError) {
+    return (
+      <div className="fit-page fit-container">
+        <PageHeading title="Dashboard" />
+        <section className="fit-panel">
+          <h2 className="fit-section-title">Dashboard couldn’t load</h2>
+          <p className="mb-4 text-[var(--fit-muted)]" role="alert">{loadError}</p>
+          <button type="button" className="fit-button fit-button-primary" onClick={reloadDashboard}>Try again</button>
+        </section>
+      </div>
+    );
+  }
 
   const showOnboarding = progressData.length === 0 && !dismissOnboarding;
 
@@ -441,12 +440,7 @@ export default function Dashboard() {
         <OnboardingModal
           isOpen={showOnboardingModal}
           onClose={() => setShowOnboardingModal(false)}
-          onComplete={() => {
-            // Refetch or update dashboard data if needed
-            api.get("/dashboard", { headers: { Authorization: `Bearer ${user.token}` } })
-              .then((res) => setProgressData(res.data.progress || []))
-              .catch(() => {});
-          }}
+          onComplete={reloadDashboard}
         />
       </motion.div>
     </div>
